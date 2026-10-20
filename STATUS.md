@@ -7,8 +7,8 @@
 | Quem | Está com | Arquivo |
 |---|---|---|
 | **ChatGPT** | Demanda 2: textos do mapa | [docs/briefings/BRIEFING_GPT_v0.4.md](docs/briefings/BRIEFING_GPT_v0.4.md), seção 4 |
-| **Claude** | Revisão da v3.1 concluída, sem ajustes; vai propor o catálogo de itens | [revisoes/2026-10-20_guardioes_v3_1.md](revisoes/2026-10-20_guardioes_v3_1.md) |
-| **Usuário** | Aprovar o banco de guardiões v3.1; aprovar o catálogo de itens quando o Claude propuser | — |
+| **Claude** | Catálogo de itens proposto; aguardando aprovação | [docs/propostas/catalogo_itens_v1.md](docs/propostas/catalogo_itens_v1.md) |
+| **Usuário** | Aprovar o banco de guardiões v3.1 e o catálogo de itens | — |
 
 ## Fila do ChatGPT
 
@@ -37,4 +37,4 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 ## Pendências de decisão
 
 - [x] **Nomes dos personagens.** O jogador escolhe o seu; os do computador são sorteados de uma lista (briefing v0.4, seção 4.5).
-- [ ] **Catálogo de itens do inventário** (6 a 8 itens). O Claude vai propor.
+- [ ] **Catálogo de itens do inventário.** Proposta do Claude em `docs/propostas/catalogo_itens_v1.md`.
