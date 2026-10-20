@@ -3,15 +3,17 @@ extends RefCounted
 ## Números do MVP v0.4 (docs/MVP_v0.4.md). Unidade de distância: metros.
 
 const NOITE_S := 720.0               # duração da noite no MVP (provisório)
-const VEL_TRILHA := 1.5              # m/s
+const VEL_TRILHA := 3.0              # m/s do jogador (dobrada a pedido do usuário em 20/10/2026)
+const VEL_COMPUTADOR := 1.5          # m/s dos personagens do computador (mais lentos, a pedido do usuário)
 const ESPACO_PEGADA := 2.6           # m entre pegadas desenhadas (o desenho é maior que o real)
 const AMOSTRA_M := 2.0               # resolução da memória do mapa
 const RAIO_PERCORRIDO := 2.0         # amostras a essa distância viram "percorridas"
-const LUZ_BASE_M := 130.0            # de quão longe se vê a luz de uma base
+const LUZ_BASE_M := 180.0            # de quão longe se vê a luz de uma base
 const PERCEPCAO_INTERVALO := 0.2     # s entre atualizações de visão
 const HESITACAO := Vector2(2.0, 5.0) # pausa dos personagens do computador em bifurcações
 const VISITA_BASE_S := 25.0          # tempo de visita do computador (provisório, até a etapa 2)
 const CLIQUE_RAIO := 15.0            # m de tolerância ao tocar no mapa
+const AVISO_S := 6.0                 # s que cada mensagem fica na tela
 
 const ATRIBUTOS := ["forca", "inteligencia", "carisma", "furtividade", "resistencia"]
 const PONTOS_TOTAIS := 12
@@ -51,7 +53,7 @@ const MARGEM_VOLTA_S := 60.0
 
 # ---- Visita às bases (etapa 2) ----
 const PERGUNTAS_POR_VISITA := Vector2i(4, 6)
-const SILENCIO_S := 10.0                 # tempo para responder antes de contar como silêncio
+const SILENCIO_S := 50.0                 # tempo para responder antes de contar como silêncio (ajustado em 20/10/2026)
 const AFINIDADE_LIMITE := 10
 const AFINIDADE_ALTA := 8               # calibrado com o banco v3.1 (ver godot/README.md)
 const AFINIDADE_BAIXA := 1

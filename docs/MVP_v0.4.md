@@ -15,9 +15,10 @@ O centro do jogo é informação incompleta: quem passou por onde, quem mente, q
 | Item | Decisão |
 |---|---|
 | Modo | **Single-player.** Os outros 3 personagens são controlados pelo computador |
+| Velocidade | Jogador 3 m/s; personagens do computador 1,5 m/s (ajustado em 20/10/2026) |
 | Ritmo | Tempo real, com movimento lento entre clareiras |
 | Guardiões | Só os 5 definidos (Bento, Iara, Anselmo, Marta, Quincas) + 1 base vazia. Os guardiões 6 a 9 ficam para depois dos testes |
-| Mapa | 10 a 12 clareiras: 6 com base, 4 a 6 sem base |
+| Mapa | 450 × 450 m, 10 a 12 clareiras: 6 com base, 4 a 6 sem base |
 | Tecnologia | Godot 4 + GDScript, dados em JSON |
 
 ---
@@ -38,8 +39,8 @@ O centro do jogo é informação incompleta: quem passou por onde, quem mente, q
 ## 3. Visão noturna
 
 - O mapa é um **pergaminho que começa escuro e desfocado**. As áreas ficam nítidas conforme o jogador anda e enxerga.
-- **Mata (20/10/2026):** copas de árvore escuras e cheias, vistas de cima, de tamanhos variados, fora das trilhas e em anel em volta das clareiras. Aparecem só onde a névoa se abriu. São só desenho: nas regras, a mata já é parede.
-- **Contraste (20/10/2026):** a trilha é um traço leve só para indicar o caminho; as pegadas têm borda clara para se destacarem.
+- **Mata (20/10/2026):** mata fechada de copas escuras vistas de cima, com sub-bosque, árvores grandes e tons variados de claro e escuro, fora das trilhas e em anel em volta das clareiras. Aparecem só onde a névoa se abriu. São só desenho: nas regras, a mata já é parede.
+- **Contraste e daltonismo (20/10/2026):** nada importante depende só de cor. A trilha é um tracejado fino; as pegadas têm borda clara; as suas pegadas são vazadas e as dos outros cheias; você é um círculo com anel escuro e os outros, losangos; nomes em letra clara com contorno escuro.
 - **Visual (decidido em 20/10/2026):** onde a névoa se abre aparece pergaminho bege com manchas de umidade e borda tostada; trilhas em tinta marrom; pegadas pretas em forma de sola e salto (bota, botina), sola fina (alpercata), bloco (tamanco) e pé com dedos (descalço). A noite em volta é azul-escura. Referências do usuário: pegadas de sola e salto sobre papel envelhecido e a paleta de mapa antigo, sem copiar elementos de obras existentes.
 - Aparecem as trilhas percorridas e o que está no alcance de vista.
 - Trilhas percorridas nunca somem. Pegadas vistas e trechos vistos de longe voltam ao escuro depois de um tempo (ver Inteligência, seção 7).

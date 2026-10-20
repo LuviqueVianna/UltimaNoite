@@ -16,7 +16,7 @@ A noite continua correndo durante a conversa.
 
 ## 2. Resposta
 
-- O jogador escolhe o **tom** (firme, gentil, evasivo) e a resposta. Sem resposta em **10 s**, conta como silêncio.
+- O jogador escolhe o **tom** (firme, gentil, evasivo) e a resposta. Sem resposta em **50 s**, conta como silêncio (ajustado em 20/10/2026).
 - Afinidade da resposta = valor da resposta (ou `mentira`, se a verificação falhar) + modificador de tom (ou o `tom` próprio da resposta) + `contradicao`, se contradiz uma marca do histórico.
 - Silêncio vale o campo `silencio` da pergunta (0 se não houver).
 - A afinidade da visita começa na soma da `reputacao` (marcas de outras bases) e fica entre −10 e +10.

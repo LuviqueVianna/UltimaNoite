@@ -3,10 +3,10 @@ extends RefCounted
 ## Sorteia o mapa da partida: clareiras ligadas por trilhas, com voltas, bifurcações e becos.
 ## Regras: docs/MVP_v0.4.md, seção 2.
 
-const AREA := Vector2(300, 300)
+const AREA := Vector2(450, 450)            # aumentado a pedido do usuário em 20/10/2026 (era 300)
 const MARGEM := 20.0
-const DIST_MIN_CLAREIRAS := 55.0
-const LIGACAO_MAX := 130.0
+const DIST_MIN_CLAREIRAS := 82.0
+const LIGACAO_MAX := 195.0
 const CHANCE_VOLTA := 0.45
 const TRECHO_MAX := 40.0
 const DESVIO := 4.0

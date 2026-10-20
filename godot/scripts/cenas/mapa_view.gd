@@ -16,7 +16,10 @@ const COR_PEGADA := Color("#1a120b")
 const COR_MINHA := Color("#5c2a14")
 const COR_AMBAR := Color("#e89a3c")
 const COR_MEMORIA := Color("#cdb88c")   # trilha lembrada, vista sobre a névoa
-const LARGURA_TRILHA := 0.45  # m (discreta, para não competir com as pegadas)
+# Textos e marcadores: contraste por claro/escuro e por formato, não por matiz (pensado para daltonismo).
+const COR_TEXTO := Color("#fff4dc")
+const COR_CONTORNO := Color("#120c06")
+const LARGURA_TRILHA := 0.25  # m (tracejado fino, como caminho de mapa antigo)
 const GLIFO := 6.0            # pegadas desenhadas maiores que o real, para leitura
 
 var mundo: Mundo
@@ -130,26 +133,40 @@ func _plantar_arvores() -> void:
 	rng.seed = m.semente * 7 + 3
 	var segs := m.arestas.map(func(e): return [m.pos(e["a"]), m.pos(e["b"])])
 	var clareiras := m.nos.filter(func(n): return n["tipo"] == "clareira").map(func(n): return n["pos"])
-	var passo := 4.2
+	var densidade := FastNoiseLite.new()
+	densidade.seed = m.semente * 13 + 5
+	densidade.frequency = 0.03
+	var passo := 3.1
 	var y := -MARGEM * 0.5
 	while y < m.tamanho.y + MARGEM * 0.5:
 		var x := -MARGEM * 0.5
 		while x < m.tamanho.x + MARGEM * 0.5:
 			var p := Vector2(x, y) + Vector2(rng.randf_range(-1.6, 1.6), rng.randf_range(-1.6, 1.6))
 			x += passo
-			var raio := rng.randf_range(1.5, 2.6)
+			# Densidade variável: grupos fechados, vãos e uma ou outra árvore bem maior.
+			var d := (densidade.get_noise_2dv(p) + 1.0) * 0.5
+			# Mata fechada: quase todo ponto vira árvore; onde a densidade é menor, nasce sub-bosque.
+			var sub_bosque := rng.randf() > smoothstep(0.15, 0.5, d) * 0.6 + 0.4
+			var raio := rng.randf_range(1.4, 2.4) * (0.85 + 0.45 * d)
+			if sub_bosque:
+				raio = rng.randf_range(0.8, 1.3)
+			elif rng.randf() < 0.08:
+				raio = rng.randf_range(3.2, 4.4)
 			var ok := true
 			for c in clareiras:
 				if p.distance_to(c) < 9.0 + raio:
 					ok = false
 					break
 			if ok:
+				var mais_perto := INF
 				for sg in segs:
-					if p.distance_to(Geometry2D.get_closest_point_to_segment(p, sg[0], sg[1])) < 2.2 + raio:
-						ok = false
+					mais_perto = minf(mais_perto, p.distance_to(Geometry2D.get_closest_point_to_segment(p, sg[0], sg[1])))
+					if mais_perto < 2.2 + raio:
 						break
+				# Longe das trilhas a névoa nunca se abre: não precisa plantar.
+				ok = mais_perto >= 1.8 + raio and mais_perto <= 30.0
 			if ok:
-				arvores.append({"pos": p, "raio": raio, "tipo": "copa",
+				arvores.append({"pos": p, "raio": raio, "tipo": "copa", "tom": rng.randf_range(-1.0, 1.0),
 					"giro": rng.randf() * TAU, "visivel": false})
 		y += passo * 0.87
 
@@ -188,15 +205,16 @@ func _draw() -> void:
 			var i: int = e["amostra_ini"] + k
 			var alfa := 0.0
 			if j.amostra_percorrida[i] == 1:
-				alfa = 0.32
+				alfa = 0.6
 			else:
 				var idade := agora - j.amostra_vista[i]
 				if idade <= lembra:
-					alfa = 0.32 * (1.0 - idade / lembra)
+					alfa = 0.6 * (1.0 - idade / lembra)
 			if alfa <= 0.01:
 				continue
+			# Tracejado: em cada trecho de 2 m, desenha só pouco mais da metade.
 			var a := pa.lerp(pb, float(k) / n)
-			var b := pa.lerp(pb, float(k + 1) / n)
+			var b := pa.lerp(pb, (k + 0.55) / n)
 			var cor := COR_TINTA_CLARA if revelado(m.amostras[i]) > 0.5 else COR_MEMORIA
 			draw_line(a * ESCALA, b * ESCALA, Color(cor, alfa), LARGURA_TRILHA * ESCALA)
 
@@ -237,10 +255,18 @@ func _draw() -> void:
 			continue
 		if agora - j.vistos.get(o.id, -1.0e9) > Regras.PERCEPCAO_INTERVALO * 1.5:
 			continue
-		draw_circle(o.pos * ESCALA, 1.3 * ESCALA, COR_TINTA)
-		draw_string(fonte, o.pos * ESCALA + Vector2(9, -9), o.nome, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COR_TINTA)
-	draw_circle(j.pos * ESCALA, 1.5 * ESCALA, COR_AMBAR)
-	draw_arc(j.pos * ESCALA, 1.5 * ESCALA, 0, TAU, 24, COR_TINTA, 2)
+		# Outros personagens: losango escuro com borda clara
+		var c: Vector2 = o.pos * ESCALA
+		var t := 1.6 * ESCALA
+		var losango := PackedVector2Array([c + Vector2(0, -t), c + Vector2(t, 0), c + Vector2(0, t), c + Vector2(-t, 0)])
+		draw_colored_polygon(losango, COR_CONTORNO)
+		losango.append(losango[0])
+		draw_polyline(losango, COR_TEXTO, 2.0)
+		_texto(c + Vector2(t + 6, -t), o.nome, 15)
+	# Você: círculo claro com anel escuro grosso e ponto escuro no centro
+	draw_circle(j.pos * ESCALA, 1.7 * ESCALA, COR_CONTORNO)
+	draw_circle(j.pos * ESCALA, 1.2 * ESCALA, COR_AMBAR)
+	draw_circle(j.pos * ESCALA, 0.35 * ESCALA, COR_CONTORNO)
 	if not j.rota.is_empty():
 		var alvo := m.pos(j.rota[-1]) * ESCALA
 		draw_arc(alvo, 10, 0, TAU, 24, Color(COR_MINHA, 0.8), 2)
@@ -251,7 +277,9 @@ func _desenhar_arvore_em(alvo: CanvasItem, a: Dictionary) -> void:
 	var c: Vector2 = a["pos"] * ESCALA
 	var r: float = a["raio"] * ESCALA
 	var giro: float = a["giro"]
-	var escura := Color("#2a1c10", 0.88)
+	var tom: float = a.get("tom", 0.0)
+	var escura := Color("#2a1c10").lerp(Color("#4a3a1e") if tom > 0.0 else Color("#140d06"), absf(tom) * 0.6)
+	escura.a = 0.9
 	# Copa: folhagem escura com borda recortada e um reflexo mais claro
 	var pts := PackedVector2Array()
 	for k in 18:
@@ -260,6 +288,16 @@ func _desenhar_arvore_em(alvo: CanvasItem, a: Dictionary) -> void:
 		pts.append(c + Vector2(cos(ang), sin(ang)) * r * bico)
 	alvo.draw_colored_polygon(pts, escura)
 	alvo.draw_circle(c + Vector2(-r * 0.25, -r * 0.25), r * 0.32, Color(COR_TINTA_CLARA, 0.35))
+	if r > 1.8 * ESCALA:
+		# Copas grandes ganham folhagem interna, para a mata parecer viva
+		alvo.draw_circle(c + Vector2(r * 0.3, -r * 0.1), r * 0.22, Color(COR_TINTA_CLARA, 0.22))
+		alvo.draw_circle(c + Vector2(-r * 0.05, r * 0.35), r * 0.18, Color("#0d0804", 0.35))
+
+
+## Texto claro com contorno escuro grosso: legível sobre o papel, as árvores e a névoa.
+func _texto(pos: Vector2, texto: String, tamanho: int) -> void:
+	draw_string_outline(fonte, pos, texto, HORIZONTAL_ALIGNMENT_LEFT, -1, tamanho, 7, COR_CONTORNO)
+	draw_string(fonte, pos, texto, HORIZONTAL_ALIGNMENT_LEFT, -1, tamanho, COR_TEXTO)
 
 
 func _arco_tracejado(c: Vector2, r: float, cor: Color) -> void:
@@ -286,7 +324,7 @@ func _desenhar_base(pos_m: Vector2, base: String) -> void:
 	for k in 5:
 		var a := TAU * k / 5.0
 		draw_circle(c + Vector2(-9, -6) * ESCALA + Vector2(cos(a), sin(a)) * 1.1 * ESCALA, 1.1 * ESCALA, Color(COR_TINTA, 0.35))
-	draw_string(fonte, c + Vector2(-tam.x / 2, -tam.y / 2 - 3.5 * ESCALA), Regras.BASES[base], HORIZONTAL_ALIGNMENT_LEFT, -1, 15, COR_TINTA)
+	_texto(c + Vector2(-tam.x / 2, -tam.y / 2 - 3.5 * ESCALA), Regras.BASES[base], 16)
 
 
 ## Porteira de duas estacas com travessa: o ponto oposto do mapa, onde se registra a chegada.
@@ -299,7 +337,7 @@ func _desenhar_saida(pos_m: Vector2) -> void:
 	draw_line(c + Vector2(3, -2) * ESCALA, c + Vector2(3, 2.5) * ESCALA, cor, 3)
 	draw_line(c + Vector2(-3, -1) * ESCALA, c + Vector2(3, -1) * ESCALA, cor, 2)
 	draw_line(c + Vector2(-3, 1) * ESCALA, c + Vector2(3, 1) * ESCALA, cor, 2)
-	draw_string(fonte, c + Vector2(-14, -4 * ESCALA), "Saída", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, cor)
+	_texto(c + Vector2(-16, -4 * ESCALA), "Saída", 16)
 
 
 ## Pegada em forma de sola e salto (ou pé descalço). Coordenadas em metros, frente para cima.
@@ -319,7 +357,11 @@ func _desenhar_pegada(g: Dictionary, j: Personagem) -> void:
 	draw_set_transform(g["pos"] * ESCALA, angulo, Vector2.ONE * ESCALA * GLIFO * 1.32)
 	_forma(g["calcado"], Color(COR_PAPEL, 0.85 * alfa), Color(COR_PAPEL, 0.0))
 	draw_set_transform(g["pos"] * ESCALA, angulo, Vector2.ONE * ESCALA * GLIFO)
-	_forma(g["calcado"], Color(COR_MINHA if minha else COR_PEGADA, alfa), Color(COR_PAPEL, alfa))
+	_forma(g["calcado"], Color(COR_PEGADA, alfa), Color(COR_PAPEL, alfa))
+	if minha:
+		# As suas ficam vazadas: miolo claro dentro do contorno escuro.
+		draw_set_transform(g["pos"] * ESCALA, angulo, Vector2.ONE * ESCALA * GLIFO * 0.58)
+		_forma(g["calcado"], Color(COR_PAPEL, 1.0), Color(COR_PAPEL, 0.0))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 

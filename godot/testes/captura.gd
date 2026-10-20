@@ -32,6 +32,8 @@ func _init() -> void:
 		main.dialogo._responder("1")
 	if args.size() > 2 and args[2] == "longe":
 		main.camera.zoom = Vector2(0.75, 0.75)
+	if args.size() > 2 and args[2] == "media":
+		main.camera.zoom = Vector2(1.3, 1.3)
 	if args.size() > 2 and args[2] == "perto":
 		main.camera.zoom = Vector2(3.2, 3.2)
 	for i in 10:

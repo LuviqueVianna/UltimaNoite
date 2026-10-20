@@ -31,6 +31,7 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
+| 20/10/2026 | Rodada de ajustes do usuário: 50 s para responder, jogador 2x mais rápido, mensagens somem em 6 s, mapa 450 × 450 m, computador mais lento, mata fechada, trilha tracejada e contraste para daltonismo |
 | 20/10/2026 | Mata desenhada no mapa: copas e embaúbas em tinta, reveladas com a névoa. Conversa entre jogadores fica para depois (decisão do usuário) |
 | 20/10/2026 | Pegadas com mais contraste (borda clara, trilha discreta) e duração de 15 a 20 s, a pedido do usuário |
 | 20/10/2026 | Visual do mapa definido pelo usuário e implementado: pergaminho manchado sob a névoa, trilhas em tinta, pegadas de sola e salto. Movimento por setas e WASD |

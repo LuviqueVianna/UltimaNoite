@@ -76,7 +76,7 @@ func leitura_pegadas() -> int:
 
 
 func velocidade() -> float:
-	return Regras.VEL_TRILHA
+	return Regras.VEL_TRILHA if eh_jogador else Regras.VEL_COMPUTADOR
 
 
 func tem_marca(marca: String) -> bool:

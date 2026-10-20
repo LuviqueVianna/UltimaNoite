@@ -179,6 +179,7 @@ func _process(dt: float) -> void:
 	if mundo == null:
 		return
 	var j := mundo.jogador()
+	_atualizar_avisos()
 	_ler_teclado()
 	for i in (40 if acelerar else 1):
 		mundo.tick(dt)
@@ -231,11 +232,18 @@ func _ao_tocar(ponto: Vector2) -> void:
 		_ao_aviso("Você não conhece um caminho até lá.")
 
 
+## Mensagens somem sozinhas depois de alguns segundos (Regras.AVISO_S).
 func _ao_aviso(texto: String) -> void:
-	avisos.append(texto)
+	avisos.append({"texto": texto, "ate": Time.get_ticks_msec() / 1000.0 + Regras.AVISO_S})
 	if avisos.size() > 5:
 		avisos.pop_front()
-	rotulo_avisos.text = "\n".join(avisos)
+	_atualizar_avisos()
+
+
+func _atualizar_avisos() -> void:
+	var agora := Time.get_ticks_msec() / 1000.0
+	avisos = avisos.filter(func(a): return a["ate"] > agora)
+	rotulo_avisos.text = "\n".join(avisos.map(func(a): return a["texto"]))
 
 
 func _ao_chegar_base(p: Personagem, base: String) -> void:

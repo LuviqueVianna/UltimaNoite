@@ -61,5 +61,5 @@ func _init() -> void:
 		main.mundo.tick(1.0 / 10.0)
 	await process_frame
 	print("Amanhecer: ", main.rotulo_base.text.replace("\n", " | "))
-	print("Cena: tempo %.1f s | jogador andou: %s | rota aceita: %s | avisos: %s" % [main.mundo.tempo, j.pos.distance_to(inicio) > 1.0, ok, main.avisos])
+	print("Cena: tempo %.1f s | jogador andou: %s | rota aceita: %s | avisos: %s" % [main.mundo.tempo, j.pos.distance_to(inicio) > 1.0, ok, main.avisos.map(func(a): return a["texto"])])
 	quit()
