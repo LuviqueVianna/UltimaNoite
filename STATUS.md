@@ -6,9 +6,9 @@
 
 | Quem | Está com | Arquivo |
 |---|---|---|
-| **ChatGPT** | Demanda 2: textos do mapa | [docs/briefings/BRIEFING_GPT_v0.4.md](docs/briefings/BRIEFING_GPT_v0.4.md), seção 4 |
+| **ChatGPT** | Demanda 3: quadro de estilo do pergaminho | [docs/briefings/BRIEFING_GPT_v0.4.md](docs/briefings/BRIEFING_GPT_v0.4.md), seção 5 |
 | **Claude** | Código do MVP em Godot: etapa 1 pronta (mapa, movimento, pegadas, visão); fazendo a etapa 2 (bases e diálogo) | [godot/README.md](godot/README.md) |
-| **Usuário** | Nada pendente | — |
+| **Usuário** | Aprovar os textos do mapa (com os 13 ajustes de concordância) | [revisoes/2026-10-20_textos_mapa.md](revisoes/2026-10-20_textos_mapa.md) |
 
 ## Fila do ChatGPT
 
@@ -18,17 +18,20 @@ Leia antes: [docs/briefings/BRIEFING_GPT_v0.4.md](docs/briefings/BRIEFING_GPT_v0
 |---|---|---|---|
 | 1 | Correções do banco de guardiões (formato v3) | `docs/correcoes/CORRECOES_guardioes_v3.md` | Entregue em 20/10 e revisada |
 | 1b | Ajustes da revisão: itens 1, 2, 3 e 4 | `revisoes/2026-10-20_guardioes_v3.md` | Entregue em 20/10 e revisada, sem ajustes |
-| 2 | Textos do mapa: janelas, eventos à distância, becos e clareiras, frases prontas, nomes | Briefing v0.4, seção 4 | **Próxima** |
-| 3 | Quadro de estilo do pergaminho | Briefing v0.4, seção 5 | Aguardando |
+| 2 | Textos do mapa: janelas, eventos à distância, becos e clareiras, frases prontas, nomes | Briefing v0.4, seção 4 | Entregue em 20/10 e revisada |
+| 3 | Quadro de estilo do pergaminho | Briefing v0.4, seção 5 | **Próxima** |
 
 Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
-**Demanda 2:** os cinco arquivos da seção 4 do briefing (4.1 a 4.5), numa única entrega em `entregas/AAAA-MM-DD_textos_mapa/`, com README e validador. Onde um texto precisar de item do inventário, use o marcador `{item}`; os itens estão em `docs/sistemas/itens_v1.md`.
+**Demanda 3:** as 3 imagens de estilo da seção 5.1 do briefing, cada uma com o prompt usado e o ponto mais fraco, em `entregas/AAAA-MM-DD_quadro_pergaminho/`. Pare depois das 3 e aguarde a escolha do usuário. Referência do que o jogo já desenha hoje: `godot/README.md`.
+
+**Marcadores de texto:** daqui em diante, vale a tabela de `revisoes/2026-10-20_textos_mapa.md`.
 
 ## Histórico
 
 | Data | O que aconteceu |
 |---|---|
+| 20/10/2026 | ChatGPT entregou os textos do mapa. Revisão: aprovado com 13 ajustes de concordância |
 | 20/10/2026 | Etapa 1 do jogo publicada em `godot/`: mapa sorteado, movimento, pegadas com calçado, visão noturna, personagens do computador |
 | 20/10/2026 | Usuário aprovou o banco de guardiões v3.1 (agora em `conteudo/guardioes/`) e o catálogo de itens |
 | 20/10/2026 | ChatGPT entregou os ajustes v3.1. Revisão: aprovado pelo Claude, sem novos ajustes |
