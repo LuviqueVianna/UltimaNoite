@@ -64,6 +64,7 @@ func _ready() -> void:
 		linha_tom.add_child(b)
 		botoes_tom[t] = b
 	caixa_opcoes = VBoxContainer.new()
+	caixa_opcoes.add_theme_constant_override("separation", 6)
 	caixa.add_child(caixa_opcoes)
 	rodape = Label.new()
 	rodape.add_theme_color_override("font_color", Color(COR_PAPEL, 0.6))
@@ -93,13 +94,37 @@ func _limpar() -> void:
 	rodape.text = ""
 
 
+## Opção clicável que cresce com o texto (respostas longas quebram linha sem vazar).
+## Todas com o mesmo visual; a opção extra de atributo só leva a etiqueta entre colchetes.
 func _opcao(rotulo: String, acao: Callable) -> void:
-	var b := Button.new()
-	b.text = rotulo
-	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	b.autowrap_mode = TextServer.AUTOWRAP_WORD
-	b.pressed.connect(acao)
-	caixa_opcoes.add_child(b)
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = Color("#1e2a38")
+	normal.set_corner_radius_all(4)
+	normal.set_content_margin_all(8)
+	normal.content_margin_left = 12
+	var realce := normal.duplicate()
+	realce.bg_color = Color("#2e3e52")
+	realce.border_color = COR_PAPEL
+	realce.set_border_width_all(1)
+
+	var caixa := PanelContainer.new()
+	caixa.add_theme_stylebox_override("panel", normal)
+	caixa.mouse_filter = Control.MOUSE_FILTER_STOP
+	caixa.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var l := Label.new()
+	l.text = rotulo
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.custom_minimum_size = Vector2(550, 0)
+	l.add_theme_color_override("font_color", COR_PAPEL)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	caixa.add_child(l)
+	caixa.mouse_entered.connect(func(): caixa.add_theme_stylebox_override("panel", realce))
+	caixa.mouse_exited.connect(func(): caixa.add_theme_stylebox_override("panel", normal))
+	caixa.gui_input.connect(func(ev: InputEvent):
+		if (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) \
+				or (ev is InputEventScreenTouch and ev.pressed):
+			acao.call())
+	caixa_opcoes.add_child(caixa)
 
 
 # ---------- Saída ----------

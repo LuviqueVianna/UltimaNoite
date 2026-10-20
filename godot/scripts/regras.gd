@@ -3,8 +3,9 @@ extends RefCounted
 ## Números do MVP v0.4 (docs/MVP_v0.4.md). Unidade de distância: metros.
 
 const NOITE_S := 720.0               # duração da noite no MVP (provisório)
-const VEL_TRILHA := 3.0              # m/s do jogador (dobrada a pedido do usuário em 20/10/2026)
+const VEL_TRILHA := 5.0              # m/s do jogador (aumentada a pedido do usuário em 20/10/2026, depois do mapa maior)
 const VEL_COMPUTADOR := 1.5          # m/s dos personagens do computador (mais lentos, a pedido do usuário)
+const ACELERA_COMPUTADOR := 3.0      # depois que o jogador registra a chegada, o computador anda 3x mais rápido
 const ESPACO_PEGADA := 2.6           # m entre pegadas desenhadas (o desenho é maior que o real)
 const AMOSTRA_M := 2.0               # resolução da memória do mapa
 const RAIO_PERCORRIDO := 2.0         # amostras a essa distância viram "percorridas"

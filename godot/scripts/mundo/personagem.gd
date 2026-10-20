@@ -37,6 +37,7 @@ var escondeu_rastro := false
 var refeicoes := {}                 # base -> "boa" | "ruim"
 var ultima_pegada_vista := -1       # id de personagem dono das últimas pegadas alheias vistas
 var saida := -1                     # nó de chegada (ponto oposto à partida)
+var acelerado := false              # computador acelerado depois que o jogador chegou
 var concluiu := -1.0                # instante em que registrou a chegada; -1 se ainda não
 var fatos_noite := {}               # premissas que aconteceram (ex.: "lobo_avancou"), preenchidas na etapa 3
 var na_base := ""
@@ -76,7 +77,9 @@ func leitura_pegadas() -> int:
 
 
 func velocidade() -> float:
-	return Regras.VEL_TRILHA if eh_jogador else Regras.VEL_COMPUTADOR
+	if eh_jogador:
+		return Regras.VEL_TRILHA
+	return Regras.VEL_COMPUTADOR * (Regras.ACELERA_COMPUTADOR if acelerado else 1.0)
 
 
 func tem_marca(marca: String) -> bool:

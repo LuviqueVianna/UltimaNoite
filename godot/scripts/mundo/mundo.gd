@@ -111,19 +111,27 @@ func _chegou(p: Personagem, no: int) -> void:
 	if p.eh_jogador:
 		if not p.bases_visitadas.has(base):
 			chegou_base.emit(p, base)
-	elif not p.bases_visitadas.has(base):
+	elif not p.bases_visitadas.has(base) and not p.acelerado:
 		if base == "vazia":
 			p.bases_visitadas[base] = tempo
 			return
 		var res := IA.visitar(p, self, base)
-		visitante[base] = {"id": p.id, "mente": res["mente"], "ate": tempo + Regras.VISITA_BASE_S}
-		p.espera = Regras.VISITA_BASE_S
+		var duracao := Regras.VISITA_BASE_S / (Regras.ACELERA_COMPUTADOR if p.acelerado else 1.0)
+		visitante[base] = {"id": p.id, "mente": res["mente"], "ate": tempo + duracao}
+		p.espera = duracao
 
 
 func registrar_chegada(p: Personagem) -> void:
 	if not p.registrou():
 		p.concluiu = tempo
 		p.rota = []
+	if p.eh_jogador:
+		# Para a comparação final: os outros apressam o passo e encurtam as visitas.
+		for o in personagens:
+			if not o.eh_jogador:
+				o.acelerado = true
+				o.espera = minf(o.espera, 3.0)
+				o.rota = o.rota.slice(0, 1)   # termina o trecho atual e recalcula rumo à saída
 
 
 ## Classificação no amanhecer: só pontua quem registrou a chegada.

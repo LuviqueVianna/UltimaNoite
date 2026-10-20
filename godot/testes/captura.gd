@@ -24,6 +24,17 @@ func _init() -> void:
 		if passo % 6 == 0:
 			main.vista._revelar()
 	j.eh_jogador = true
+	if args.size() > 2 and args[2] == "dialogo_longo":
+		# Procura uma pergunta com resposta longa ou opção extra, para conferir o layout
+		main.dialogo.abrir(main.mundo, "iara")
+		main.dialogo._entrar("frente")
+		var v: Visita = main.dialogo.visita
+		for e in Dados.guardiao("iara")["entradas"]:
+			if e["id"] == "iara_09":
+				v.perguntas = [e]
+		v.indice = 0
+		j.atributos = {"forca": 1, "inteligencia": 4, "carisma": 4, "furtividade": 2, "resistencia": 1}
+		main.dialogo._mostrar_pergunta("")
 	if args.size() > 2 and args[2] == "dialogo":
 		var b: String = main.mundo.mapa.bases().keys().filter(func(x): return x != "vazia" and not j.bases_visitadas.has(x))[0]
 		main.dialogo.abrir(main.mundo, b)

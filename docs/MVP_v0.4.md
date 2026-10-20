@@ -15,7 +15,7 @@ O centro do jogo é informação incompleta: quem passou por onde, quem mente, q
 | Item | Decisão |
 |---|---|
 | Modo | **Single-player.** Os outros 3 personagens são controlados pelo computador |
-| Velocidade | Jogador 3 m/s; personagens do computador 1,5 m/s (ajustado em 20/10/2026) |
+| Velocidade | Jogador 5 m/s; personagens do computador 1,5 m/s (ajustado em 20/10/2026). Depois que o jogador registra a chegada, o computador anda 3x mais rápido e vai direto para a saída, sem novas visitas |
 | Ritmo | Tempo real, com movimento lento entre clareiras |
 | Guardiões | Só os 5 definidos (Bento, Iara, Anselmo, Marta, Quincas) + 1 base vazia. Os guardiões 6 a 9 ficam para depois dos testes |
 | Mapa | 450 × 450 m, 10 a 12 clareiras: 6 com base, 4 a 6 sem base |

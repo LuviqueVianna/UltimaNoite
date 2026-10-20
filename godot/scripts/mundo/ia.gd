@@ -57,6 +57,8 @@ static func _tem_saida_nova(p: Personagem, mapa: Mapa, no: int) -> bool:
 
 ## Vai para a saída quando já visitou todos os guardiões ou quando o tempo aperta.
 static func hora_de_ir(p: Personagem, mundo: Mundo) -> bool:
+	if p.acelerado:
+		return true   # o jogador já chegou: vai direto para a saída, sem novas visitas
 	var guardioes := Regras.BASES.keys().filter(func(b): return b != "vazia")
 	if guardioes.all(func(b): return p.bases_visitadas.has(b)):
 		return true

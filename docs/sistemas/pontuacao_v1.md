@@ -13,6 +13,7 @@
 - O jogador **sabe onde fica** a saída (aparece como uma porteira no mapa, com direção e distância no alto da tela), mas **não sabe o caminho**: precisa descobrir as trilhas.
 - Passar pela saída não encerra nada. Ao chegar, o jogador escolhe entre **registrar** (a noite dele termina e o tempo acelera até o amanhecer) ou **continuar na mata**.
 - Quem não registrar até o amanhecer **não pontua**.
+- Depois que o jogador registra a chegada, os personagens do computador param de visitar bases, andam 3 vezes mais rápido e vão direto para a saída, para o placar comparar o que cada um tinha feito até ali (pedido do usuário em 20/10/2026).
 - Os personagens do computador voltam quando já visitaram todos os guardiões ou quando o tempo aperta (estimam o caminho conhecido, ou 2,5 vezes a distância em linha reta, com 60 s de folga). Nas simulações, cerca de 9 em cada 10 chegam a tempo.
 
 ## PROPOSTA — valores dos pontos
