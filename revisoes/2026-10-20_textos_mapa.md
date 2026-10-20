@@ -2,7 +2,7 @@
 
 **Revisor:** Claude · **Data:** 20/10/2026 · **Entrega:** `entregas/2026-10-20_textos_mapa/`
 
-**Resultado:** aprovada com 13 ajustes de concordância, causados por uma lacuna do briefing (não dizia como o jogo preenche os marcadores). Os ajustes são mecânicos e o Claude os aplica ao copiar para `conteudo/`, se o usuário aprovar.
+**Resultado:** aprovada com 15 ajustes de concordância (5 janelas e 10 frases), causados por uma lacuna do briefing (não dizia como o jogo preenche os marcadores). Os ajustes são mecânicos e o Claude os aplica ao copiar para `conteudo/`, se o usuário aprovar.
 
 ## O que está bom
 
@@ -40,3 +40,7 @@
 | frases | panela | "Na {base}, eu escolheria a panela da {lado}." | "Em {base}, eu escolheria a panela da {lado}." |
 
 Para as próximas demandas, a tabela de marcadores acima passa a valer como regra.
+
+## Aplicação
+
+Aprovado pelo usuário em 20/10/2026, com os ajustes aplicados pelo Claude (sem nova volta ao ChatGPT). Conteúdo em `conteudo/textos/` e `conteudo/nomes.json`.

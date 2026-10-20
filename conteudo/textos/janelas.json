@@ -1,0 +1,305 @@
+{
+  "versao_formato": 1,
+  "janelas": [
+    {
+      "id": "bento_janela_01",
+      "base": "bento",
+      "situacao": "sozinho",
+      "texto": "Bento afia a faca devagar, de costas para a porta."
+    },
+    {
+      "id": "bento_janela_02",
+      "base": "bento",
+      "situacao": "sozinho",
+      "texto": "Bento examina um laço vazio sob a luz do lampião."
+    },
+    {
+      "id": "bento_janela_03",
+      "base": "bento",
+      "situacao": "sozinho",
+      "texto": "Bento alimenta o fogão e observa a fumaça sem piscar."
+    },
+    {
+      "id": "bento_janela_04",
+      "base": "bento",
+      "situacao": "com_visitante",
+      "texto": "Uma segunda sombra se inclina diante de Bento, junto ao fogão."
+    },
+    {
+      "id": "bento_janela_05",
+      "base": "bento",
+      "situacao": "com_visitante",
+      "texto": "Um par de {calcado_par} enlameado descansa perto da mesa de Bento."
+    },
+    {
+      "id": "bento_janela_06",
+      "base": "bento",
+      "situacao": "com_visitante",
+      "texto": "Bento aponta a faca para a mesa; alguém escuta fora de vista."
+    },
+    {
+      "id": "bento_janela_07",
+      "base": "bento",
+      "situacao": "sinal_mentira",
+      "texto": "Bento baixa os olhos e limpa a lâmina, evitando encarar a visita."
+    },
+    {
+      "id": "bento_janela_08",
+      "base": "bento",
+      "situacao": "sinal_mentira",
+      "texto": "Sem erguer o rosto, Bento passa o pano pela faca enquanto responde."
+    },
+    {
+      "id": "bento_janela_09",
+      "base": "bento",
+      "situacao": "sinal_mentira",
+      "texto": "Bento encara o fio da faca, esfregando-o com um pano durante a conversa."
+    },
+    {
+      "id": "iara_janela_01",
+      "base": "iara",
+      "situacao": "sozinho",
+      "texto": "Iara separa folhas úmidas em pequenos montes sobre a mesa."
+    },
+    {
+      "id": "iara_janela_02",
+      "base": "iara",
+      "situacao": "sozinho",
+      "texto": "Iara sopra uma tigela quente, segurando-a com as duas mãos."
+    },
+    {
+      "id": "iara_janela_03",
+      "base": "iara",
+      "situacao": "sozinho",
+      "texto": "Iara acende uma vela no oratório e murmura quase sem som."
+    },
+    {
+      "id": "iara_janela_04",
+      "base": "iara",
+      "situacao": "com_visitante",
+      "texto": "Uma silhueta recebe de Iara um ramo recém-amarrado."
+    },
+    {
+      "id": "iara_janela_05",
+      "base": "iara",
+      "situacao": "com_visitante",
+      "texto": "Folhas pisadas cercam um par de {calcado_par} diante do fogão."
+    },
+    {
+      "id": "iara_janela_06",
+      "base": "iara",
+      "situacao": "com_visitante",
+      "texto": "Iara fala baixo; alguém permanece oculto atrás da cortina."
+    },
+    {
+      "id": "iara_janela_07",
+      "base": "iara",
+      "situacao": "sinal_mentira",
+      "texto": "Iara oferece a tigela com uma mão; a outra some no avental."
+    },
+    {
+      "id": "iara_janela_08",
+      "base": "iara",
+      "situacao": "sinal_mentira",
+      "texto": "Sorrindo, Iara estende a tigela sozinha e esconde a mão livre no avental."
+    },
+    {
+      "id": "iara_janela_09",
+      "base": "iara",
+      "situacao": "sinal_mentira",
+      "texto": "Iara sustenta a tigela numa mão enquanto aperta o avental com a outra."
+    },
+    {
+      "id": "anselmo_janela_01",
+      "base": "anselmo",
+      "situacao": "sozinho",
+      "texto": "Anselmo lê de pé, imóvel entre duas velas baixas."
+    },
+    {
+      "id": "anselmo_janela_02",
+      "base": "anselmo",
+      "situacao": "sozinho",
+      "texto": "Anselmo apaga uma vela e observa a fumaça subir até a sineira."
+    },
+    {
+      "id": "anselmo_janela_03",
+      "base": "anselmo",
+      "situacao": "sozinho",
+      "texto": "Anselmo fecha o livro e inclina a cabeça para a mata."
+    },
+    {
+      "id": "anselmo_janela_04",
+      "base": "anselmo",
+      "situacao": "com_visitante",
+      "texto": "Uma figura permanece ajoelhada enquanto Anselmo escuta em silêncio."
+    },
+    {
+      "id": "anselmo_janela_05",
+      "base": "anselmo",
+      "situacao": "com_visitante",
+      "texto": "Um par de {calcado_par} surge sob o banco diante de Anselmo."
+    },
+    {
+      "id": "anselmo_janela_06",
+      "base": "anselmo",
+      "situacao": "com_visitante",
+      "texto": "Anselmo cobre o livro; outra sombra recua para longe da janela."
+    },
+    {
+      "id": "anselmo_janela_07",
+      "base": "anselmo",
+      "situacao": "sinal_mentira",
+      "texto": "Anselmo termina de falar; acima dele, sino e corda permanecem imóveis."
+    },
+    {
+      "id": "anselmo_janela_08",
+      "base": "anselmo",
+      "situacao": "sinal_mentira",
+      "texto": "A última palavra morre, mas a corda parada não move o sino."
+    },
+    {
+      "id": "anselmo_janela_09",
+      "base": "anselmo",
+      "situacao": "sinal_mentira",
+      "texto": "Anselmo conclui a resposta sob o sino quieto, com a corda sem balanço."
+    },
+    {
+      "id": "marta_janela_01",
+      "base": "marta",
+      "situacao": "sozinho",
+      "texto": "Marta limpa a luneta e vigia a mata entre cada movimento."
+    },
+    {
+      "id": "marta_janela_02",
+      "base": "marta",
+      "situacao": "sozinho",
+      "texto": "Marta confere o lampião e risca um mapa sem letras."
+    },
+    {
+      "id": "marta_janela_03",
+      "base": "marta",
+      "situacao": "sozinho",
+      "texto": "Marta observa a clareira pela luneta, imóvel junto à parede."
+    },
+    {
+      "id": "marta_janela_04",
+      "base": "marta",
+      "situacao": "com_visitante",
+      "texto": "Duas sombras atravessam o aposento estreito em direções contrárias."
+    },
+    {
+      "id": "marta_janela_05",
+      "base": "marta",
+      "situacao": "com_visitante",
+      "texto": "Um par de {calcado_par} espera junto à escada enquanto Marta aponta o mapa."
+    },
+    {
+      "id": "marta_janela_06",
+      "base": "marta",
+      "situacao": "com_visitante",
+      "texto": "Marta ergue a luneta; alguém ao lado acompanha sua direção."
+    },
+    {
+      "id": "marta_janela_07",
+      "base": "marta",
+      "situacao": "sinal_mentira",
+      "texto": "Marta já abre a boca com a resposta antes do fim da pergunta."
+    },
+    {
+      "id": "marta_janela_08",
+      "base": "marta",
+      "situacao": "sinal_mentira",
+      "texto": "Sem a pausa habitual, Marta responde com a boca pronta e o olhar fixo."
+    },
+    {
+      "id": "marta_janela_09",
+      "base": "marta",
+      "situacao": "sinal_mentira",
+      "texto": "A pergunta mal acaba e Marta dispara a resposta, sem baixar os olhos."
+    },
+    {
+      "id": "quincas_janela_01",
+      "base": "quincas",
+      "situacao": "sozinho",
+      "texto": "Quincas pesa uma moeda e confere a balança vazia."
+    },
+    {
+      "id": "quincas_janela_02",
+      "base": "quincas",
+      "situacao": "sozinho",
+      "texto": "Quincas alinha garrafas diante da janela e conta baixinho."
+    },
+    {
+      "id": "quincas_janela_03",
+      "base": "quincas",
+      "situacao": "sozinho",
+      "texto": "Quincas gira uma moeda, atento ao ranger da roda parada."
+    },
+    {
+      "id": "quincas_janela_04",
+      "base": "quincas",
+      "situacao": "com_visitante",
+      "texto": "Quincas exibe uma mercadoria para alguém escondido pelos caixotes."
+    },
+    {
+      "id": "quincas_janela_05",
+      "base": "quincas",
+      "situacao": "com_visitante",
+      "texto": "Um par de {calcado_par} aparece sob o balcão diante de Quincas."
+    },
+    {
+      "id": "quincas_janela_06",
+      "base": "quincas",
+      "situacao": "com_visitante",
+      "texto": "Duas canecas fumegam enquanto uma sombra negocia com Quincas."
+    },
+    {
+      "id": "quincas_janela_07",
+      "base": "quincas",
+      "situacao": "sinal_mentira",
+      "texto": "Quincas encolhe os ombros, esfrega as mãos e solta uma risadinha."
+    },
+    {
+      "id": "quincas_janela_08",
+      "base": "quincas",
+      "situacao": "sinal_mentira",
+      "texto": "Com os ombros curvados, Quincas ri baixo enquanto esfrega as palmas."
+    },
+    {
+      "id": "quincas_janela_09",
+      "base": "quincas",
+      "situacao": "sinal_mentira",
+      "texto": "Quincas junta os ombros e aquece as mãos numa risada curta."
+    },
+    {
+      "id": "vazia_janela_01",
+      "base": "vazia",
+      "situacao": "sem_ninguem",
+      "texto": "A lamparina apagada repousa numa mesa coberta de poeira."
+    },
+    {
+      "id": "vazia_janela_02",
+      "base": "vazia",
+      "situacao": "sem_ninguem",
+      "texto": "Uma cadeira balança devagar, embora a porta permaneça fechada."
+    },
+    {
+      "id": "vazia_janela_03",
+      "base": "vazia",
+      "situacao": "sem_ninguem",
+      "texto": "Folhas úmidas cobrem o chão; nenhum abrigo parece ter sido usado."
+    },
+    {
+      "id": "vazia_janela_04",
+      "base": "vazia",
+      "situacao": "sem_ninguem",
+      "texto": "A janela embaçada mostra apenas paredes nuas e um banco tombado."
+    },
+    {
+      "id": "vazia_janela_05",
+      "base": "vazia",
+      "situacao": "sem_ninguem",
+      "texto": "Um prato limpo espera sobre a mesa, cercado por teias antigas."
+    }
+  ]
+}

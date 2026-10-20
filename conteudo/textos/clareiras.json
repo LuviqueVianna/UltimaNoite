@@ -1,0 +1,293 @@
+{
+  "versao_formato": 1,
+  "descobertas": [
+    {
+      "id": "beco_nada_01",
+      "local": "beco",
+      "conteudo": "nada",
+      "texto": "A trilha morre num paredão de samambaias. Só o vento responde."
+    },
+    {
+      "id": "beco_nada_02",
+      "local": "beco",
+      "conteudo": "nada",
+      "texto": "Cipós fecham o caminho sobre barro intacto. Não há passagem."
+    },
+    {
+      "id": "beco_nada_03",
+      "local": "beco",
+      "conteudo": "nada",
+      "texto": "O bambuzal termina junto a um barranco úmido e silencioso."
+    },
+    {
+      "id": "beco_esconderijo_01",
+      "local": "beco",
+      "conteudo": "esconderijo",
+      "texto": "Atrás das samambaias, um vão seco permite desaparecer da trilha."
+    },
+    {
+      "id": "beco_esconderijo_02",
+      "local": "beco",
+      "conteudo": "esconderijo",
+      "texto": "Raízes arqueadas escondem um espaço estreito sob o barranco."
+    },
+    {
+      "id": "beco_esconderijo_03",
+      "local": "beco",
+      "conteudo": "esconderijo",
+      "texto": "Uma moita de bromélias encobre um recuo protegido do caminho."
+    },
+    {
+      "id": "beco_item_01",
+      "local": "beco",
+      "conteudo": "item",
+      "texto": "Entre folhas úmidas, algo foi abandonado: {item}."
+    },
+    {
+      "id": "beco_item_02",
+      "local": "beco",
+      "conteudo": "item",
+      "texto": "No fim da trilha, o barro guarda {item}."
+    },
+    {
+      "id": "beco_item_03",
+      "local": "beco",
+      "conteudo": "item",
+      "texto": "Sob uma raiz exposta, encontra-se {item}."
+    },
+    {
+      "id": "beco_animal_lobo_01",
+      "local": "beco",
+      "conteudo": "animal_lobo",
+      "texto": "Um lobo bloqueia o retorno, farejando o barro vermelho."
+    },
+    {
+      "id": "beco_animal_lobo_02",
+      "local": "beco",
+      "conteudo": "animal_lobo",
+      "texto": "Olhos atentos surgem entre as samambaias; o lobo não recua."
+    },
+    {
+      "id": "beco_animal_lobo_03",
+      "local": "beco",
+      "conteudo": "animal_lobo",
+      "texto": "O lobo ronda o barranco, silencioso demais para folhas tão secas."
+    },
+    {
+      "id": "beco_animal_coruja_01",
+      "local": "beco",
+      "conteudo": "animal_coruja",
+      "texto": "Uma coruja observa do bambu partido, virada para o caminho fechado."
+    },
+    {
+      "id": "beco_animal_coruja_02",
+      "local": "beco",
+      "conteudo": "animal_coruja",
+      "texto": "A coruja pousa numa raiz e inclina a cabeça para o barranco."
+    },
+    {
+      "id": "beco_animal_coruja_03",
+      "local": "beco",
+      "conteudo": "animal_coruja",
+      "texto": "Um bater de asas revela a coruja acima da trilha sem saída."
+    },
+    {
+      "id": "beco_animal_cao_01",
+      "local": "beco",
+      "conteudo": "animal_cao",
+      "texto": "Um cão enlameado espera no fim da trilha, sem latir."
+    },
+    {
+      "id": "beco_animal_cao_02",
+      "local": "beco",
+      "conteudo": "animal_cao",
+      "texto": "O cão fareja as raízes e mantém distância do barranco."
+    },
+    {
+      "id": "beco_animal_cao_03",
+      "local": "beco",
+      "conteudo": "animal_cao",
+      "texto": "Entre bambus quebrados, um cão vigia algo que não aparece."
+    },
+    {
+      "id": "beco_armadilha_notada_01",
+      "local": "beco",
+      "conteudo": "armadilha_notada",
+      "texto": "Sob as folhas, um laço armado cruza a única saída."
+    },
+    {
+      "id": "beco_armadilha_notada_02",
+      "local": "beco",
+      "conteudo": "armadilha_notada",
+      "texto": "Um fio quase invisível liga duas raízes diante do barranco."
+    },
+    {
+      "id": "beco_armadilha_notada_03",
+      "local": "beco",
+      "conteudo": "armadilha_notada",
+      "texto": "Folhas mal espalhadas denunciam uma mola escondida no barro."
+    },
+    {
+      "id": "beco_armadilha_acionada_01",
+      "local": "beco",
+      "conteudo": "armadilha_acionada",
+      "texto": "O laço dispara, arrancando folhas e fechando o caminho."
+    },
+    {
+      "id": "beco_armadilha_acionada_02",
+      "local": "beco",
+      "conteudo": "armadilha_acionada",
+      "texto": "Uma mola salta do barro com um estalo seco."
+    },
+    {
+      "id": "beco_armadilha_acionada_03",
+      "local": "beco",
+      "conteudo": "armadilha_acionada",
+      "texto": "O fio rompe; madeira presa desaba diante da saída."
+    },
+    {
+      "id": "clareira_vazia_nada_01",
+      "local": "clareira_vazia",
+      "conteudo": "nada",
+      "texto": "A clareira guarda apenas capim molhado e marcas antigas de fogueira."
+    },
+    {
+      "id": "clareira_vazia_nada_02",
+      "local": "clareira_vazia",
+      "conteudo": "nada",
+      "texto": "Samambaias cercam um círculo de barro onde nada se move."
+    },
+    {
+      "id": "clareira_vazia_nada_03",
+      "local": "clareira_vazia",
+      "conteudo": "nada",
+      "texto": "O luar alcança o chão vazio; uma sombra parece sobrar."
+    },
+    {
+      "id": "clareira_vazia_esconderijo_01",
+      "local": "clareira_vazia",
+      "conteudo": "esconderijo",
+      "texto": "Uma embaúba caída forma abrigo sob o tronco coberto de bromélias."
+    },
+    {
+      "id": "clareira_vazia_esconderijo_02",
+      "local": "clareira_vazia",
+      "conteudo": "esconderijo",
+      "texto": "Cipós espessos ocultam um espaço seco na borda da clareira."
+    },
+    {
+      "id": "clareira_vazia_esconderijo_03",
+      "local": "clareira_vazia",
+      "conteudo": "esconderijo",
+      "texto": "Uma moita alta abre passagem para um esconderijo entre raízes."
+    },
+    {
+      "id": "clareira_vazia_item_01",
+      "local": "clareira_vazia",
+      "conteudo": "item",
+      "texto": "No centro do barro revolvido, encontra-se {item}."
+    },
+    {
+      "id": "clareira_vazia_item_02",
+      "local": "clareira_vazia",
+      "conteudo": "item",
+      "texto": "Junto às cinzas frias, alguém deixou {item}."
+    },
+    {
+      "id": "clareira_vazia_item_03",
+      "local": "clareira_vazia",
+      "conteudo": "item",
+      "texto": "Sob folhas de embaúba, aparece {item}."
+    },
+    {
+      "id": "clareira_vazia_animal_lobo_01",
+      "local": "clareira_vazia",
+      "conteudo": "animal_lobo",
+      "texto": "Um lobo atravessa o luar e para junto à mata."
+    },
+    {
+      "id": "clareira_vazia_animal_lobo_02",
+      "local": "clareira_vazia",
+      "conteudo": "animal_lobo",
+      "texto": "O lobo fareja cinzas antigas no centro da clareira."
+    },
+    {
+      "id": "clareira_vazia_animal_lobo_03",
+      "local": "clareira_vazia",
+      "conteudo": "animal_lobo",
+      "texto": "Entre capim e sombra, o lobo observa sem mostrar os dentes."
+    },
+    {
+      "id": "clareira_vazia_animal_coruja_01",
+      "local": "clareira_vazia",
+      "conteudo": "animal_coruja",
+      "texto": "Uma coruja desce ao chão e encara marcas quase apagadas."
+    },
+    {
+      "id": "clareira_vazia_animal_coruja_02",
+      "local": "clareira_vazia",
+      "conteudo": "animal_coruja",
+      "texto": "A coruja pia num galho baixo, voltada para as cinzas."
+    },
+    {
+      "id": "clareira_vazia_animal_coruja_03",
+      "local": "clareira_vazia",
+      "conteudo": "animal_coruja",
+      "texto": "As asas cortam o luar antes de pousarem na embaúba."
+    },
+    {
+      "id": "clareira_vazia_animal_cao_01",
+      "local": "clareira_vazia",
+      "conteudo": "animal_cao",
+      "texto": "Um cão solitário fareja o centro da clareira e recua."
+    },
+    {
+      "id": "clareira_vazia_animal_cao_02",
+      "local": "clareira_vazia",
+      "conteudo": "animal_cao",
+      "texto": "O cão espera junto ao capim, atento à mata fechada."
+    },
+    {
+      "id": "clareira_vazia_animal_cao_03",
+      "local": "clareira_vazia",
+      "conteudo": "animal_cao",
+      "texto": "Um cão surge enlameado, trazendo folhas presas ao pelo."
+    },
+    {
+      "id": "clareira_vazia_armadilha_notada_01",
+      "local": "clareira_vazia",
+      "conteudo": "armadilha_notada",
+      "texto": "Uma estaca inclinada denuncia o laço escondido sob o capim."
+    },
+    {
+      "id": "clareira_vazia_armadilha_notada_02",
+      "local": "clareira_vazia",
+      "conteudo": "armadilha_notada",
+      "texto": "O barro liso demais revela uma armadilha ainda armada."
+    },
+    {
+      "id": "clareira_vazia_armadilha_notada_03",
+      "local": "clareira_vazia",
+      "conteudo": "armadilha_notada",
+      "texto": "Um fio tenso brilha entre as folhas molhadas da clareira."
+    },
+    {
+      "id": "clareira_vazia_armadilha_acionada_01",
+      "local": "clareira_vazia",
+      "conteudo": "armadilha_acionada",
+      "texto": "O laço fecha com força, sacudindo o capim ao redor."
+    },
+    {
+      "id": "clareira_vazia_armadilha_acionada_02",
+      "local": "clareira_vazia",
+      "conteudo": "armadilha_acionada",
+      "texto": "Estacas saltam do barro e quebram o silêncio da clareira."
+    },
+    {
+      "id": "clareira_vazia_armadilha_acionada_03",
+      "local": "clareira_vazia",
+      "conteudo": "armadilha_acionada",
+      "texto": "Uma corda retesa arrasta folhas até a borda da mata."
+    }
+  ]
+}

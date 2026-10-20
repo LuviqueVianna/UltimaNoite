@@ -8,7 +8,7 @@
 |---|---|---|
 | **ChatGPT** | Demanda 3: quadro de estilo do pergaminho | [docs/briefings/BRIEFING_GPT_v0.4.md](docs/briefings/BRIEFING_GPT_v0.4.md), seção 5 |
 | **Claude** | Código do MVP em Godot: etapa 1 pronta (mapa, movimento, pegadas, visão); fazendo a etapa 2 (bases e diálogo) | [godot/README.md](godot/README.md) |
-| **Usuário** | Aprovar os textos do mapa (com os 13 ajustes de concordância) | [revisoes/2026-10-20_textos_mapa.md](revisoes/2026-10-20_textos_mapa.md) |
+| **Usuário** | Escolher o estilo do pergaminho quando o ChatGPT entregar | — |
 
 ## Fila do ChatGPT
 
@@ -31,7 +31,8 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
-| 20/10/2026 | ChatGPT entregou os textos do mapa. Revisão: aprovado com 13 ajustes de concordância |
+| 20/10/2026 | Usuário aprovou os textos do mapa; o Claude aplicou 15 ajustes de concordância (agora em `conteudo/textos/`) |
+| 20/10/2026 | ChatGPT entregou os textos do mapa. Revisão: aprovado com ajustes de concordância |
 | 20/10/2026 | Etapa 1 do jogo publicada em `godot/`: mapa sorteado, movimento, pegadas com calçado, visão noturna, personagens do computador |
 | 20/10/2026 | Usuário aprovou o banco de guardiões v3.1 (agora em `conteudo/guardioes/`) e o catálogo de itens |
 | 20/10/2026 | ChatGPT entregou os ajustes v3.1. Revisão: aprovado pelo Claude, sem novos ajustes |
