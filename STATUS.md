@@ -7,8 +7,8 @@
 | Quem | Está com | Arquivo |
 |---|---|---|
 | **ChatGPT** | Demanda 3: quadro de estilo do pergaminho | [docs/briefings/BRIEFING_GPT_v0.4.md](docs/briefings/BRIEFING_GPT_v0.4.md), seção 5 |
-| **Claude** | Código do MVP em Godot: etapa 1 pronta (mapa, movimento, pegadas, visão); fazendo a etapa 2 (bases e diálogo) | [godot/README.md](godot/README.md) |
-| **Usuário** | Escolher o estilo do pergaminho quando o ChatGPT entregar | — |
+| **Claude** | Código do MVP em Godot: etapas 1 e 2 prontas (mapa, pegadas, visão, bases, diálogo, panelas); fazendo a etapa 3 (perigos, itens, habilidades) | [godot/README.md](godot/README.md) |
+| **Usuário** | Jogar as etapas 1 e 2; definir a regra de vitória; escolher o estilo do pergaminho quando o ChatGPT entregar | [docs/sistemas/visitas_v1.md](docs/sistemas/visitas_v1.md) |
 
 ## Fila do ChatGPT
 
@@ -31,6 +31,7 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
+| 20/10/2026 | Etapa 2 do jogo publicada: visitas às bases, perguntas com tom e silêncio, verificação de mentiras, indicação da panela e veneno |
 | 20/10/2026 | Usuário aprovou os textos do mapa; o Claude aplicou 15 ajustes de concordância (agora em `conteudo/textos/`) |
 | 20/10/2026 | ChatGPT entregou os textos do mapa. Revisão: aprovado com ajustes de concordância |
 | 20/10/2026 | Etapa 1 do jogo publicada em `godot/`: mapa sorteado, movimento, pegadas com calçado, visão noturna, personagens do computador |
@@ -43,4 +44,5 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 ## Pendências de decisão
 
 - [x] **Nomes dos personagens.** O jogador escolhe o seu; os do computador são sorteados de uma lista (briefing v0.4, seção 4.5).
+- [ ] **Regra de vitória e pontuação.** Hoje o amanhecer mostra só quantas panelas boas cada um comeu.
 - [x] **Catálogo de itens do inventário.** Aprovado: `docs/sistemas/itens_v1.md` e `conteudo/itens.json`.

@@ -71,3 +71,51 @@ static func _um_passo(p: Personagem, mundo: Mundo, destino: Vector2) -> void:
 			melhor = viz
 	if melhor >= 0:
 		p.rota = [melhor]
+
+
+## Visita completa de um personagem do computador: responde, recebe a indicação e come.
+static func visitar(p: Personagem, mundo: Mundo, base: String) -> Dictionary:
+	var v := Visita.new(mundo, p, base)
+	var tom: String = {"ousado": "firme", "cauteloso": "gentil", "trapaceiro": "evasivo"}.get(p.perfil, "gentil")
+	while not v.terminou_perguntas():
+		var e := v.pergunta_atual()
+		# Escolhe com hesitação: respostas que agradam são mais prováveis, mas não certas.
+		var chaves := []
+		var pesos := []
+		for o in v.opcoes():
+			var r: Dictionary = e["opcao_extra"] if o["chave"] == "extra" else e["respostas"][int(o["chave"])]
+			var verdade: bool = not e.get("verificavel", false) or mundo.resposta_verdadeira(p, base, e["id"], o["chave"])
+			if not verdade and p.perfil != "trapaceiro":
+				continue
+			chaves.append(o["chave"])
+			pesos.append(exp(float(r["afinidade"]) / Regras.ESCOLHA_TEMPERATURA))
+		var escolha := "silencio"
+		if not chaves.is_empty():
+			var total := 0.0
+			for w in pesos:
+				total += w
+			var sorteio := mundo.rng.randf() * total
+			for i in chaves.size():
+				sorteio -= pesos[i]
+				if sorteio <= 0.0:
+					escolha = chaves[i]
+					break
+			if escolha == "silencio":
+				escolha = chaves[-1]
+		v.responder(escolha, tom)
+	var ind := v.indicar()
+	if ind["pede_item"]:
+		var dar := ""
+		if p.perfil != "trapaceiro" and not p.inventario.is_empty():
+			dar = "fumo" if p.inventario.has("fumo") else p.inventario[0]
+		ind = v.pagar(dar)
+	var lado: String = ind["lado"]
+	if lado == "":
+		lado = "esquerda" if mundo.rng.randf() < 0.5 else "direita"
+	else:
+		var percebeu: bool = ind["mente"] and mundo.rng.randf() < 0.1 * p.nivel("inteligencia")
+		var desconfia: bool = p.perfil == "trapaceiro" and v.afinidade < 0
+		if percebeu or desconfia:
+			lado = "direita" if lado == "esquerda" else "esquerda"
+	v.comer(lado)
+	return {"mente": ind["mente"], "afinidade": v.afinidade}

@@ -6,6 +6,7 @@ extends RefCounted
 signal chegou_base(personagem: Personagem, base: String)
 signal aviso(texto: String)
 signal amanheceu
+signal guardiao_mentiu_para(personagem: Personagem, base: String)
 
 var mapa: Mapa
 var personagens: Array = []
@@ -13,6 +14,9 @@ var pegadas: Array = []      # {id, pos, dir, dono, calcado, t, vida}
 var tempo := 0.0
 var terminou := false
 var rng := RandomNumberGenerator.new()
+var panela_boa := {}         # base -> "esquerda" | "direita"
+var visitante := {}          # base -> {"id": personagem, "mente": bool} enquanto um personagem do computador está lá
+var _verificacao := {}
 var _proxima_pegada := 0
 var _acumulado_percepcao := 0.0
 
@@ -28,6 +32,11 @@ func iniciar(semente: int, jogador: Dictionary) -> void:
 	_embaralhar(nomes)
 	var partidas := mapa.partidas()
 	_embaralhar(partidas)
+	for b in Regras.BASES:
+		panela_boa[b] = "esquerda" if rng.randf() < 0.5 else "direita"
+	var v = Dados.ler_json("guardioes/verificacao.json")
+	_verificacao = v.get("condicoes", {}) if v is Dictionary else {}
+	var comuns := (Dados.itens().get("itens", []) as Array).filter(func(i): return i["raridade"] == "comum").map(func(i): return i["id"])
 
 	for i in 4:
 		var p := Personagem.new()
@@ -42,6 +51,8 @@ func iniciar(semente: int, jogador: Dictionary) -> void:
 			p.perfil = Regras.PERFIS[rng.randi() % Regras.PERFIS.size()]
 			p.atributos = Regras.sortear_atributos(rng)
 		p.preparar(mapa, partidas[i])
+		if not comuns.is_empty():
+			p.inventario.append(comuns[rng.randi() % comuns.size()])
 		personagens.append(p)
 	for p in personagens:
 		_perceber(p)
@@ -89,10 +100,118 @@ func _chegou(p: Personagem, no: int) -> void:
 	if base == "":
 		return
 	if p.eh_jogador:
-		chegou_base.emit(p, base)
+		if not p.bases_visitadas.has(base):
+			chegou_base.emit(p, base)
 	elif not p.bases_visitadas.has(base):
-		p.bases_visitadas[base] = tempo
+		if base == "vazia":
+			p.bases_visitadas[base] = tempo
+			return
+		var res := IA.visitar(p, self, base)
+		visitante[base] = {"id": p.id, "mente": res["mente"], "ate": tempo + Regras.VISITA_BASE_S}
 		p.espera = Regras.VISITA_BASE_S
+
+
+func item(id: String) -> Dictionary:
+	for i in Dados.itens().get("itens", []):
+		if i["id"] == id:
+			return i
+	return {}
+
+
+func embaralhar(a: Array) -> void:
+	_embaralhar(a)
+
+
+## O que se vê pela janela de uma base agora.
+func texto_janela(base: String) -> String:
+	var lista: Array = Dados.ler_json("textos/janelas.json").get("janelas", [])
+	if base == "vazia":
+		return Textos.sortear(lista, {"base": base, "situacao": "sem_ninguem"}, rng)
+	var v: Dictionary = visitante.get(base, {})
+	if v.is_empty() or tempo > v["ate"]:
+		return Textos.sortear(lista, {"base": base, "situacao": "sozinho"}, rng)
+	var o: Personagem = personagens[v["id"]]
+	var sit := "sinal_mentira" if v["mente"] else "com_visitante"
+	return Textos.preencher(Textos.sortear(lista, {"base": base, "situacao": sit}, rng),
+		{"calcado": Regras.CALCADOS[o.calcado], "calcado_par": Regras.CALCADOS_PAR[o.calcado]})
+
+
+## Fatos da noite que as perguntas verificáveis consultam (conteudo/guardioes/verificacao.json).
+func fato(p: Personagem, base: String, nome: String) -> Variant:
+	match nome:
+		"aproximacao":
+			return p.aproximacao.get(base, "frente")
+		"bases_antes":
+			return p.bases_visitadas.keys().filter(func(b): return b != base).size()
+		"esconderijos":
+			return p.esconderijos
+		"jogadores_vistos":
+			return p.vistos.size()
+		"jogadores_perto":
+			var c := 0
+			for o in personagens:
+				if o.id != p.id and o.pos.distance_to(mapa.pos(mapa.bases()[base])) <= Regras.JOGADORES_PERTO_M:
+					c += 1
+			return c
+		"itens":
+			return p.inventario.size()
+		"reconhece_calcado":
+			return p.ultima_pegada_vista >= 0 and p.vistos.has(p.ultima_pegada_vista)
+		"mentiu_antes":
+			return p.mentiras > 0
+		"mentiu_inventario":
+			return p.mentiu_inventario
+		"usou_silencio":
+			return p.silencios
+		"armadilhas_acionadas":
+			return p.armadilhas_acionadas
+		"avisou_armadilha":
+			return p.avisou_armadilha
+		"escondeu_rastro":
+			return p.escondeu_rastro
+	return null
+
+
+func resposta_verdadeira(p: Personagem, base: String, id_pergunta: String, chave: String) -> bool:
+	var conds: Array = _verificacao.get(id_pergunta, {}).get(chave, [])
+	for c in conds:
+		var valor = fato(p, base, c["fato"])
+		if valor == null:
+			continue
+		var alvo = c["valor"]
+		match c["op"]:
+			"==":
+				if valor != alvo:
+					return false
+			">=":
+				if valor < alvo:
+					return false
+			"<=":
+				if valor > alvo:
+					return false
+	return true
+
+
+## Premissas do formato v3: a pergunta só é sorteada se o fato aconteceu.
+func premissa(p: Personagem, base: String, nome: String) -> bool:
+	if nome.begins_with("marca:"):
+		return p.tem_marca(nome.substr(6))
+	match nome:
+		"viu_pegadas_alheias":
+			return p.ultima_pegada_vista >= 0
+		"reconhece_calcado":
+			return fato(p, base, "reconhece_calcado")
+		"viu_jogador":
+			return not p.vistos.is_empty()
+		"visitou_outra_base":
+			return fato(p, base, "bases_antes") > 0
+		"tem_item":
+			return not p.inventario.is_empty()
+		"usou_esconderijo":
+			return p.esconderijos > 0
+		"acionou_armadilha":
+			return p.armadilhas_acionadas > 0
+	return p.fatos_noite.has(nome)
 
 
 ## Toque do jogador no mapa: anda até o nó conhecido mais próximo do ponto tocado.
@@ -124,9 +243,13 @@ func _perceber(p: Personagem) -> void:
 			p.luzes[base] = n["pos"]
 			if p.eh_jogador:
 				aviso.emit("Uma luz âmbar aparece entre as árvores.")
+	var mais_nova := -1.0
 	for g in pegadas:
 		if g["dono"] != p.id and p.pos.distance_squared_to(g["pos"]) <= r2:
 			p.pegadas_vistas[g["id"]] = tempo
+			if g["t"] > mais_nova:
+				mais_nova = g["t"]
+				p.ultima_pegada_vista = g["dono"]
 	for o in personagens:
 		if o.id == p.id or p.pos.distance_squared_to(o.pos) > r2:
 			continue

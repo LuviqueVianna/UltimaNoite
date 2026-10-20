@@ -1,0 +1,364 @@
+{
+  "versao_formato": 1,
+  "descricao": "Condições que o jogo usa para checar se uma resposta verificável é verdadeira. Chave: id da pergunta; dentro, o índice da resposta (0, 1, 2) ou 'extra'. Resposta sem condição conta como verdadeira. Todas as condições da lista precisam valer.",
+  "fatos": {
+    "aproximacao": "'rondou' se olhou pela janela antes de entrar; senão 'frente' ou 'fundos'",
+    "bases_antes": "bases visitadas antes desta",
+    "esconderijos": "entradas em esconderijos na noite",
+    "jogadores_vistos": "personagens diferentes vistos na noite",
+    "jogadores_perto": "personagens a até 40 m da base agora",
+    "itens": "itens no inventário",
+    "reconhece_calcado": "o jogador já viu o dono das últimas pegadas alheias que viu",
+    "mentiu_antes": "alguma resposta anterior falhou na verificação",
+    "mentiu_inventario": "mentiu numa pergunta sobre inventário em outra base",
+    "usou_silencio": "vezes que ficou em silêncio em outras bases",
+    "armadilhas_acionadas": "armadilhas em que pisou",
+    "avisou_armadilha": "enviou frase de perigo depois de acionar ou notar armadilha",
+    "escondeu_rastro": "usou pano de saco ou sumir na mata na última trilha"
+  },
+  "condicoes": {
+    "bento_05": {
+      "0": [
+        {
+          "fato": "reconhece_calcado",
+          "op": "==",
+          "valor": true
+        }
+      ],
+      "1": [
+        {
+          "fato": "reconhece_calcado",
+          "op": "==",
+          "valor": false
+        }
+      ],
+      "2": [
+        {
+          "fato": "reconhece_calcado",
+          "op": "==",
+          "valor": true
+        }
+      ]
+    },
+    "bento_06": {
+      "0": [
+        {
+          "fato": "aproximacao",
+          "op": "==",
+          "valor": "rondou"
+        }
+      ],
+      "1": [
+        {
+          "fato": "aproximacao",
+          "op": "==",
+          "valor": "frente"
+        }
+      ],
+      "2": [
+        {
+          "fato": "aproximacao",
+          "op": "==",
+          "valor": "fundos"
+        }
+      ],
+      "extra": [
+        {
+          "fato": "aproximacao",
+          "op": "==",
+          "valor": "rondou"
+        }
+      ]
+    },
+    "bento_08": {
+      "0": [
+        {
+          "fato": "esconderijos",
+          "op": "==",
+          "valor": 0
+        }
+      ],
+      "1": [
+        {
+          "fato": "esconderijos",
+          "op": "==",
+          "valor": 1
+        }
+      ],
+      "2": [
+        {
+          "fato": "esconderijos",
+          "op": ">=",
+          "valor": 2
+        }
+      ],
+      "extra": [
+        {
+          "fato": "esconderijos",
+          "op": ">=",
+          "valor": 1
+        }
+      ]
+    },
+    "iara_10": {
+      "0": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": ">=",
+          "valor": 1
+        },
+        {
+          "fato": "avisou_armadilha",
+          "op": "==",
+          "valor": true
+        }
+      ],
+      "1": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": ">=",
+          "valor": 1
+        }
+      ],
+      "2": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": "==",
+          "valor": 0
+        }
+      ],
+      "extra": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": "==",
+          "valor": 0
+        }
+      ]
+    },
+    "anselmo_04": {
+      "0": [
+        {
+          "fato": "bases_antes",
+          "op": "==",
+          "valor": 0
+        }
+      ],
+      "1": [
+        {
+          "fato": "bases_antes",
+          "op": ">=",
+          "valor": 1
+        },
+        {
+          "fato": "bases_antes",
+          "op": "<=",
+          "valor": 2
+        }
+      ],
+      "2": [
+        {
+          "fato": "bases_antes",
+          "op": ">=",
+          "valor": 3
+        }
+      ]
+    },
+    "anselmo_05": {
+      "0": [
+        {
+          "fato": "mentiu_antes",
+          "op": "==",
+          "valor": true
+        }
+      ],
+      "1": [
+        {
+          "fato": "mentiu_antes",
+          "op": "==",
+          "valor": false
+        }
+      ],
+      "extra": [
+        {
+          "fato": "mentiu_antes",
+          "op": "==",
+          "valor": true
+        }
+      ]
+    },
+    "anselmo_08": {
+      "0": [
+        {
+          "fato": "jogadores_vistos",
+          "op": "==",
+          "valor": 0
+        }
+      ],
+      "1": [
+        {
+          "fato": "jogadores_vistos",
+          "op": "==",
+          "valor": 1
+        }
+      ],
+      "2": [
+        {
+          "fato": "jogadores_vistos",
+          "op": ">=",
+          "valor": 2
+        }
+      ]
+    },
+    "anselmo_09": {
+      "0": [
+        {
+          "fato": "mentiu_inventario",
+          "op": "==",
+          "valor": true
+        }
+      ],
+      "1": [
+        {
+          "fato": "mentiu_inventario",
+          "op": "==",
+          "valor": false
+        }
+      ]
+    },
+    "anselmo_11": {
+      "0": [
+        {
+          "fato": "usou_silencio",
+          "op": ">=",
+          "valor": 1
+        }
+      ],
+      "1": [
+        {
+          "fato": "usou_silencio",
+          "op": ">=",
+          "valor": 1
+        }
+      ]
+    },
+    "marta_04": {
+      "0": [
+        {
+          "fato": "jogadores_perto",
+          "op": "==",
+          "valor": 0
+        }
+      ],
+      "1": [
+        {
+          "fato": "jogadores_perto",
+          "op": "==",
+          "valor": 1
+        }
+      ],
+      "2": [
+        {
+          "fato": "jogadores_perto",
+          "op": ">=",
+          "valor": 2
+        }
+      ],
+      "extra": [
+        {
+          "fato": "jogadores_perto",
+          "op": ">=",
+          "valor": 2
+        }
+      ]
+    },
+    "marta_05": {
+      "0": [
+        {
+          "fato": "reconhece_calcado",
+          "op": "==",
+          "valor": true
+        }
+      ],
+      "2": [
+        {
+          "fato": "reconhece_calcado",
+          "op": "==",
+          "valor": true
+        }
+      ]
+    },
+    "marta_06": {
+      "2": [
+        {
+          "fato": "reconhece_calcado",
+          "op": "==",
+          "valor": true
+        }
+      ]
+    },
+    "marta_10": {
+      "2": [
+        {
+          "fato": "escondeu_rastro",
+          "op": "==",
+          "valor": true
+        }
+      ],
+      "extra": [
+        {
+          "fato": "escondeu_rastro",
+          "op": "==",
+          "valor": true
+        }
+      ]
+    },
+    "quincas_05": {
+      "0": [
+        {
+          "fato": "itens",
+          "op": "==",
+          "valor": 0
+        }
+      ],
+      "1": [
+        {
+          "fato": "itens",
+          "op": "==",
+          "valor": 1
+        }
+      ],
+      "2": [
+        {
+          "fato": "itens",
+          "op": ">=",
+          "valor": 2
+        }
+      ]
+    },
+    "quincas_06": {
+      "0": [
+        {
+          "fato": "itens",
+          "op": ">=",
+          "valor": 1
+        }
+      ],
+      "1": [
+        {
+          "fato": "itens",
+          "op": ">=",
+          "valor": 1
+        }
+      ]
+    },
+    "quincas_14": {
+      "0": [
+        {
+          "fato": "itens",
+          "op": ">=",
+          "valor": 1
+        }
+      ]
+    }
+  }
+}

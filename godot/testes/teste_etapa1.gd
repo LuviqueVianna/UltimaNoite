@@ -62,7 +62,9 @@ func _testar_noite(n: int) -> void:
 		mundo.jogador().perfil = "ousado"
 		var pico_pegadas := 0
 		var dt := 1.0 / 30.0
-		while not mundo.terminou:
+		var passos := 0
+		while not mundo.terminou and passos < 40000:
+			passos += 1
 			mundo.tick(dt)
 			pico_pegadas = maxi(pico_pegadas, mundo.pegadas.size())
 		var visitas := []

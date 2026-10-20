@@ -22,5 +22,19 @@ func _init() -> void:
 	var ok: bool = main.mundo.mover_jogador_para(main.mundo.mapa.pos(alvo))
 	for i in 600:
 		await process_frame
+	# Abre o diálogo da primeira base e joga até o fim
+	var b: String = main.mundo.mapa.bases().keys().filter(func(x): return x != "vazia")[0]
+	main.dialogo.abrir(main.mundo, b)
+	main.dialogo._olhar_janela()
+	main.dialogo._entrar("frente")
+	var guarda := 0
+	while main.dialogo.estado == "pergunta" and guarda < 10:
+		main.dialogo._responder("0")
+		guarda += 1
+	var ind_texto: String = main.dialogo.texto.text
+	if main.dialogo.visita.indicacao.get("pede_item", false):
+		main.dialogo._apresentar(main.dialogo.visita.pagar(""))
+	main.dialogo._comer("esquerda")
+	print("Diálogo: %d perguntas, afinidade %d, indicação: %s | resultado: %s" % [guarda, main.dialogo.visita.afinidade, ind_texto.replace("\n", " "), main.dialogo.texto.text.replace("\n", " ")])
 	print("Cena: tempo %.1f s | jogador andou: %s | rota aceita: %s | avisos: %s" % [main.mundo.tempo, j.pos.distance_to(inicio) > 1.0, ok, main.avisos])
 	quit()

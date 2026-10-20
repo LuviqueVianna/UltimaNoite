@@ -12,6 +12,8 @@ var rotulo_relogio: Label
 var rotulo_avisos: Label
 var painel_base: PanelContainer
 var rotulo_base: Label
+var dialogo: Dialogo
+var centro: CenterContainer
 var avisos: Array = []
 
 # Tela inicial
@@ -146,6 +148,14 @@ func _montar_noite() -> void:
 	sair.pressed.connect(func(): painel_base.visible = false)
 	caixa.add_child(sair)
 
+	centro = CenterContainer.new()
+	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
+	centro.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hud.add_child(centro)
+	dialogo = Dialogo.new()
+	centro.add_child(dialogo)
+	dialogo.fechado.connect(_ao_fechar_dialogo)
+
 	mundo.aviso.connect(_ao_aviso)
 	mundo.chegou_base.connect(_ao_chegar_base)
 	mundo.amanheceu.connect(_ao_amanhecer)
@@ -173,7 +183,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _ao_tocar(ponto: Vector2) -> void:
-	if painel_base.visible or mundo.terminou:
+	if painel_base.visible or dialogo.visible or mundo.terminou:
 		return
 	if not mundo.mover_jogador_para(ponto):
 		_ao_aviso("Você não conhece um caminho até lá.")
@@ -186,13 +196,27 @@ func _ao_aviso(texto: String) -> void:
 	rotulo_avisos.text = "\n".join(avisos)
 
 
-func _ao_chegar_base(_p: Personagem, base: String) -> void:
-	rotulo_base.text = "Você chegou à %s.\n\nO diálogo com o guardião entra na etapa 2." % Regras.BASES[base]
-	if base == "vazia":
-		rotulo_base.text = "A Tapera está vazia. Só o vento mexe na porta."
-	painel_base.visible = true
+func _ao_chegar_base(p: Personagem, base: String) -> void:
+	p.rota = []
+	dialogo.abrir(mundo, base)
+
+
+func _ao_fechar_dialogo() -> void:
+	var j := mundo.jogador()
+	var atrib := []
+	for k in Regras.ATRIBUTOS:
+		atrib.append("%s %d" % [k.substr(0, 3).capitalize(), j.atributos[k]])
+	_ao_aviso("Panelas boas: %d   ·   %s" % [j.panelas_boas(), "  ".join(atrib)])
 
 
 func _ao_amanhecer() -> void:
-	rotulo_base.text = "Amanheceu."
+	dialogo.visible = false
+	var linhas := ["Amanheceu.", ""]
+	var ordem := mundo.personagens.duplicate()
+	ordem.sort_custom(func(a, b): return a.panelas_boas() > b.panelas_boas())
+	for p in ordem:
+		linhas.append("%s — %d panela(s) boa(s), %d ruim(ns)" % [p.nome, p.panelas_boas(), p.refeicoes.size() - p.panelas_boas()])
+	linhas.append("")
+	linhas.append("(Pontuação provisória: a regra de vitória ainda não foi definida.)")
+	rotulo_base.text = "\n".join(linhas)
 	painel_base.visible = true

@@ -24,6 +24,14 @@ const CALCADOS := {
 	"descalco": "pé descalço",
 }
 
+const CALCADOS_PAR := {
+	"bota": "botas de couro",
+	"botina": "botinas",
+	"alpercata": "alpercatas",
+	"tamanco": "tamancos",
+	"descalco": "pés descalços",
+}
+
 const BASES := {
 	"bento": "Cabana do Caçador",
 	"iara": "Casa da Curandeira",
@@ -34,6 +42,45 @@ const BASES := {
 }
 
 const PERFIS := ["cauteloso", "ousado", "trapaceiro"]
+
+# ---- Visita às bases (etapa 2) ----
+const PERGUNTAS_POR_VISITA := Vector2i(4, 6)
+const SILENCIO_S := 10.0                 # tempo para responder antes de contar como silêncio
+const AFINIDADE_LIMITE := 10
+const AFINIDADE_ALTA := 8               # calibrado com o banco v3.1 (ver godot/README.md)
+const AFINIDADE_BAIXA := 1
+const ESCOLHA_TEMPERATURA := 1.5         # quanto o computador hesita entre respostas (maior = mais ao acaso)
+const MA_INTENCAO_MIN := 2               # respostas "ma" na visita para o guardião perceber
+const JOGADORES_PERTO_M := 40.0
+const TONS := ["firme", "gentil", "evasivo"]
+const MECANICAS_MVP := ["bases_visitadas", "jogadores_vistos", "esconderijo", "aproximacao", "rastros",
+	"armadilhas", "historico_respostas", "frases_prontas", "animais", "inventario"]
+
+## O que cada guardião faz em cada situação (GDD v0.3, seção 2.1 e 2.2).
+## boa = indica a boa; ruim = indica a ruim (mentindo); nada = não indica;
+## sorteio = indica uma ao acaso; preco = pede um item: dá a boa se receber, senão a ruim.
+const COMPORTAMENTO := {
+	"bento":   {"alta": "boa", "neutra": "nada",    "baixa": "ruim", "ma": "ruim"},
+	"iara":    {"alta": "boa", "neutra": "boa",     "baixa": "ruim", "ma": "ruim"},
+	"anselmo": {"alta": "boa", "neutra": "boa",     "baixa": "nada", "ma": "ruim"},
+	"marta":   {"alta": "boa", "neutra": "nada",    "baixa": "ruim", "ma": "ruim"},
+	"quincas": {"alta": "preco", "neutra": "sorteio", "baixa": "ruim", "ma": "preco"},
+}
+
+## Falas e gestos da indicação. Provisório: o banco definitivo será pedido ao ChatGPT.
+const INDICACAO := {
+	"bento": {"fala": "A da {lado}. E não volte pra reclamar.", "nada": "Escolha sozinho. Coragem não se empresta.",
+		"verdade": "Bento olha você nos olhos enquanto fala.", "mentira": "Bento limpa a faca num pano, sem olhar para você."},
+	"iara": {"fala": "Coma da {lado}, meu bem. Faz bem pro corpo.", "nada": "As duas têm o mesmo cheiro, né?",
+		"verdade": "Iara oferece a tigela com as duas mãos.", "mentira": "Iara oferece a tigela com uma mão; a outra some no avental."},
+	"anselmo": {"fala": "A da {lado}.", "nada": "Não lhe devo essa resposta.",
+		"verdade": "Quando ele termina, o sino toca uma vez.", "mentira": "Ele termina de falar. O sino não toca."},
+	"marta": {"fala": "{lado}.", "nada": "Descubra. Eu descobri.",
+		"verdade": "Marta faz uma pausa antes de responder.", "mentira": "Marta responde antes de você terminar a pergunta."},
+	"quincas": {"fala": "Pra você, a da {lado}. Palavra de comerciante.", "nada": "Sem mercadoria, sem conselho.",
+		"preco": "Uma indicação dessas tem preço. O que você me dá?",
+		"verdade": "Quincas fala com as mãos paradas sobre o balcão.", "mentira": "Quincas esfrega as mãos e solta uma risadinha."},
+}
 
 # Provisório: substituído por conteudo/nomes.json quando a demanda 2 for aprovada.
 const NOMES_PROVISORIOS := ["Zé Tonico", "Cotinha", "Bastião", "Filó", "Nhô Juca", "Sá Rita", "Tonhão", "Dita"]

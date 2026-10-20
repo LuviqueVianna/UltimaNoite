@@ -9,3 +9,4 @@ Só entra aqui o que o usuário aprovou, já pronto para o jogo ler.
 | `itens.json` | `docs/sistemas/itens_v1.md` | 20/10/2026 |
 | `textos/*.json` | `entregas/2026-10-20_textos_mapa/` + 15 ajustes de concordância (`revisoes/2026-10-20_textos_mapa.md`) | 20/10/2026 |
 | `nomes.json` | `entregas/2026-10-20_textos_mapa/` | 20/10/2026 |
+| `guardioes/verificacao.json` | Claude: condições que checam as respostas verificáveis ([visitas_v1](../docs/sistemas/visitas_v1.md)) | 20/10/2026 |

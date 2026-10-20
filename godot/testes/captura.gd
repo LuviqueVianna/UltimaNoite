@@ -20,6 +20,12 @@ func _init() -> void:
 		main.mundo.tick(1.0 / 30.0)
 		t += 1.0 / 30.0
 	j.eh_jogador = true
+	if args.size() > 2 and args[2] == "dialogo":
+		var b: String = main.mundo.mapa.bases().keys().filter(func(x): return x != "vazia" and not j.bases_visitadas.has(x))[0]
+		main.dialogo.abrir(main.mundo, b)
+		main.dialogo._olhar_janela()
+		main.dialogo._entrar("frente")
+		main.dialogo._responder("1")
 	for i in 10:
 		await process_frame
 	await RenderingServer.frame_post_draw

@@ -23,6 +23,19 @@ var passo_esquerdo := false
 
 # Estado de jogo
 var bases_visitadas := {}
+var inventario: Array = []          # ids de itens
+var marcas: Array = []              # {"marca": String, "base": String}
+var mentiras := 0                   # respostas que falharam na verificação
+var mentiu_inventario := false
+var silencios := 0
+var aproximacao := {}               # base -> "rondou" | "frente" | "fundos"
+var esconderijos := 0
+var armadilhas_acionadas := 0
+var avisou_armadilha := false
+var escondeu_rastro := false
+var refeicoes := {}                 # base -> "boa" | "ruim"
+var ultima_pegada_vista := -1       # id de personagem dono das últimas pegadas alheias vistas
+var fatos_noite := {}               # premissas que aconteceram (ex.: "lobo_avancou"), preenchidas na etapa 3
 var na_base := ""
 var no_anterior := -1
 var hesitou_no := -1
@@ -61,6 +74,33 @@ func leitura_pegadas() -> int:
 
 func velocidade() -> float:
 	return Regras.VEL_TRILHA
+
+
+func tem_marca(marca: String) -> bool:
+	for m in marcas:
+		if m["marca"] == marca:
+			return true
+	return false
+
+
+func panelas_boas() -> int:
+	return refeicoes.values().count("boa")
+
+
+## Veneno da panela ruim: tira 1 ponto da maior habilidade (empate: sorteio; mínimo 1).
+## Devolve o atributo perdido, "resistiu" ou "" se não havia o que tirar.
+func envenenar(rng: RandomNumberGenerator) -> String:
+	if rng.randf() < Regras.nivel(Regras.RESISTIR_VENENO, nivel("resistencia")):
+		return "resistiu"
+	var maior := 0
+	for k in Regras.ATRIBUTOS:
+		maior = maxi(maior, atributos[k])
+	if maior <= 1:
+		return ""
+	var candidatos := Regras.ATRIBUTOS.filter(func(k): return atributos[k] == maior)
+	var perdido: String = candidatos[rng.randi() % candidatos.size()]
+	atributos[perdido] -= 1
+	return perdido
 
 
 func preparar(mapa: Mapa, no_inicial: int) -> void:
