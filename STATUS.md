@@ -7,7 +7,7 @@
 | Quem | Está com | Arquivo |
 |---|---|---|
 | **ChatGPT** | Demanda 2: textos do mapa | [docs/briefings/BRIEFING_GPT_v0.4.md](docs/briefings/BRIEFING_GPT_v0.4.md), seção 4 |
-| **Claude** | Código do MVP em Godot | `godot/` |
+| **Claude** | Código do MVP em Godot: etapa 1 pronta (mapa, movimento, pegadas, visão); fazendo a etapa 2 (bases e diálogo) | [godot/README.md](godot/README.md) |
 | **Usuário** | Nada pendente | — |
 
 ## Fila do ChatGPT
@@ -29,6 +29,7 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
+| 20/10/2026 | Etapa 1 do jogo publicada em `godot/`: mapa sorteado, movimento, pegadas com calçado, visão noturna, personagens do computador |
 | 20/10/2026 | Usuário aprovou o banco de guardiões v3.1 (agora em `conteudo/guardioes/`) e o catálogo de itens |
 | 20/10/2026 | ChatGPT entregou os ajustes v3.1. Revisão: aprovado pelo Claude, sem novos ajustes |
 | 20/10/2026 | ChatGPT entregou o banco de guardiões v3. Revisão: aprovado com 4 ajustes pequenos |
