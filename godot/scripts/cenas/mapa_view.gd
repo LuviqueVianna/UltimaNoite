@@ -251,24 +251,24 @@ func _desenhar_arvore_em(alvo: CanvasItem, a: Dictionary) -> void:
 	var c: Vector2 = a["pos"] * ESCALA
 	var r: float = a["raio"] * ESCALA
 	var giro: float = a["giro"]
-	var tinta := Color(COR_TINTA, 0.55)
+	var escura := Color("#2a1c10", 0.88)
 	if a["tipo"] == "palmeira":
-		var linhas := PackedVector2Array()
+		# Embaúba/palmeira: folhas escuras em estrela
 		for k in 7:
 			var ang := giro + TAU * k / 7.0
-			var ponta := c + Vector2(cos(ang), sin(ang)) * r
-			linhas.append_array([c, ponta, ponta, ponta + Vector2(cos(ang + 0.9), sin(ang + 0.9)) * r * 0.3])
-		alvo.draw_multiline(linhas, tinta, 1.3)
-		alvo.draw_circle(c, r * 0.14, tinta)
+			var dir := Vector2(cos(ang), sin(ang))
+			var lado := dir.orthogonal() * r * 0.13
+			alvo.draw_colored_polygon(PackedVector2Array([c + lado, c + dir * r, c - lado]), escura)
+		alvo.draw_circle(c, r * 0.18, escura)
 		return
-	alvo.draw_circle(c, r, Color(COR_TINTA, 0.09))
+	# Copa: folhagem escura com borda recortada e um reflexo mais claro
 	var pts := PackedVector2Array()
-	for k in 19:
+	for k in 18:
 		var ang := giro + TAU * k / 18.0
 		var bico := 1.0 if k % 2 == 0 else 0.84
 		pts.append(c + Vector2(cos(ang), sin(ang)) * r * bico)
-	alvo.draw_polyline(pts, tinta, 1.3)
-	alvo.draw_circle(c + Vector2(r * 0.15, r * 0.12), r * 0.12, Color(COR_TINTA, 0.45))
+	alvo.draw_colored_polygon(pts, escura)
+	alvo.draw_circle(c + Vector2(-r * 0.25, -r * 0.25), r * 0.32, Color(COR_TINTA_CLARA, 0.35))
 
 
 func _arco_tracejado(c: Vector2, r: float, cor: Color) -> void:
