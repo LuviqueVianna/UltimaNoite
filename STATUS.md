@@ -31,6 +31,7 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
+| 20/10/2026 | Pegadas com mais contraste (borda clara, trilha discreta) e duração de 15 a 20 s, a pedido do usuário |
 | 20/10/2026 | Visual do mapa definido pelo usuário e implementado: pergaminho manchado sob a névoa, trilhas em tinta, pegadas de sola e salto. Movimento por setas e WASD |
 | 20/10/2026 | Regra de vitória decidida e implementada: chegada ao ponto oposto do mapa, classificação no amanhecer |
 | 20/10/2026 | Etapa 2 do jogo publicada: visitas às bases, perguntas com tom e silêncio, verificação de mentiras, indicação da panela e veneno |

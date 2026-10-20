@@ -16,7 +16,7 @@ const COR_PEGADA := Color("#1a120b")
 const COR_MINHA := Color("#5c2a14")
 const COR_AMBAR := Color("#e89a3c")
 const COR_MEMORIA := Color("#cdb88c")   # trilha lembrada, vista sobre a névoa
-const LARGURA_TRILHA := 0.7   # m
+const LARGURA_TRILHA := 0.45  # m (discreta, para não competir com as pegadas)
 const GLIFO := 6.0            # pegadas desenhadas maiores que o real, para leitura
 
 var mundo: Mundo
@@ -133,16 +133,16 @@ func _draw() -> void:
 			var i: int = e["amostra_ini"] + k
 			var alfa := 0.0
 			if j.amostra_percorrida[i] == 1:
-				alfa = 0.6
+				alfa = 0.32
 			else:
 				var idade := agora - j.amostra_vista[i]
 				if idade <= lembra:
-					alfa = 0.6 * (1.0 - idade / lembra)
+					alfa = 0.32 * (1.0 - idade / lembra)
 			if alfa <= 0.01:
 				continue
 			var a := pa.lerp(pb, float(k) / n)
 			var b := pa.lerp(pb, float(k + 1) / n)
-			var cor := COR_TINTA if revelado(m.amostras[i]) > 0.5 else COR_MEMORIA
+			var cor := COR_TINTA_CLARA if revelado(m.amostras[i]) > 0.5 else COR_MEMORIA
 			draw_line(a * ESCALA, b * ESCALA, Color(cor, alfa), LARGURA_TRILHA * ESCALA)
 
 	# Clareiras e bases conhecidas
@@ -244,9 +244,16 @@ func _desenhar_pegada(g: Dictionary, j: Personagem) -> void:
 	var esquerdo: bool = int(g.get("id", 0)) % 2 == 0
 	if leitura >= 2:
 		angulo += -0.12 if esquerdo else 0.12   # pés esquerdo e direito levemente abertos
+	# Borda clara (papel) por baixo, para a pegada saltar sobre a trilha e as manchas.
+	draw_set_transform(g["pos"] * ESCALA, angulo, Vector2.ONE * ESCALA * GLIFO * 1.32)
+	_forma(g["calcado"], Color(COR_PAPEL, 0.85 * alfa), Color(COR_PAPEL, 0.0))
 	draw_set_transform(g["pos"] * ESCALA, angulo, Vector2.ONE * ESCALA * GLIFO)
-	var c := Color(COR_MINHA if minha else COR_PEGADA, alfa)
-	match g["calcado"]:
+	_forma(g["calcado"], Color(COR_MINHA if minha else COR_PEGADA, alfa), Color(COR_PAPEL, alfa))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+func _forma(calcado: String, c: Color, detalhe: Color) -> void:
+	match calcado:
 		"bota":
 			_sola(Vector2(0.15, 0.2), 0.26, c)
 			_salto(Vector2(0, 0.2), Vector2(0.11, 0.07), c)
@@ -257,14 +264,14 @@ func _desenhar_pegada(g: Dictionary, j: Personagem) -> void:
 			_sola(Vector2(0.13, 0.0), 0.26, c, true)
 		"alpercata":
 			_sola(Vector2(0.09, 0.12), 0.24, c)
-			draw_line(Vector2(-0.12, 0.0), Vector2(0.12, -0.05), Color(COR_PAPEL, alfa), 0.025)
+			if detalhe.a > 0.0:
+				draw_line(Vector2(-0.12, 0.0), Vector2(0.12, -0.05), detalhe, 0.025)
 		"descalco":
 			_elipse(Vector2(0, -0.07), Vector2(0.1, 0.13), c)
 			_elipse(Vector2(0, 0.17), Vector2(0.07, 0.08), c)
 			draw_rect(Rect2(Vector2(-0.04, 0.02), Vector2(0.07, 0.12)), c)
 			for k in 5:
 				draw_circle(Vector2(-0.085 + 0.042 * k, -0.24 + abs(k - 1.5) * 0.012), 0.022, c)
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 ## Sola: frente arredondada mais larga, cintura estreita. largura.x = frente, largura.y não usada;

@@ -38,6 +38,7 @@ O centro do jogo é informação incompleta: quem passou por onde, quem mente, q
 ## 3. Visão noturna
 
 - O mapa é um **pergaminho que começa escuro e desfocado**. As áreas ficam nítidas conforme o jogador anda e enxerga.
+- **Contraste (20/10/2026):** a trilha é um traço leve só para indicar o caminho; as pegadas têm borda clara para se destacarem.
 - **Visual (decidido em 20/10/2026):** onde a névoa se abre aparece pergaminho bege com manchas de umidade e borda tostada; trilhas em tinta marrom; pegadas pretas em forma de sola e salto (bota, botina), sola fina (alpercata), bloco (tamanco) e pé com dedos (descalço). A noite em volta é azul-escura. Referências do usuário: pegadas de sola e salto sobre papel envelhecido e a paleta de mapa antigo, sem copiar elementos de obras existentes.
 - Aparecem as trilhas percorridas e o que está no alcance de vista.
 - Trilhas percorridas nunca somem. Pegadas vistas e trechos vistos de longe voltam ao escuro depois de um tempo (ver Inteligência, seção 7).
@@ -103,7 +104,7 @@ Referência de escala: velocidade na trilha de 1,5 m/s; trechos de trilha de 20 
 | Inteligência | Tempo que pegadas vistas e trechos vistos de longe ficam no mapa | 30 s | 45 s | 60 s | 90 s | 120 s |
 | Inteligência | Distância para notar uma armadilha | só ao pisar | 2 m | 3 m | 4 m | 5 m |
 | Furtividade | Usos do "sumir na mata" por noite | 1 | 1 | 2 | 2 | 3 |
-| Furtividade | Tempo que suas pegadas ficam visíveis para os outros | 120 s | 100 s | 80 s | 60 s | 40 s |
+| Furtividade | Tempo que suas pegadas ficam visíveis para os outros (ajustado em 20/10/2026) | 20 s | 19 s | 18 s | 16,5 s | 15 s |
 | Furtividade | Leitura de pegadas alheias (cumulativa) | alguém passou + calçado | + direção | + recente ou antiga | + pegadas fracas de quem andou oculto | + quantas pessoas passaram |
 | Resistência | Chance de resistir ao veneno | 0% | 10% | 20% | 30% | 40% |
 | Resistência | Redução da duração da lentidão por armadilha | 0% | 15% | 30% | 45% | 60% |
