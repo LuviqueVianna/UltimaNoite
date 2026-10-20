@@ -25,6 +25,17 @@ var fundo: ColorRect
 var mascara: Image
 var textura_mascara: ImageTexture
 var _acumulado := 0.0
+var arvores: Array = []        # {pos, raio, tipo, visivel}; só desenho, a mata já é parede nas regras
+var camada_arvores: Node2D     # redesenhada só quando aparecem árvores novas
+
+
+## Camada separada para a mata: o Godot guarda o desenho e só refaz quando pedimos.
+class CamadaArvores extends Node2D:
+	var vista: MapaView
+	func _draw() -> void:
+		for a in vista.arvores:
+			if a["visivel"]:
+				vista._desenhar_arvore_em(self, a)
 
 
 func _ready() -> void:
@@ -62,6 +73,11 @@ func preparar(m: Mundo) -> void:
 	fundo.show_behind_parent = true
 	fundo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(fundo)
+	camada_arvores = CamadaArvores.new()
+	camada_arvores.vista = self
+	camada_arvores.show_behind_parent = true
+	add_child(camada_arvores)
+	_plantar_arvores()
 	_revelar()
 
 
@@ -97,6 +113,45 @@ func _revelar() -> void:
 			if v > mascara.get_pixel(x, y).r:
 				mascara.set_pixel(x, y, Color(v, v, v))
 	textura_mascara.update(mascara)
+	var novas := false
+	for a in arvores:
+		if not a["visivel"] and a["pos"].distance_to(j.pos) <= r * 0.78:
+			a["visivel"] = true
+			novas = true
+	if novas and camada_arvores != null:
+		camada_arvores.queue_redraw()
+
+
+## Espalha a mata em volta das trilhas: copas vistas de cima, fora das trilhas e das clareiras.
+## Sorteio fixo pela semente do mapa, para a mata ser a mesma a noite toda.
+func _plantar_arvores() -> void:
+	var m := mundo.mapa
+	var rng := RandomNumberGenerator.new()
+	rng.seed = m.semente * 7 + 3
+	var segs := m.arestas.map(func(e): return [m.pos(e["a"]), m.pos(e["b"])])
+	var clareiras := m.nos.filter(func(n): return n["tipo"] == "clareira").map(func(n): return n["pos"])
+	var passo := 4.2
+	var y := -MARGEM * 0.5
+	while y < m.tamanho.y + MARGEM * 0.5:
+		var x := -MARGEM * 0.5
+		while x < m.tamanho.x + MARGEM * 0.5:
+			var p := Vector2(x, y) + Vector2(rng.randf_range(-1.6, 1.6), rng.randf_range(-1.6, 1.6))
+			x += passo
+			var raio := rng.randf_range(1.5, 2.6)
+			var ok := true
+			for c in clareiras:
+				if p.distance_to(c) < 9.0 + raio:
+					ok = false
+					break
+			if ok:
+				for sg in segs:
+					if p.distance_to(Geometry2D.get_closest_point_to_segment(p, sg[0], sg[1])) < 2.2 + raio:
+						ok = false
+						break
+			if ok:
+				arvores.append({"pos": p, "raio": raio, "tipo": "palmeira" if rng.randf() < 0.22 else "copa",
+					"giro": rng.randf() * TAU, "visivel": false})
+		y += passo * 0.87
 
 
 func revelado(p_m: Vector2) -> float:
@@ -189,6 +244,31 @@ func _draw() -> void:
 	if not j.rota.is_empty():
 		var alvo := m.pos(j.rota[-1]) * ESCALA
 		draw_arc(alvo, 10, 0, TAU, 24, Color(COR_MINHA, 0.8), 2)
+
+
+## Copa vista de cima com borda recortada (folhagem), ou embaúba/palmeira em estrela.
+func _desenhar_arvore_em(alvo: CanvasItem, a: Dictionary) -> void:
+	var c: Vector2 = a["pos"] * ESCALA
+	var r: float = a["raio"] * ESCALA
+	var giro: float = a["giro"]
+	var tinta := Color(COR_TINTA, 0.55)
+	if a["tipo"] == "palmeira":
+		var linhas := PackedVector2Array()
+		for k in 7:
+			var ang := giro + TAU * k / 7.0
+			var ponta := c + Vector2(cos(ang), sin(ang)) * r
+			linhas.append_array([c, ponta, ponta, ponta + Vector2(cos(ang + 0.9), sin(ang + 0.9)) * r * 0.3])
+		alvo.draw_multiline(linhas, tinta, 1.3)
+		alvo.draw_circle(c, r * 0.14, tinta)
+		return
+	alvo.draw_circle(c, r, Color(COR_TINTA, 0.09))
+	var pts := PackedVector2Array()
+	for k in 19:
+		var ang := giro + TAU * k / 18.0
+		var bico := 1.0 if k % 2 == 0 else 0.84
+		pts.append(c + Vector2(cos(ang), sin(ang)) * r * bico)
+	alvo.draw_polyline(pts, tinta, 1.3)
+	alvo.draw_circle(c + Vector2(r * 0.15, r * 0.12), r * 0.12, Color(COR_TINTA, 0.45))
 
 
 func _arco_tracejado(c: Vector2, r: float, cor: Color) -> void:

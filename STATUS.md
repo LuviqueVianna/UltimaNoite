@@ -31,6 +31,7 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
+| 20/10/2026 | Mata desenhada no mapa: copas e embaúbas em tinta, reveladas com a névoa. Conversa entre jogadores fica para depois (decisão do usuário) |
 | 20/10/2026 | Pegadas com mais contraste (borda clara, trilha discreta) e duração de 15 a 20 s, a pedido do usuário |
 | 20/10/2026 | Visual do mapa definido pelo usuário e implementado: pergaminho manchado sob a névoa, trilhas em tinta, pegadas de sola e salto. Movimento por setas e WASD |
 | 20/10/2026 | Regra de vitória decidida e implementada: chegada ao ponto oposto do mapa, classificação no amanhecer |
@@ -48,5 +49,6 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 - [x] **Nomes dos personagens.** O jogador escolhe o seu; os do computador são sorteados de uma lista (briefing v0.4, seção 4.5).
 - [x] **Regra de vitória.** Ganha quem fizer mais pontos e chegar ao ponto oposto do mapa antes do amanhecer.
+- [ ] **Conversa entre jogadores** (frases prontas): só de perto ou também de longe? Adiada pelo usuário em 20/10/2026.
 - [ ] **Valores dos pontos.** Proposta em `docs/sistemas/pontuacao_v1.md`.
 - [x] **Catálogo de itens do inventário.** Aprovado: `docs/sistemas/itens_v1.md` e `conteudo/itens.json`.
