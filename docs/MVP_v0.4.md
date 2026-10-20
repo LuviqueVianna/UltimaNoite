@@ -53,6 +53,13 @@ O centro do jogo é informação incompleta: quem passou por onde, quem mente, q
 - Cada um dos 4 personagens usa um **tipo de calçado**, sorteado por partida entre 5: **bota de couro, botina, alpercata, tamanco e pé descalço**. A pegada mostra o calçado.
 - Para ligar um calçado a uma pessoa, o jogador precisa **ver a pessoa** ao menos uma vez, ou receber essa informação por frase pronta (que pode ser falsa).
 
+### Nomes
+
+- **O jogador escolhe o nome do próprio personagem** (decidido em 20/10/2026).
+- Os personagens do computador recebem nomes sorteados de uma lista, sem repetir na partida.
+- Um nome só aparece para o jogador depois que ele **vê** aquele personagem, ou numa frase pronta. Nas respostas do tipo "digo quem era", o jogador escolhe entre os nomes que conhece.
+- **(sugestão)** Nome do jogador com até 12 caracteres, diferente dos nomes da lista dos personagens do computador.
+
 ---
 
 ## 5. Bases
@@ -149,6 +156,6 @@ O **inventário** é do próprio jogador; ele pode oferecer itens a um guardião
 
 ## 11. Em aberto
 
-- [ ] Nomes dos personagens (identificador usado em frases e perguntas).
+- [x] Nomes: o jogador escolhe o seu; os do computador vêm de uma lista sorteada.
 - [ ] Catálogo de itens do inventário (6 a 8 itens) — o Claude vai propor.
 - [ ] Pontuação e condição de vitória no single-player.

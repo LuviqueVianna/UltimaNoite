@@ -53,7 +53,7 @@ Os textos vêm antes da arte porque o protótipo roda com arte provisória, mas 
 
 ## 4. Demanda 2 — Textos do mapa
 
-Quatro arquivos JSON. Regras comuns:
+Cinco arquivos JSON. Regras comuns:
 - Português do Brasil, tom de suspense, frases curtas (até 15 palavras, salvo indicação).
 - **Nunca** nomear personagens nem revelar se uma informação é verdadeira. Use os marcadores entre chaves, que o jogo preenche: `{direcao}` ("ao norte", "perto do moinho"), `{calcado}`, `{personagem}`, `{base}`, `{lado}`, `{item}`.
 - IDs únicos no padrão indicado. `versao_formato: 1` em todos.
@@ -125,6 +125,23 @@ Quatro arquivos JSON. Regras comuns:
 - **8 frases por categoria**, até 10 palavras.
 - Cada frase precisa funcionar **verdadeira ou falsa**: o jogo decide o conteúdo dos marcadores. Nada de frase que só faz sentido como mentira.
 - `marcadores`: lista dos marcadores usados no texto.
+
+### 4.5 `nomes.json` — nomes dos personagens do computador
+
+O jogador escolhe o próprio nome. Os 3 personagens do computador recebem nomes sorteados desta lista.
+
+```json
+{
+  "versao_formato": 1,
+  "nomes": [
+    { "id": "nome_01", "nome": "Zé Tonico" }
+  ]
+}
+```
+
+- **24 nomes**, metade femininos e metade masculinos.
+- Nomes e apelidos do interior do Brasil em meados do século XX (ex.: Zé Tonico, Dona Cotinha, Bastião, Filó).
+- Até 12 caracteres, sem repetir, sem nomes de pessoas famosas e sem coincidir com os guardiões.
 
 ---
 

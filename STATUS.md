@@ -8,7 +8,7 @@
 |---|---|---|
 | **ChatGPT** | Demanda 1b: ajustes pequenos no banco de guardiões v3 | [revisoes/2026-10-20_guardioes_v3.md](revisoes/2026-10-20_guardioes_v3.md) |
 | **Claude** | Revisão da entrega v3 concluída; vocabulário de premissas ampliado | [docs/correcoes/CORRECOES_guardioes_v3.md](docs/correcoes/CORRECOES_guardioes_v3.md) |
-| **Usuário** | Decidir os nomes dos personagens; aprovar o catálogo de itens quando o Claude propuser | — |
+| **Usuário** | Aprovar o catálogo de itens quando o Claude propuser | — |
 
 ## Fila do ChatGPT
 
@@ -35,5 +35,5 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 ## Pendências de decisão
 
-- [ ] **Nomes dos personagens.** Frases e respostas como "digo quem era" precisam de um identificador escolhível. Sugestão do Claude: elenco de nomes e aparências sorteado por partida.
+- [x] **Nomes dos personagens.** O jogador escolhe o seu; os do computador são sorteados de uma lista (briefing v0.4, seção 4.5).
 - [ ] **Catálogo de itens do inventário** (6 a 8 itens). O Claude vai propor.
