@@ -1,0 +1,58 @@
+{
+  "versao_formato": 1,
+  "frases": [
+    { "id": "fp_panela_01", "categoria": "panela", "texto": "Na {base}, a panela da {lado} é segura.", "marcadores": ["base", "lado"] },
+    { "id": "fp_panela_02", "categoria": "panela", "texto": "Evite a panela da {lado} em {base}.", "marcadores": ["lado", "base"] },
+    { "id": "fp_panela_03", "categoria": "panela", "texto": "Escolhi a panela da {lado} em {base}.", "marcadores": ["lado", "base"] },
+    { "id": "fp_panela_04", "categoria": "panela", "texto": "O guardião de {base} indicou a panela da {lado}.", "marcadores": ["base", "lado"] },
+    { "id": "fp_panela_05", "categoria": "panela", "texto": "A panela da {lado} me fez bem em {base}.", "marcadores": ["lado", "base"] },
+    { "id": "fp_panela_06", "categoria": "panela", "texto": "Em {base}, confie na panela da {lado}.", "marcadores": ["base", "lado"] },
+    { "id": "fp_panela_07", "categoria": "panela", "texto": "Em {base}, desconfie da panela da {lado}.", "marcadores": ["base", "lado"] },
+    { "id": "fp_panela_08", "categoria": "panela", "texto": "Na {base}, eu escolheria a panela da {lado}.", "marcadores": ["base", "lado"] },
+
+    { "id": "fp_rota_01", "categoria": "rota", "texto": "A trilha {direcao} leva até {base}.", "marcadores": ["direcao", "base"] },
+    { "id": "fp_rota_02", "categoria": "rota", "texto": "Para chegar a {base}, siga {direcao}.", "marcadores": ["base", "direcao"] },
+    { "id": "fp_rota_03", "categoria": "rota", "texto": "O caminho {direcao} termina em {base}.", "marcadores": ["direcao", "base"] },
+    { "id": "fp_rota_04", "categoria": "rota", "texto": "Passei {direcao} antes de alcançar {base}.", "marcadores": ["direcao", "base"] },
+    { "id": "fp_rota_05", "categoria": "rota", "texto": "A bifurcação {direcao} conduz a {base}.", "marcadores": ["direcao", "base"] },
+    { "id": "fp_rota_06", "categoria": "rota", "texto": "Há um atalho {direcao} para {base}.", "marcadores": ["direcao", "base"] },
+    { "id": "fp_rota_07", "categoria": "rota", "texto": "Vindo de {base}, apareci {direcao}.", "marcadores": ["base", "direcao"] },
+    { "id": "fp_rota_08", "categoria": "rota", "texto": "{base} fica além da trilha {direcao}.", "marcadores": ["base", "direcao"] },
+
+    { "id": "fp_perigo_01", "categoria": "perigo", "texto": "Há uma armadilha {direcao}.", "marcadores": ["direcao"] },
+    { "id": "fp_perigo_02", "categoria": "perigo", "texto": "O lobo ronda {direcao}.", "marcadores": ["direcao"] },
+    { "id": "fp_perigo_03", "categoria": "perigo", "texto": "Evite passar {direcao}; ouvi uma armadilha.", "marcadores": ["direcao"] },
+    { "id": "fp_perigo_04", "categoria": "perigo", "texto": "Vi o lobo seguindo {direcao}.", "marcadores": ["direcao"] },
+    { "id": "fp_perigo_05", "categoria": "perigo", "texto": "A trilha {direcao} não está segura.", "marcadores": ["direcao"] },
+    { "id": "fp_perigo_06", "categoria": "perigo", "texto": "Uma armadilha fechou {direcao}.", "marcadores": ["direcao"] },
+    { "id": "fp_perigo_07", "categoria": "perigo", "texto": "Ouvi o lobo atacar {direcao}.", "marcadores": ["direcao"] },
+    { "id": "fp_perigo_08", "categoria": "perigo", "texto": "Cuidado ao entrar em {base}.", "marcadores": ["base"] },
+
+    { "id": "fp_identidade_01", "categoria": "identidade", "texto": "{personagem} usa {calcado}.", "marcadores": ["personagem", "calcado"] },
+    { "id": "fp_identidade_02", "categoria": "identidade", "texto": "O {calcado} pertence a {personagem}.", "marcadores": ["calcado", "personagem"] },
+    { "id": "fp_identidade_03", "categoria": "identidade", "texto": "Reconheci {personagem} pelo {calcado}.", "marcadores": ["personagem", "calcado"] },
+    { "id": "fp_identidade_04", "categoria": "identidade", "texto": "As pegadas de {calcado} são de {personagem}.", "marcadores": ["calcado", "personagem"] },
+    { "id": "fp_identidade_05", "categoria": "identidade", "texto": "Vi {personagem} calçando {calcado}.", "marcadores": ["personagem", "calcado"] },
+    { "id": "fp_identidade_06", "categoria": "identidade", "texto": "Quem usa {calcado} é {personagem}.", "marcadores": ["calcado", "personagem"] },
+    { "id": "fp_identidade_07", "categoria": "identidade", "texto": "{personagem} deixou marcas de {calcado}.", "marcadores": ["personagem", "calcado"] },
+    { "id": "fp_identidade_08", "categoria": "identidade", "texto": "Comparei as pegadas: {calcado} é de {personagem}.", "marcadores": ["calcado", "personagem"] },
+
+    { "id": "fp_pedido_01", "categoria": "pedido", "texto": "Preciso saber qual panela escolher em {base}.", "marcadores": ["base"] },
+    { "id": "fp_pedido_02", "categoria": "pedido", "texto": "Diga quem usa {calcado}.", "marcadores": ["calcado"] },
+    { "id": "fp_pedido_03", "categoria": "pedido", "texto": "Mostre o caminho até {base}.", "marcadores": ["base"] },
+    { "id": "fp_pedido_04", "categoria": "pedido", "texto": "Avise se encontrar perigo {direcao}.", "marcadores": ["direcao"] },
+    { "id": "fp_pedido_05", "categoria": "pedido", "texto": "Encontre-me {direcao}.", "marcadores": ["direcao"] },
+    { "id": "fp_pedido_06", "categoria": "pedido", "texto": "Conte o que viu em {base}.", "marcadores": ["base"] },
+    { "id": "fp_pedido_07", "categoria": "pedido", "texto": "Ajude a procurar {item}.", "marcadores": ["item"] },
+    { "id": "fp_pedido_08", "categoria": "pedido", "texto": "Confirme se {personagem} usa {calcado}.", "marcadores": ["personagem", "calcado"] },
+
+    { "id": "fp_aviso_01", "categoria": "aviso", "texto": "Alguém passou {direcao}.", "marcadores": ["direcao"] },
+    { "id": "fp_aviso_02", "categoria": "aviso", "texto": "A trilha {direcao} parece livre.", "marcadores": ["direcao"] },
+    { "id": "fp_aviso_03", "categoria": "aviso", "texto": "Vi movimento {direcao}.", "marcadores": ["direcao"] },
+    { "id": "fp_aviso_04", "categoria": "aviso", "texto": "A luz de {base} está acesa.", "marcadores": ["base"] },
+    { "id": "fp_aviso_05", "categoria": "aviso", "texto": "A porta de {base} acabou de fechar.", "marcadores": ["base"] },
+    { "id": "fp_aviso_06", "categoria": "aviso", "texto": "Pegadas de {calcado} seguem {direcao}.", "marcadores": ["calcado", "direcao"] },
+    { "id": "fp_aviso_07", "categoria": "aviso", "texto": "O mato foi quebrado {direcao}.", "marcadores": ["direcao"] },
+    { "id": "fp_aviso_08", "categoria": "aviso", "texto": "Encontrei {item} perto de {base}.", "marcadores": ["item", "base"] }
+  ]
+}

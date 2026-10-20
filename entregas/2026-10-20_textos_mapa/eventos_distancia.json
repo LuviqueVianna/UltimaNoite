@@ -1,0 +1,39 @@
+{
+  "versao_formato": 1,
+  "eventos": [
+    { "id": "lobo_uivou_01", "gatilho": "lobo_uivou", "texto": "Um lobo uiva {direcao}." },
+    { "id": "lobo_uivou_02", "gatilho": "lobo_uivou", "texto": "Um uivo comprido atravessa a mata {direcao}." },
+    { "id": "lobo_uivou_03", "gatilho": "lobo_uivou", "texto": "O lobo chama outra vez {direcao}." },
+    { "id": "lobo_uivou_04", "gatilho": "lobo_uivou", "texto": "Um uivo solitário ecoa {direcao}." },
+
+    { "id": "lobo_atacou_01", "gatilho": "lobo_atacou", "texto": "Um rosnado explode, seguido de luta {direcao}." },
+    { "id": "lobo_atacou_02", "gatilho": "lobo_atacou", "texto": "O lobo avança; galhos e um grito soam {direcao}." },
+    { "id": "lobo_atacou_03", "gatilho": "lobo_atacou", "texto": "Dentes estalam entre passos apressados {direcao}." },
+    { "id": "lobo_atacou_04", "gatilho": "lobo_atacou", "texto": "Um ataque rompe o silêncio da mata {direcao}." },
+
+    { "id": "coruja_piou_01", "gatilho": "coruja_piou", "texto": "Uma coruja pia duas vezes {direcao}." },
+    { "id": "coruja_piou_02", "gatilho": "coruja_piou", "texto": "O pio seco de uma coruja vem {direcao}." },
+    { "id": "coruja_piou_03", "gatilho": "coruja_piou", "texto": "Uma coruja chama no alto {direcao}." },
+    { "id": "coruja_piou_04", "gatilho": "coruja_piou", "texto": "As folhas calam quando a coruja pia {direcao}." },
+
+    { "id": "cao_latiu_01", "gatilho": "cao_latiu", "texto": "Um cão late com insistência {direcao}." },
+    { "id": "cao_latiu_02", "gatilho": "cao_latiu", "texto": "Latidos curtos respondem à noite {direcao}." },
+    { "id": "cao_latiu_03", "gatilho": "cao_latiu", "texto": "Um cão rosna e começa a latir {direcao}." },
+    { "id": "cao_latiu_04", "gatilho": "cao_latiu", "texto": "O latido de um cão corta a mata {direcao}." },
+
+    { "id": "armadilha_acionada_01", "gatilho": "armadilha_acionada", "texto": "Um estalo de metal ressoa {direcao}." },
+    { "id": "armadilha_acionada_02", "gatilho": "armadilha_acionada", "texto": "Uma mola dispara e sacode folhas {direcao}." },
+    { "id": "armadilha_acionada_03", "gatilho": "armadilha_acionada", "texto": "Madeira parte; alguma armadilha fechou {direcao}." },
+    { "id": "armadilha_acionada_04", "gatilho": "armadilha_acionada", "texto": "Um laço retesa com violência {direcao}." },
+
+    { "id": "porta_de_base_01", "gatilho": "porta_de_base", "texto": "Uma porta pesada range {direcao}." },
+    { "id": "porta_de_base_02", "gatilho": "porta_de_base", "texto": "Trincos batem e uma porta se fecha {direcao}." },
+    { "id": "porta_de_base_03", "gatilho": "porta_de_base", "texto": "Dobradiças antigas gemem {direcao}." },
+    { "id": "porta_de_base_04", "gatilho": "porta_de_base", "texto": "Uma porta bate contra o batente {direcao}." },
+
+    { "id": "mato_quebrado_01", "gatilho": "mato_quebrado", "texto": "Galhos grossos quebram em sequência {direcao}." },
+    { "id": "mato_quebrado_02", "gatilho": "mato_quebrado", "texto": "O mato fechado cede com estrondo {direcao}." },
+    { "id": "mato_quebrado_03", "gatilho": "mato_quebrado", "texto": "Bambus racham e folhas despencam {direcao}." },
+    { "id": "mato_quebrado_04", "gatilho": "mato_quebrado", "texto": "Alguém força passagem pela mata {direcao}." }
+  ]
+}
