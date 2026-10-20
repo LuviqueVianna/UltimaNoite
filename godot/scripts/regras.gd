@@ -4,7 +4,7 @@ extends RefCounted
 
 const NOITE_S := 720.0               # duração da noite no MVP (provisório)
 const VEL_TRILHA := 1.5              # m/s
-const ESPACO_PEGADA := 1.5           # m entre pegadas
+const ESPACO_PEGADA := 2.6           # m entre pegadas desenhadas (o desenho é maior que o real)
 const AMOSTRA_M := 2.0               # resolução da memória do mapa
 const RAIO_PERCORRIDO := 2.0         # amostras a essa distância viram "percorridas"
 const LUZ_BASE_M := 130.0            # de quão longe se vê a luz de uma base

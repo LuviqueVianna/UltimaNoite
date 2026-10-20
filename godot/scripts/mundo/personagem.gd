@@ -219,7 +219,7 @@ func passo(dt: float, mapa: Mapa) -> Array:
 		passo_esquerdo = not passo_esquerdo
 		var dir := (mapa.pos(para) - mapa.pos(de)).normalized()
 		var lado := -1.0 if passo_esquerdo else 1.0
-		eventos.append({"tipo": "pegada", "pos": pos + dir.orthogonal() * 0.25 * lado, "dir": dir})
+		eventos.append({"tipo": "pegada", "pos": pos + dir.orthogonal() * 0.45 * lado, "dir": dir})
 	if chegou:
 		no_atual = para
 		de = -1

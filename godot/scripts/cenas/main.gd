@@ -112,12 +112,12 @@ func _comecar() -> void:
 
 func _montar_noite() -> void:
 	vista = MapaView.new()
-	vista.mundo = mundo
 	vista.toque.connect(_ao_tocar)
 	add_child(vista)
+	vista.preparar(mundo)
 
 	camera = Camera2D.new()
-	camera.zoom = Vector2(1.6, 1.6)
+	camera.zoom = Vector2(2.4, 2.4)
 	camera.position_smoothing_enabled = true
 	vista.add_child(camera)
 	camera.make_current()
@@ -127,12 +127,16 @@ func _montar_noite() -> void:
 	rotulo_relogio = Label.new()
 	rotulo_relogio.position = Vector2(16, 12)
 	rotulo_relogio.add_theme_color_override("font_color", COR_PAPEL)
+	rotulo_relogio.add_theme_color_override("font_outline_color", Color("#0e1a2b"))
+	rotulo_relogio.add_theme_constant_override("outline_size", 6)
 	hud.add_child(rotulo_relogio)
 
 	rotulo_avisos = Label.new()
 	rotulo_avisos.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	rotulo_avisos.position = Vector2(16, -140)
 	rotulo_avisos.add_theme_color_override("font_color", COR_PAPEL)
+	rotulo_avisos.add_theme_color_override("font_outline_color", Color("#0e1a2b"))
+	rotulo_avisos.add_theme_constant_override("outline_size", 6)
 	hud.add_child(rotulo_avisos)
 
 	painel_base = PanelContainer.new()

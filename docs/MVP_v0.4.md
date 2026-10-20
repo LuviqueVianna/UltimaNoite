@@ -38,6 +38,7 @@ O centro do jogo é informação incompleta: quem passou por onde, quem mente, q
 ## 3. Visão noturna
 
 - O mapa é um **pergaminho que começa escuro e desfocado**. As áreas ficam nítidas conforme o jogador anda e enxerga.
+- **Visual (decidido em 20/10/2026):** onde a névoa se abre aparece pergaminho bege com manchas de umidade e borda tostada; trilhas em tinta marrom; pegadas pretas em forma de sola e salto (bota, botina), sola fina (alpercata), bloco (tamanco) e pé com dedos (descalço). A noite em volta é azul-escura. Referências do usuário: pegadas de sola e salto sobre papel envelhecido e a paleta de mapa antigo, sem copiar elementos de obras existentes.
 - Aparecem as trilhas percorridas e o que está no alcance de vista.
 - Trilhas percorridas nunca somem. Pegadas vistas e trechos vistos de longe voltam ao escuro depois de um tempo (ver Inteligência, seção 7).
 - **(sugestão)** A luz âmbar das bases se vê de longe, como ponto de luz, sem a trilha até ela.

@@ -16,9 +16,13 @@ func _init() -> void:
 	j.eh_jogador = false
 	j.perfil = "ousado"
 	var t := 0.0
+	var passo := 0
 	while t < segundos:
 		main.mundo.tick(1.0 / 30.0)
 		t += 1.0 / 30.0
+		passo += 1
+		if passo % 6 == 0:
+			main.vista._revelar()
 	j.eh_jogador = true
 	if args.size() > 2 and args[2] == "dialogo":
 		var b: String = main.mundo.mapa.bases().keys().filter(func(x): return x != "vazia" and not j.bases_visitadas.has(x))[0]
@@ -28,6 +32,8 @@ func _init() -> void:
 		main.dialogo._responder("1")
 	if args.size() > 2 and args[2] == "longe":
 		main.camera.zoom = Vector2(0.75, 0.75)
+	if args.size() > 2 and args[2] == "perto":
+		main.camera.zoom = Vector2(3.2, 3.2)
 	for i in 10:
 		await process_frame
 	await RenderingServer.frame_post_draw

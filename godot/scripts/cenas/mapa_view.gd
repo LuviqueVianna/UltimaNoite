@@ -1,29 +1,112 @@
 class_name MapaView
 extends Node2D
-## Desenha a noite do ponto de vista do jogador: só o que ele percorreu, vê agora ou ainda lembra.
-## Visual provisório até a escolha do estilo de pergaminho (demanda 3 do ChatGPT).
+## Desenha a noite do ponto de vista do jogador. Onde ele andou e enxergou, a névoa se abre
+## e aparece o pergaminho bege manchado, com trilhas em tinta marrom e pegadas pretas de sola e salto.
+## Direção de arte pedida pelo usuário em 20/10/2026.
 
 signal toque(ponto_m: Vector2)
 
-const ESCALA := 4.0          # px por metro
+const ESCALA := 4.0           # px por metro
+const MARGEM := 40.0          # m de névoa em volta da área do mapa
 const COR_NOITE := Color("#0e1a2b")
-const COR_PAPEL := Color("#e8d9b5")
-const COR_TINTA := Color("#d9c79a")
+const COR_PAPEL := Color("#dcc596")
+const COR_TINTA := Color("#4a321c")
+const COR_TINTA_CLARA := Color("#7a5a36")
+const COR_PEGADA := Color("#1a120b")
+const COR_MINHA := Color("#5c2a14")
 const COR_AMBAR := Color("#e89a3c")
-const COR_MATA := Color("#1f3328")
-const LARGURA_TRILHA := 1.6  # m
-const GLIFO := 1.8           # pegadas desenhadas maiores que o real, para leitura
+const COR_MEMORIA := Color("#cdb88c")   # trilha lembrada, vista sobre a névoa
+const LARGURA_TRILHA := 0.7   # m
+const GLIFO := 6.0            # pegadas desenhadas maiores que o real, para leitura
 
 var mundo: Mundo
 var fonte: Font
+var fundo: ColorRect
+var mascara: Image
+var textura_mascara: ImageTexture
+var _acumulado := 0.0
 
 
 func _ready() -> void:
 	fonte = ThemeDB.fallback_font
 
 
-func _process(_dt: float) -> void:
+func preparar(m: Mundo) -> void:
+	mundo = m
+	var area := mundo.mapa.tamanho + Vector2.ONE * MARGEM * 2.0
+	mascara = Image.create(int(area.x), int(area.y), false, Image.FORMAT_L8)
+	mascara.fill(Color.BLACK)
+	textura_mascara = ImageTexture.create_from_image(mascara)
+
+	var ruido := NoiseTexture2D.new()
+	ruido.width = 256
+	ruido.height = 256
+	ruido.seamless = true
+	var fn := FastNoiseLite.new()
+	fn.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	fn.frequency = 0.012
+	fn.fractal_octaves = 4
+	fn.seed = mundo.mapa.semente
+	ruido.noise = fn
+
+	var material := ShaderMaterial.new()
+	material.shader = load("res://cenas/pergaminho.gdshader")
+	material.set_shader_parameter("mascara", textura_mascara)
+	material.set_shader_parameter("ruido", ruido)
+	material.set_shader_parameter("tamanho_m", area)
+
+	fundo = ColorRect.new()
+	fundo.material = material
+	fundo.position = -Vector2.ONE * MARGEM * ESCALA
+	fundo.size = area * ESCALA
+	fundo.show_behind_parent = true
+	fundo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(fundo)
+	_revelar()
+
+
+func _process(dt: float) -> void:
+	if mundo == null:
+		return
+	_acumulado += dt
+	if _acumulado >= Regras.PERCEPCAO_INTERVALO:
+		_acumulado = 0.0
+		_revelar()
+	var j := mundo.jogador()
+	var mat := fundo.material as ShaderMaterial
+	mat.set_shader_parameter("jogador_m", j.pos + Vector2.ONE * MARGEM)
+	mat.set_shader_parameter("alcance", j.alcance())
 	queue_redraw()
+
+
+## Abre a névoa em volta do jogador, de forma permanente (borda suave).
+func _revelar() -> void:
+	var j := mundo.jogador()
+	var centro := j.pos + Vector2.ONE * MARGEM
+	var r := j.alcance() * 1.2
+	var x0 := maxi(0, int(centro.x - r))
+	var x1 := mini(mascara.get_width() - 1, int(centro.x + r))
+	var y0 := maxi(0, int(centro.y - r))
+	var y1 := mini(mascara.get_height() - 1, int(centro.y + r))
+	for y in range(y0, y1 + 1):
+		for x in range(x0, x1 + 1):
+			var d := centro.distance_to(Vector2(x + 0.5, y + 0.5))
+			if d > r:
+				continue
+			var v := clampf((r - d) / (r * 0.45), 0.0, 1.0)
+			if v > mascara.get_pixel(x, y).r:
+				mascara.set_pixel(x, y, Color(v, v, v))
+	textura_mascara.update(mascara)
+
+
+func revelado(p_m: Vector2) -> float:
+	var q := p_m + Vector2.ONE * MARGEM
+	var x := clampi(int(q.x), 0, mascara.get_width() - 1)
+	var y := clampi(int(q.y), 0, mascara.get_height() - 1)
+	var v := mascara.get_pixel(x, y).r
+	if mundo.jogador().pos.distance_to(p_m) <= mundo.jogador().alcance() * 0.8:
+		v = 1.0
+	return v
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -41,10 +124,7 @@ func _draw() -> void:
 	var agora := mundo.tempo
 	var lembra := j.lembranca()
 
-	draw_rect(Rect2(Vector2(-200, -200), (m.tamanho + Vector2(400, 400)) * ESCALA), COR_NOITE)
-	draw_circle(j.pos * ESCALA, j.alcance() * ESCALA, Color(COR_MATA, 0.55))
-
-	# Trilhas: percorridas ficam; vistas de longe somem com o tempo.
+	# Trilhas em tinta. Percorridas ficam; vistas de longe somem com o tempo.
 	for e in m.arestas:
 		var pa := m.pos(e["a"])
 		var pb := m.pos(e["b"])
@@ -53,16 +133,17 @@ func _draw() -> void:
 			var i: int = e["amostra_ini"] + k
 			var alfa := 0.0
 			if j.amostra_percorrida[i] == 1:
-				alfa = 0.9
+				alfa = 0.6
 			else:
 				var idade := agora - j.amostra_vista[i]
 				if idade <= lembra:
-					alfa = 0.75 * (1.0 - idade / lembra)
+					alfa = 0.6 * (1.0 - idade / lembra)
 			if alfa <= 0.01:
 				continue
 			var a := pa.lerp(pb, float(k) / n)
 			var b := pa.lerp(pb, float(k + 1) / n)
-			draw_line(a * ESCALA, b * ESCALA, Color(COR_TINTA, alfa), LARGURA_TRILHA * ESCALA)
+			var cor := COR_TINTA if revelado(m.amostras[i]) > 0.5 else COR_MEMORIA
+			draw_line(a * ESCALA, b * ESCALA, Color(cor, alfa), LARGURA_TRILHA * ESCALA)
 
 	# Clareiras e bases conhecidas
 	for no in m.nos:
@@ -71,11 +152,12 @@ func _draw() -> void:
 		var p: Vector2 = no["pos"] * ESCALA
 		match no["tipo"]:
 			"clareira":
-				draw_circle(p, 8.0 * ESCALA, Color(COR_PAPEL, 0.12))
-				draw_arc(p, 8.0 * ESCALA, 0, TAU, 32, Color(COR_PAPEL, 0.5), 1.5)
+				draw_circle(p, 8.0 * ESCALA, Color(COR_TINTA, 0.08))
+				_arco_tracejado(p, 8.0 * ESCALA, Color(COR_TINTA, 0.7))
 			"beco":
-				draw_line(p + Vector2(-6, -6), p + Vector2(6, 6), Color(COR_PAPEL, 0.6), 2)
-				draw_line(p + Vector2(-6, 6), p + Vector2(6, -6), Color(COR_PAPEL, 0.6), 2)
+				var cor := Color(COR_TINTA, 0.8)
+				draw_line(p + Vector2(-5, -5), p + Vector2(5, 5), cor, 2)
+				draw_line(p + Vector2(-5, 5), p + Vector2(5, -5), cor, 2)
 		if no["base"] != "":
 			_desenhar_base(no["pos"], no["base"])
 
@@ -85,13 +167,11 @@ func _draw() -> void:
 		if j.no_visto[no_base] == 1:
 			continue
 		var p: Vector2 = j.luzes[b] * ESCALA
-		draw_circle(p, 9, Color(COR_AMBAR, 0.18))
+		draw_circle(p, 12, Color(COR_AMBAR, 0.15))
 		draw_circle(p, 4, COR_AMBAR)
 
-	# Saída do jogador: ele sabe para onde precisa ir, não o caminho.
 	_desenhar_saida(m.pos(j.saida))
 
-	# Pegadas
 	for g in mundo.pegadas:
 		if mundo.pegada_visivel_para(j, g):
 			_desenhar_pegada(g, j)
@@ -102,74 +182,116 @@ func _draw() -> void:
 			continue
 		if agora - j.vistos.get(o.id, -1.0e9) > Regras.PERCEPCAO_INTERVALO * 1.5:
 			continue
-		draw_circle(o.pos * ESCALA, 1.2 * ESCALA, Color(COR_PAPEL, 0.9))
-		draw_string(fonte, o.pos * ESCALA + Vector2(8, -8), o.nome, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, COR_PAPEL)
-	draw_circle(j.pos * ESCALA, 1.4 * ESCALA, COR_AMBAR)
-	draw_arc(j.pos * ESCALA, 1.4 * ESCALA, 0, TAU, 24, COR_NOITE, 2)
+		draw_circle(o.pos * ESCALA, 1.3 * ESCALA, COR_TINTA)
+		draw_string(fonte, o.pos * ESCALA + Vector2(9, -9), o.nome, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COR_TINTA)
+	draw_circle(j.pos * ESCALA, 1.5 * ESCALA, COR_AMBAR)
+	draw_arc(j.pos * ESCALA, 1.5 * ESCALA, 0, TAU, 24, COR_TINTA, 2)
 	if not j.rota.is_empty():
 		var alvo := m.pos(j.rota[-1]) * ESCALA
-		draw_arc(alvo, 10, 0, TAU, 24, Color(COR_AMBAR, 0.7), 2)
+		draw_arc(alvo, 10, 0, TAU, 24, Color(COR_MINHA, 0.8), 2)
 
 
-## Planta baixa provisória: casa, porta da frente (baixo), fundos (cima), janela (lado) e esconderijo.
+func _arco_tracejado(c: Vector2, r: float, cor: Color) -> void:
+	for k in 24:
+		if k % 2 == 0:
+			draw_arc(c, r, TAU * k / 24.0, TAU * (k + 1) / 24.0, 4, cor, 1.5)
+
+
+## Planta baixa: casa em tinta, porta da frente (baixo), fundos (cima), janela acesa (lado) e moita de esconderijo.
 func _desenhar_base(pos_m: Vector2, base: String) -> void:
 	var c := pos_m * ESCALA
 	var tam := Vector2(10, 7) * ESCALA
 	var r := Rect2(c - tam / 2, tam)
-	var luz := base != "vazia"
-	draw_rect(r, Color(COR_PAPEL, 0.18))
-	draw_rect(r, COR_PAPEL, false, 2)
-	draw_rect(Rect2(c + Vector2(-1.2, tam.y / 2 / ESCALA - 0.4) * ESCALA, Vector2(2.4, 0.8) * ESCALA), COR_PAPEL)        # frente
-	draw_rect(Rect2(c + Vector2(-1.0, -tam.y / 2 / ESCALA - 0.4) * ESCALA, Vector2(2.0, 0.8) * ESCALA), COR_PAPEL)       # fundos
-	draw_rect(Rect2(c + Vector2(tam.x / 2 / ESCALA - 0.4, -1.2) * ESCALA, Vector2(0.8, 2.4) * ESCALA), COR_AMBAR if luz else COR_PAPEL)  # janela
-	draw_circle(c + Vector2(-9, -6) * ESCALA, 2.2 * ESCALA, Color(COR_MATA, 0.9))                                         # esconderijo
-	draw_string(fonte, c + Vector2(-tam.x / 2, -tam.y / 2 - 3.5 * ESCALA), Regras.BASES[base], HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COR_PAPEL)
+	draw_rect(r, Color(COR_TINTA, 0.12))
+	draw_rect(r, COR_TINTA, false, 2.5)
+	draw_line(c + Vector2(-tam.x / 2, 0), c + Vector2(tam.x / 2 - 3 * ESCALA, 0), Color(COR_TINTA, 0.6), 1.5)
+	draw_rect(Rect2(c + Vector2(-1.2, tam.y / 2 / ESCALA - 0.4) * ESCALA, Vector2(2.4, 0.8) * ESCALA), COR_PAPEL)
+	draw_rect(Rect2(c + Vector2(-1.2, tam.y / 2 / ESCALA - 0.4) * ESCALA, Vector2(2.4, 0.8) * ESCALA), COR_TINTA, false, 1.5)
+	draw_rect(Rect2(c + Vector2(-1.0, -tam.y / 2 / ESCALA - 0.4) * ESCALA, Vector2(2.0, 0.8) * ESCALA), COR_PAPEL)
+	draw_rect(Rect2(c + Vector2(-1.0, -tam.y / 2 / ESCALA - 0.4) * ESCALA, Vector2(2.0, 0.8) * ESCALA), COR_TINTA, false, 1.5)
+	var janela := Rect2(c + Vector2(tam.x / 2 / ESCALA - 0.4, -1.2) * ESCALA, Vector2(0.8, 2.4) * ESCALA)
+	draw_rect(janela, COR_AMBAR if base != "vazia" else COR_PAPEL)
+	draw_rect(janela, COR_TINTA, false, 1.5)
+	for k in 5:
+		var a := TAU * k / 5.0
+		draw_circle(c + Vector2(-9, -6) * ESCALA + Vector2(cos(a), sin(a)) * 1.1 * ESCALA, 1.1 * ESCALA, Color(COR_TINTA, 0.35))
+	draw_string(fonte, c + Vector2(-tam.x / 2, -tam.y / 2 - 3.5 * ESCALA), Regras.BASES[base], HORIZONTAL_ALIGNMENT_LEFT, -1, 15, COR_TINTA)
 
 
 ## Porteira de duas estacas com travessa: o ponto oposto do mapa, onde se registra a chegada.
 func _desenhar_saida(pos_m: Vector2) -> void:
 	var c := pos_m * ESCALA
-	var cor := Color(COR_AMBAR, 0.9)
-	draw_circle(c, 7.0 * ESCALA, Color(COR_AMBAR, 0.08))
+	var claro := revelado(pos_m) > 0.5
+	var cor := COR_MINHA if claro else COR_AMBAR
+	draw_circle(c, 7.0 * ESCALA, Color(COR_AMBAR, 0.1))
 	draw_line(c + Vector2(-3, -2) * ESCALA, c + Vector2(-3, 2.5) * ESCALA, cor, 3)
 	draw_line(c + Vector2(3, -2) * ESCALA, c + Vector2(3, 2.5) * ESCALA, cor, 3)
 	draw_line(c + Vector2(-3, -1) * ESCALA, c + Vector2(3, -1) * ESCALA, cor, 2)
 	draw_line(c + Vector2(-3, 1) * ESCALA, c + Vector2(3, 1) * ESCALA, cor, 2)
-	draw_string(fonte, c + Vector2(-14, -4 * ESCALA), "Saída", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COR_AMBAR)
+	draw_string(fonte, c + Vector2(-14, -4 * ESCALA), "Saída", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, cor)
 
 
+## Pegada em forma de sola e salto (ou pé descalço). Coordenadas em metros, frente para cima.
 func _desenhar_pegada(g: Dictionary, j: Personagem) -> void:
 	var minha: bool = g["dono"] == j.id
 	var leitura := 5 if minha else j.leitura_pegadas()
-	var cor := COR_AMBAR if minha else COR_PAPEL
-	var alfa := 0.85
+	var alfa := 0.9
 	if leitura >= 3 or minha:
-		alfa = clampf(1.0 - (mundo.tempo - g["t"]) / g["vida"], 0.15, 0.9)
+		alfa = clampf(1.0 - (mundo.tempo - g["t"]) / g["vida"], 0.2, 0.92)
 	if minha:
-		alfa *= 0.55
+		alfa *= 0.85
 	var angulo: float = g["dir"].angle() + PI / 2 if leitura >= 2 else 0.0
+	var esquerdo: bool = int(g.get("id", 0)) % 2 == 0
+	if leitura >= 2:
+		angulo += -0.12 if esquerdo else 0.12   # pés esquerdo e direito levemente abertos
 	draw_set_transform(g["pos"] * ESCALA, angulo, Vector2.ONE * ESCALA * GLIFO)
-	var c := Color(cor, alfa)
+	var c := Color(COR_MINHA if minha else COR_PEGADA, alfa)
 	match g["calcado"]:
 		"bota":
-			_elipse(Vector2.ZERO, Vector2(0.38, 0.8), c)
+			_sola(Vector2(0.15, 0.2), 0.26, c)
+			_salto(Vector2(0, 0.2), Vector2(0.11, 0.07), c)
 		"botina":
-			_elipse(Vector2(0, -0.12), Vector2(0.32, 0.55), c)
-			draw_rect(Rect2(Vector2(-0.26, 0.45), Vector2(0.52, 0.3)), c)
-		"alpercata":
-			_elipse(Vector2.ZERO, Vector2(0.2, 0.75), c)
+			_sola(Vector2(0.12, 0.16), 0.21, c)
+			_salto(Vector2(0, 0.17), Vector2(0.09, 0.06), c)
 		"tamanco":
-			draw_rect(Rect2(Vector2(-0.34, -0.7), Vector2(0.68, 1.4)), c)
+			_sola(Vector2(0.13, 0.0), 0.26, c, true)
+		"alpercata":
+			_sola(Vector2(0.09, 0.12), 0.24, c)
+			draw_line(Vector2(-0.12, 0.0), Vector2(0.12, -0.05), Color(COR_PAPEL, alfa), 0.025)
 		"descalco":
-			_elipse(Vector2(0, 0.1), Vector2(0.26, 0.5), c)
-			for k in 3:
-				draw_circle(Vector2(-0.18 + 0.18 * k, -0.55), 0.09, c)
+			_elipse(Vector2(0, -0.07), Vector2(0.1, 0.13), c)
+			_elipse(Vector2(0, 0.17), Vector2(0.07, 0.08), c)
+			draw_rect(Rect2(Vector2(-0.04, 0.02), Vector2(0.07, 0.12)), c)
+			for k in 5:
+				draw_circle(Vector2(-0.085 + 0.042 * k, -0.24 + abs(k - 1.5) * 0.012), 0.022, c)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+## Sola: frente arredondada mais larga, cintura estreita. largura.x = frente, largura.y não usada;
+## comprimento = metade do comprimento da sola.
+## inteira = true: sola e salto num bloco só (tamanco).
+func _sola(largura: Vector2, comprimento: float, cor: Color, inteira := false) -> void:
+	var pts := PackedVector2Array()
+	var frente := largura.x
+	for k in 9:
+		var a := PI + PI * k / 8.0
+		pts.append(Vector2(cos(a) * frente, -comprimento * 0.45 + sin(a) * comprimento * 0.55))
+	var fundo := comprimento * (1.0 if inteira else 0.45)
+	var cintura := 0.8 if inteira else 0.55
+	pts.append(Vector2(frente * 0.75, comprimento * 0.15))
+	pts.append(Vector2(frente * cintura, fundo))
+	pts.append(Vector2(-frente * cintura, fundo))
+	pts.append(Vector2(-frente * 0.75, comprimento * 0.15))
+	draw_colored_polygon(pts, cor)
+
+
+func _salto(centro: Vector2, meio: Vector2, cor: Color) -> void:
+	_elipse(centro + Vector2(0, 0.08), meio, cor)
 
 
 func _elipse(centro: Vector2, raio: Vector2, cor: Color) -> void:
 	var pts := PackedVector2Array()
-	for k in 12:
-		var a := TAU * k / 12.0
+	for k in 14:
+		var a := TAU * k / 14.0
 		pts.append(centro + Vector2(cos(a) * raio.x, sin(a) * raio.y))
 	draw_colored_polygon(pts, cor)
