@@ -1,0 +1,60 @@
+{
+  "guardiao": "iara",
+  "versao_formato": 3,
+  "modificadores_tom": {
+    "firme": 0,
+    "gentil": 1,
+    "evasivo": -1
+  },
+  "reputacao": {
+    "delatou_jogador": -2,
+    "protegeu_identidade": 1,
+    "alertou_perigo": 1,
+    "explorou_vulneravel": -2,
+    "enviou_dica_falsa": -2
+  },
+  "status": "fora_do_mvp",
+  "motivo": "Depende de mecânica suspensa no MVP v0.4; preservada para uso futuro.",
+  "entradas": [
+    {
+      "id": "iara_12",
+      "tipo": "pergunta",
+      "texto": "Você recebeu uma prenda contra outro jogador? O que fez?",
+      "verificavel": true,
+      "verificacao": "Checar prenda recebida e se foi cumprida, recusada ou ainda está ativa.",
+      "requer": [
+        "prendas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "respostas": [
+        {
+          "texto": "Recusei prejudicar a pessoa, mesmo pagando o custo.",
+          "afinidade": 3,
+          "intencao": "boa",
+          "registra": [
+            "recusou_prejudicar"
+          ]
+        },
+        {
+          "texto": "Cumpri. Era a forma de continuar na partida.",
+          "afinidade": 0,
+          "intencao": null
+        },
+        {
+          "texto": "Ainda não decidi; estou procurando uma saída.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Procurei a pessoa e revelei a prenda antes de agir.",
+        "afinidade": 2
+      }
+    }
+  ]
+}

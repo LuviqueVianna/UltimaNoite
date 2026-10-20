@@ -1,0 +1,59 @@
+{
+  "guardiao": "marta",
+  "versao_formato": 3,
+  "modificadores_tom": {
+    "firme": 1,
+    "gentil": -1,
+    "evasivo": 0
+  },
+  "reputacao": {
+    "delatou_jogador": 2,
+    "protegeu_identidade": -2,
+    "protegeu_jogador": -2,
+    "alertou_perigo": -1
+  },
+  "status": "fora_do_mvp",
+  "motivo": "Depende de mecânica suspensa no MVP v0.4; preservada para uso futuro.",
+  "entradas": [
+    {
+      "id": "marta_06",
+      "tipo": "pergunta",
+      "texto": "Você recebeu algum alerta anônimo de furtividade?",
+      "verificavel": true,
+      "verificacao": "Checar alertas de furtividade recebidos.",
+      "requer": [
+        "alerta_furtividade"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Sim, perto da última clareira.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Não recebi nenhum.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Recebi, mas guardo a direção.",
+          "afinidade": 0,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Estimo a direção pelo intervalo do eco, sem afirmar certeza.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    }
+  ]
+}

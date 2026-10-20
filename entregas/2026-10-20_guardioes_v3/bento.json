@@ -1,0 +1,511 @@
+{
+  "guardiao": "bento",
+  "versao_formato": 3,
+  "modificadores_tom": {
+    "firme": 2,
+    "gentil": -1,
+    "evasivo": -2
+  },
+  "reputacao": {
+    "confessou_mentira": 1,
+    "alertou_perigo": 1,
+    "protegeu_identidade": -1,
+    "enviou_dica_falsa": -2
+  },
+  "entradas": [
+    {
+      "id": "bento_01",
+      "tipo": "narracao",
+      "texto": "Bento finca a faca na tábua e mede a lama nas botas do visitante."
+    },
+    {
+      "id": "bento_02",
+      "tipo": "fala",
+      "texto": "Aqui não tem conversa bonita: tem escolha e consequência."
+    },
+    {
+      "id": "bento_03",
+      "tipo": "fala",
+      "texto": "Pode ter corrido. Só não venha me vender fuga com nome de coragem."
+    },
+    {
+      "id": "bento_04",
+      "tipo": "pergunta",
+      "texto": "Quando o lobo avançou, você correu ou ficou?",
+      "verificavel": true,
+      "verificacao": "Checar a reação do jogador quando o lobo rosnou e avançou.",
+      "requer": [
+        "animais"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "contradicao": {
+        "afinidade": -3
+      },
+      "respostas": [
+        {
+          "texto": "Corri, sim. Quis continuar vivo.",
+          "afinidade": 1,
+          "intencao": null,
+          "registra": [
+            "confessou_fuga"
+          ],
+          "contradiz": [
+            "alegou_coragem"
+          ]
+        },
+        {
+          "texto": "Fiquei e sustentei o olhar.",
+          "afinidade": 3,
+          "intencao": null,
+          "registra": [
+            "alegou_coragem"
+          ],
+          "contradiz": [
+            "confessou_fuga"
+          ]
+        },
+        {
+          "texto": "Recuei sem virar as costas.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Observei as orelhas e só recuei quando ele marcou ataque.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -2
+      },
+      "premissa": [
+        "lobo_avancou"
+      ]
+    },
+    {
+      "id": "bento_05",
+      "tipo": "pergunta",
+      "texto": "Que pegadas alheias viu perto da última clareira? Diga na cara.",
+      "verificavel": true,
+      "verificacao": "Checar o calçado das pegadas vistas. Um nome só é válido se o jogador já viu o dono daquele calçado.",
+      "requer": [
+        "rastros",
+        "jogadores_vistos"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Reconheci o calçado; digo quem era.",
+          "afinidade": 3,
+          "intencao": null,
+          "registra": [
+            "delatou_jogador"
+          ]
+        },
+        {
+          "texto": "Digo o calçado e a direção, mas não conheço o dono.",
+          "afinidade": 2,
+          "intencao": null,
+          "registra": [
+            "descreveu_pegadas"
+          ]
+        },
+        {
+          "texto": "Reconheci, mas não entrego ninguém.",
+          "afinidade": -1,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_identidade"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Digo direção e idade do rastro, sem inventar um nome.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -2
+      },
+      "premissa": [
+        "viu_pegadas_alheias"
+      ]
+    },
+    {
+      "id": "bento_06",
+      "tipo": "pergunta",
+      "texto": "Você rondou a casa antes de entrar ou veio pela frente?",
+      "verificavel": true,
+      "verificacao": "Checar a rota de aproximação usada nesta base.",
+      "requer": [
+        "aproximacao"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Rondei. Queria saber onde estava pisando.",
+          "afinidade": 1,
+          "intencao": null,
+          "registra": [
+            "confessou_cautela"
+          ]
+        },
+        {
+          "texto": "Vim pela frente, sem me esconder.",
+          "afinidade": 3,
+          "intencao": null,
+          "registra": [
+            "entrou_de_frente"
+          ]
+        },
+        {
+          "texto": "Entrei pelos fundos e assumo.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Rondei sem deixar rastro. Prudência não é bravata.",
+        "afinidade": 0
+      },
+      "silencio": {
+        "afinidade": -2
+      }
+    },
+    {
+      "id": "bento_07",
+      "tipo": "pergunta",
+      "texto": "Uma trilha está tomada por perigo e a outra custa tempo. Qual você pega?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "A perigosa. Não entrego a noite ao medo.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "A longa. Escolho o risco que consigo sustentar.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Espero outro passar primeiro e sigo o resultado.",
+          "afinidade": -2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "resistencia",
+        "minimo": 4,
+        "texto": "Pego a longa e mantenho o passo até o fim.",
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "bento_08",
+      "tipo": "pergunta",
+      "texto": "Quantas vezes você entrou num esconderijo esta noite?",
+      "verificavel": true,
+      "verificacao": "Comparar ao contador de entradas em esconderijos.",
+      "requer": [
+        "esconderijo"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Nenhuma.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Uma vez. Ouvi perigo e me preservei.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Mais de uma. Não vou fingir coragem.",
+          "afinidade": 1,
+          "intencao": null,
+          "registra": [
+            "confessou_fuga"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Digo o número exato e por que me escondi.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -2
+      }
+    },
+    {
+      "id": "bento_09",
+      "tipo": "pergunta",
+      "texto": "Tem coragem de escolher uma panela sem pedir garantia?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Tenho. Escolho e aceito o resultado.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Não. Prefiro admitir que preciso de informação.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Exijo que você prove qual é a boa.",
+          "afinidade": -2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "resistencia",
+        "minimo": 4,
+        "texto": "Escolho, mas não chamo resistência de coragem.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "bento_10",
+      "tipo": "pergunta",
+      "texto": "Um rival sabe a rota segura. Como consegue a informação?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Peço de frente e ofereço troca justa.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Digo que preciso e aceito um não.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Uso uma frase falsa para fazê-lo falar.",
+          "afinidade": -3,
+          "intencao": "ma",
+          "registra": [
+            "admitiu_engano"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Proponho seguirmos juntos, deixando o risco claro.",
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "bento_11",
+      "tipo": "pergunta",
+      "texto": "Você enviou uma dica sem saber se era verdade?",
+      "verificavel": true,
+      "verificacao": "Cruzar a frase enviada com as informações conhecidas pelo jogador naquele momento.",
+      "requer": [
+        "frases_prontas",
+        "historico_respostas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Enviei. Preferi arriscar a informação.",
+          "afinidade": 2,
+          "intencao": null,
+          "registra": [
+            "confessou_imprudencia"
+          ]
+        },
+        {
+          "texto": "Não. Só enviei o que podia sustentar.",
+          "afinidade": 3,
+          "intencao": null,
+          "registra": [
+            "afirmou_dica_segura"
+          ]
+        },
+        {
+          "texto": "Enviei porque precisava tirar alguém da minha rota.",
+          "afinidade": 1,
+          "intencao": "ma",
+          "registra": [
+            "enviou_dica_falsa"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Enviei como suspeita, deixando claro que não era certeza.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -3
+      },
+      "premissa": [
+        "enviou_frase"
+      ]
+    },
+    {
+      "id": "bento_12",
+      "tipo": "pergunta",
+      "texto": "O que vale mais: chegar primeiro ou não disfarçar o caminho que tomou?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Não disfarçar. Vitória não muda o que fiz.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Chegar primeiro e assumir o preço.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Chegar primeiro e contar a versão que convier.",
+          "afinidade": -4,
+          "intencao": "ma"
+        }
+      ],
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "bento_13",
+      "tipo": "pergunta",
+      "texto": "A coruja denunciou sua posição. Você avançou ou se encolheu?",
+      "verificavel": true,
+      "verificacao": "Checar a ação imediatamente posterior ao momento em que a coruja notou o jogador.",
+      "requer": [
+        "animais"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Avancei pela trilha que já tinha escolhido.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Mudei a rota. O risco ficou maior do que aceitei.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Procurei abrigo e esperei passar.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Avancei fora da trilha para não oferecer outro sinal.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -2
+      },
+      "premissa": [
+        "coruja_notou"
+      ]
+    },
+    {
+      "id": "bento_14",
+      "tipo": "pergunta",
+      "texto": "Se eu disser que a panela da esquerda é ruim, vai acreditar?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Acredito na sua palavra e assumo minha escolha.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Vou observar seus gestos antes de decidir.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Só acredito se ganhar alguma garantia.",
+          "afinidade": 0,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Comparo sua fala ao que sei desta base.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 0
+      }
+    },
+    {
+      "id": "bento_15",
+      "tipo": "pergunta",
+      "texto": "Diga sem rodeio: do que você teve medo esta noite?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "De falhar quando fosse posto à prova.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "De ser eliminado antes do amanhecer.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Não tive medo de nada.",
+          "afinidade": -2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Tive medo e quase recuei. Essa é a verdade inteira.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -2
+      }
+    }
+  ]
+}

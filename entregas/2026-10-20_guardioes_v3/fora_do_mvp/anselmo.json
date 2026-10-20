@@ -1,0 +1,93 @@
+{
+  "guardiao": "anselmo",
+  "versao_formato": 3,
+  "modificadores_tom": {
+    "firme": 1,
+    "gentil": 0,
+    "evasivo": -2
+  },
+  "reputacao": {
+    "confessou_fuga": 1,
+    "enviou_dica_falsa": -2,
+    "alertou_perigo": 1
+  },
+  "status": "fora_do_mvp",
+  "motivo": "Depende de mecânica suspensa no MVP v0.4; preservada para uso futuro.",
+  "entradas": [
+    {
+      "id": "anselmo_09",
+      "tipo": "pergunta",
+      "texto": "Você recebeu um item por uma informação incompleta?",
+      "verificavel": true,
+      "verificacao": "Cruzar trocas concluídas com frases prontas fornecidas na negociação.",
+      "requer": [
+        "trocas",
+        "frases_prontas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Sim. Omiti parte para fechar a troca.",
+          "afinidade": 3,
+          "intencao": "ma",
+          "registra": [
+            "confessou_omissao"
+          ]
+        },
+        {
+          "texto": "Sim, mas eu mesmo não conhecia o restante.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Não recebi item por informação.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "silencio": {
+        "afinidade": -2
+      }
+    },
+    {
+      "id": "anselmo_11",
+      "tipo": "pergunta",
+      "texto": "Você cumpriu a última prenda que recebeu?",
+      "verificavel": true,
+      "verificacao": "Checar a última prenda recebida e seu estado.",
+      "requer": [
+        "prendas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Cumpri, mesmo discordando dela.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Recusei e aceitei a consequência.",
+          "afinidade": 3,
+          "intencao": null,
+          "registra": [
+            "assumiu_escolha"
+          ]
+        },
+        {
+          "texto": "Ainda está em aberto.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "silencio": {
+        "afinidade": -2
+      }
+    }
+  ]
+}

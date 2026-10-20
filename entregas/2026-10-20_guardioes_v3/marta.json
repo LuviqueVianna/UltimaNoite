@@ -1,0 +1,496 @@
+{
+  "guardiao": "marta",
+  "versao_formato": 3,
+  "modificadores_tom": {
+    "firme": 1,
+    "gentil": -1,
+    "evasivo": 0
+  },
+  "reputacao": {
+    "delatou_jogador": 2,
+    "protegeu_identidade": -2,
+    "protegeu_jogador": -2,
+    "alertou_perigo": -1
+  },
+  "entradas": [
+    {
+      "id": "marta_01",
+      "tipo": "narracao",
+      "texto": "Marta permanece junto à janela alta; da torre, as trilhas parecem confissões feitas com pegadas."
+    },
+    {
+      "id": "marta_02",
+      "tipo": "fala",
+      "texto": "Poupe gentileza. Diga algo que eu ainda não possa ver daqui."
+    },
+    {
+      "id": "marta_03",
+      "tipo": "fala",
+      "texto": "Quem protege informação protege concorrente. Eu não confundo lealdade com inteligência."
+    },
+    {
+      "id": "marta_04",
+      "tipo": "pergunta",
+      "texto": "Quantos jogadores estão perto desta torre?",
+      "verificavel": true,
+      "verificacao": "Comparar ao número de jogadores no raio da Torre.",
+      "requer": [
+        "jogadores_vistos"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Nenhum.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Um; digo em qual direção.",
+          "afinidade": 3,
+          "intencao": null,
+          "registra": [
+            "delatou_jogador"
+          ]
+        },
+        {
+          "texto": "Dois ou mais; não distingui todos.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Um ao sul; outro rastro já se afasta a leste.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -2
+      }
+    },
+    {
+      "id": "marta_05",
+      "tipo": "pergunta",
+      "texto": "Quem visitou a base mais próxima antes de você?",
+      "verificavel": true,
+      "requer": [
+        "jogadores_vistos",
+        "rastros",
+        "bases_visitadas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Digo quem foi e por onde saiu.",
+          "afinidade": 3,
+          "intencao": null,
+          "registra": [
+            "delatou_jogador"
+          ]
+        },
+        {
+          "texto": "Tenho uma suspeita e a apresento como suspeita.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Reconheci, mas não vou entregar.",
+          "afinidade": -1,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_identidade"
+          ]
+        }
+      ],
+      "silencio": {
+        "afinidade": -2
+      },
+      "premissa": [
+        "visitou_outra_base",
+        "viu_pegadas_alheias"
+      ],
+      "verificacao": "Checar o calçado e a rota nas pegadas vistas. Um nome só é válido se o jogador já viu o dono daquele calçado."
+    },
+    {
+      "id": "marta_06",
+      "tipo": "pergunta",
+      "texto": "Das últimas pegadas alheias, o que conseguiu ler?",
+      "verificavel": true,
+      "verificacao": "Checar detalhes realmente revelados pela Furtividade; um nome só vale se o jogador já viu o dono do calçado.",
+      "requer": [
+        "rastros",
+        "jogadores_vistos"
+      ],
+      "premissa": [
+        "viu_pegadas_alheias"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Digo o calçado e a direção.",
+          "afinidade": 3,
+          "intencao": null,
+          "registra": [
+            "descreveu_pegadas"
+          ]
+        },
+        {
+          "texto": "Só sei que alguém passou.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Reconheci o calçado, mas guardo o nome.",
+          "afinidade": -1,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_identidade"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Digo também se o rastro era recente ou antigo.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_07",
+      "tipo": "pergunta",
+      "texto": "Um jogador está escondido perto daqui. Você aponta o lugar?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Aponto se a informação me render outra.",
+          "afinidade": 3,
+          "intencao": "ma",
+          "registra": [
+            "aceitou_delacao"
+          ]
+        },
+        {
+          "texto": "Não entrego quem ainda pode me ser útil.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Não entrego alguém apenas por estar escondido.",
+          "afinidade": -1,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_identidade"
+          ]
+        }
+      ],
+      "silencio": {
+        "afinidade": 2
+      }
+    },
+    {
+      "id": "marta_08",
+      "tipo": "pergunta",
+      "texto": "Para onde foi o último jogador que você viu?",
+      "verificavel": true,
+      "verificacao": "Checar o último personagem visto e a direção observada, sem inferir inventário.",
+      "requer": [
+        "jogadores_vistos",
+        "rastros"
+      ],
+      "premissa": [
+        "viu_jogador"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Digo a direção e a trilha.",
+          "afinidade": 3,
+          "intencao": null,
+          "registra": [
+            "delatou_jogador"
+          ]
+        },
+        {
+          "texto": "Vi a direção, mas perdi a trilha.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Sei para onde foi, mas não entrego.",
+          "afinidade": -1,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_identidade"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Digo também o calçado, sem afirmar mais do que vi.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_09",
+      "tipo": "pergunta",
+      "texto": "Se sua informação puder eliminar alguém, isso muda o preço?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Não. Quem compra decide como usar.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Aumenta o preço; o risco também tem valor.",
+          "afinidade": 2,
+          "intencao": "ma"
+        },
+        {
+          "texto": "Muda. Eu não venderia nesse caso.",
+          "afinidade": -1,
+          "intencao": "boa"
+        }
+      ],
+      "silencio": {
+        "afinidade": 2
+      }
+    },
+    {
+      "id": "marta_10",
+      "tipo": "pergunta",
+      "texto": "Você deixou rastros na última trilha?",
+      "verificavel": true,
+      "verificacao": "Checar rastros deixados pelo jogador na última trilha percorrida.",
+      "requer": [
+        "rastros"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Deixei; minha direção está clara.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Deixei sinais e depois mudei de rota.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Não deixei rastro perceptível.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Deixei apenas o necessário para sugerir uma rota incompleta.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_11",
+      "tipo": "pergunta",
+      "texto": "Diga a rota de quem passou por você por último.",
+      "verificavel": true,
+      "verificacao": "Checar o último jogador detectado e sua direção registrada.",
+      "requer": [
+        "jogadores_vistos"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Digo a direção exata.",
+          "afinidade": 3,
+          "intencao": null,
+          "registra": [
+            "delatou_jogador"
+          ]
+        },
+        {
+          "texto": "Digo apenas de onde veio.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Não entrego a rota.",
+          "afinidade": -1,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_identidade"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Dou a direção e o destino provável, marcando a inferência.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -2
+      },
+      "premissa": [
+        "viu_jogador"
+      ]
+    },
+    {
+      "id": "marta_12",
+      "tipo": "pergunta",
+      "texto": "Prefere uma verdade útil ou um jogador leal?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "A verdade útil.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "A lealdade enquanto ela produzir informação.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "O jogador leal, mesmo sem vantagem.",
+          "afinidade": -2,
+          "intencao": "boa"
+        }
+      ],
+      "silencio": {
+        "afinidade": 2
+      }
+    },
+    {
+      "id": "marta_13",
+      "tipo": "pergunta",
+      "texto": "Qual base você evitaria agora?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Nomeio a base e explico o risco.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Indico duas possibilidades e o que falta confirmar.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Guardo meu plano para não orientar rivais.",
+          "afinidade": 0,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Cruzo posição, tempo e rastros, mas não prometo certeza.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_14",
+      "tipo": "pergunta",
+      "texto": "Você avisou alguém sobre uma armadilha que descobriu?",
+      "verificavel": true,
+      "verificacao": "Checar armadilha detectada e frase pronta enviada depois.",
+      "requer": [
+        "armadilhas",
+        "frases_prontas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Não. Guardei a informação.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Avisei em troca de outra dica.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Avisei sem pedir nada.",
+          "afinidade": -1,
+          "intencao": "boa",
+          "registra": [
+            "alertou_perigo"
+          ]
+        }
+      ],
+      "silencio": {
+        "afinidade": 1
+      },
+      "premissa": [
+        "notou_armadilha"
+      ]
+    },
+    {
+      "id": "marta_15",
+      "tipo": "pergunta",
+      "texto": "Quem devo observar quando você sair daqui?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Dou um nome e um motivo.",
+          "afinidade": 3,
+          "intencao": null,
+          "registra": [
+            "delatou_jogador"
+          ]
+        },
+        {
+          "texto": "Aponto quem parece ter mais recursos.",
+          "afinidade": 2,
+          "intencao": "ma"
+        },
+        {
+          "texto": "Observe a mim. Não entrego os outros.",
+          "afinidade": -1,
+          "intencao": "boa"
+        }
+      ],
+      "silencio": {
+        "afinidade": 2
+      }
+    }
+  ]
+}
