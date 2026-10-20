@@ -16,6 +16,7 @@ var dialogo: Dialogo
 var centro: CenterContainer
 var avisos: Array = []
 var acelerar := false
+var usando_teclado := false
 
 # Tela inicial
 var inicio: Control
@@ -166,6 +167,7 @@ func _montar_noite() -> void:
 	mundo.amanheceu.connect(_ao_amanhecer)
 	var j := mundo.jogador()
 	_ao_aviso("Noite começa. Você usa %s." % Regras.CALCADOS[j.calcado])
+	_ao_aviso("Ande com as setas, WASD ou clicando numa trilha visível.")
 	_ao_aviso("Chegue à saída, %s, antes do amanhecer para registrar seus pontos." % Textos.direcao(j.pos, mundo.mapa.pos(j.saida)))
 
 
@@ -173,6 +175,7 @@ func _process(dt: float) -> void:
 	if mundo == null:
 		return
 	var j := mundo.jogador()
+	_ler_teclado()
 	for i in (40 if acelerar else 1):
 		mundo.tick(dt)
 	camera.position = j.pos * MapaView.ESCALA
@@ -189,6 +192,27 @@ func _unhandled_input(event: InputEvent) -> void:
 			camera.zoom = (camera.zoom * 1.1).clamp(Vector2(0.6, 0.6), Vector2(4, 4))
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			camera.zoom = (camera.zoom / 1.1).clamp(Vector2(0.6, 0.6), Vector2(4, 4))
+
+
+## Setas ou WASD movem pelas trilhas. Soltar a tecla para o personagem onde está.
+func _ler_teclado() -> void:
+	if dialogo.visible or painel_base.visible or mundo.terminou:
+		return
+	var dir := Vector2.ZERO
+	if Input.is_physical_key_pressed(KEY_UP) or Input.is_physical_key_pressed(KEY_W):
+		dir.y -= 1
+	if Input.is_physical_key_pressed(KEY_DOWN) or Input.is_physical_key_pressed(KEY_S):
+		dir.y += 1
+	if Input.is_physical_key_pressed(KEY_LEFT) or Input.is_physical_key_pressed(KEY_A):
+		dir.x -= 1
+	if Input.is_physical_key_pressed(KEY_RIGHT) or Input.is_physical_key_pressed(KEY_D):
+		dir.x += 1
+	if dir != Vector2.ZERO:
+		usando_teclado = true
+		mundo.dirigir_jogador(dir)
+	elif usando_teclado:
+		usando_teclado = false
+		mundo.dirigir_jogador(Vector2.ZERO)
 
 
 func _ao_registrar() -> void:

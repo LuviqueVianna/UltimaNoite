@@ -7,7 +7,7 @@ Godot **4.3** (renderizador Compatibility). O jogo lê o conteúdo aprovado em `
 1. Instale o Godot 4.3: https://godotengine.org/download
 2. No Godot, **Importar** e escolha o arquivo `godot/project.godot` deste repositório.
 3. Aperte **F5**. Na tela inicial, escolha seu nome e distribua 12 pontos nos atributos.
-4. Toque ou clique num ponto conhecido do mapa para andar até lá. A roda do mouse aproxima e afasta.
+4. **Para andar:** use as setas ou W, A, S, D (o personagem segue a trilha que aponta para aquela direção e para quando você solta a tecla), ou clique numa trilha visível. A roda do mouse aproxima e afasta.
 5. Ao chegar numa base: olhe pela janela, entre, responda escolhendo o tom (10 s de silêncio contam como resposta) e escolha uma das duas panelas.
 
 ## Estado

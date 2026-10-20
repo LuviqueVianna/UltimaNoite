@@ -240,12 +240,62 @@ func premissa(p: Personagem, base: String, nome: String) -> bool:
 
 
 ## Toque do jogador no mapa: anda até o nó conhecido mais próximo do ponto tocado.
+## Toque ou clique: num ponto conhecido, anda até ele; numa trilha visível, segue por ela.
 func mover_jogador_para(ponto: Vector2) -> bool:
 	var j := jogador()
-	var alvo := mapa.no_mais_proximo(ponto, Regras.CLIQUE_RAIO, func(n): return j.no_visto[n] == 1)
-	if alvo < 0:
+	var alvo := mapa.no_mais_proximo(ponto, Regras.CLIQUE_RAIO * 0.6, func(n): return j.no_visto[n] == 1)
+	if alvo >= 0 and alvo != j.no_atual:
+		return j.ir_para(mapa, alvo)
+	# Trilha visível (percorrida ou ainda lembrada) perto do clique
+	var melhor := -1
+	var melhor_d := Regras.CLIQUE_RAIO
+	for i in mapa.amostras.size():
+		if j.amostra_percorrida[i] == 0 and tempo - j.amostra_vista[i] > j.lembranca():
+			continue
+		var d := mapa.amostras[i].distance_to(ponto)
+		if d < melhor_d:
+			melhor_d = d
+			melhor = i
+	if melhor < 0:
 		return false
-	return j.ir_para(mapa, alvo)
+	var e: Dictionary = mapa.arestas[mapa.amostra_aresta[melhor]]
+	var a: int = e["a"]
+	var b: int = e["b"]
+	var destino := a if mapa.pos(a).distance_to(ponto) < mapa.pos(b).distance_to(ponto) else b
+	if j.no_atual == a or j.no_atual == b:
+		destino = b if j.no_atual == a else a
+	return j.ir_para(mapa, destino)
+
+
+## Teclado: segue a trilha que mais aponta para a direção pedida. Direção zero = para onde está.
+func dirigir_jogador(dir: Vector2) -> void:
+	var j := jogador()
+	if j.registrou():
+		return
+	if dir == Vector2.ZERO:
+		j.rota = []
+		j.pausado = true
+		return
+	j.pausado = false
+	dir = dir.normalized()
+	if j.no_atual >= 0:
+		var melhor := -1
+		var melhor_dot := 0.35
+		for v in mapa.adj[j.no_atual]:
+			var d := (mapa.pos(v.x) - mapa.pos(j.no_atual)).normalized().dot(dir)
+			if d > melhor_dot:
+				melhor_dot = d
+				melhor = v.x
+		j.rota = [melhor] if melhor >= 0 else []
+		return
+	var sentido := (mapa.pos(j.para) - mapa.pos(j.de)).normalized()
+	if sentido.dot(dir) < -0.35:
+		var comp: float = mapa.arestas[mapa.aresta_entre(j.de, j.para)]["comp"]
+		var t := j.de
+		j.de = j.para
+		j.para = t
+		j.progresso = comp - j.progresso
+	j.rota = []
 
 
 func _perceber(p: Personagem) -> void:

@@ -17,6 +17,7 @@ var de := -1
 var para := -1
 var progresso := 0.0
 var rota: Array = []
+var pausado := false          # parado no meio de uma trilha (jogador soltou a tecla)
 var espera := 0.0
 var desde_pegada := 0.0
 var passo_esquerdo := false
@@ -147,6 +148,7 @@ func aresta_percorrida(mapa: Mapa, a: int) -> bool:
 ## Define o destino. Se estiver no meio de uma trilha, decide se continua ou dá meia-volta.
 ## `so_conhecidas`: usa só trilhas que este personagem já viu.
 func ir_para(mapa: Mapa, alvo: int, so_conhecidas := true) -> bool:
+	pausado = false
 	var filtro := Callable(self, "conhece_aresta") if so_conhecidas else Callable()
 	if no_atual >= 0:
 		if alvo == no_atual:
@@ -189,6 +191,8 @@ func passo(dt: float, mapa: Mapa) -> Array:
 	var eventos := []
 	if espera > 0.0:
 		espera -= dt
+		return eventos
+	if pausado and no_atual < 0:
 		return eventos
 	if no_atual >= 0:
 		if rota.is_empty():

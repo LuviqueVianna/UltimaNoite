@@ -22,6 +22,23 @@ func _init() -> void:
 	var ok: bool = main.mundo.mover_jogador_para(main.mundo.mapa.pos(alvo))
 	for i in 600:
 		await process_frame
+	# Teclado: anda na direção da primeira trilha e para ao soltar
+	var antes := j.pos
+	var m: Mapa = main.mundo.mapa
+	var no_ini: int = j.no_atual if j.no_atual >= 0 else j.de
+	var viz: int = m.adj[no_ini][0].x
+	var dir := (m.pos(viz) - m.pos(no_ini)).normalized()
+	for i in 90:
+		main.mundo.dirigir_jogador(dir)
+		main.mundo.tick(1.0 / 30.0)
+	main.mundo.dirigir_jogador(Vector2.ZERO)
+	var parado := j.pos
+	for i in 60:
+		main.mundo.tick(1.0 / 30.0)
+	print("Teclado: andou %.1f m, depois de soltar andou %.1f m" % [antes.distance_to(parado), parado.distance_to(j.pos)])
+	# Clique numa trilha vista
+	var ok_clique: bool = main.mundo.mover_jogador_para(m.amostras[m.arestas[m.aresta_entre(no_ini, viz)]["amostra_ini"]])
+	print("Clique na trilha aceito: ", ok_clique)
 	# Abre o diálogo da primeira base e joga até o fim
 	var b: String = main.mundo.mapa.bases().keys().filter(func(x): return x != "vazia")[0]
 	main.dialogo.abrir(main.mundo, b)
