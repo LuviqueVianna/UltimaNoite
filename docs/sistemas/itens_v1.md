@@ -1,6 +1,6 @@
-# PROPOSTA — Catálogo de itens do MVP (v1)
+# Catálogo de itens do MVP (v1)
 
-**Autor:** Claude · **Data:** 20/10/2026 · **Estado:** aguardando aprovação do usuário.
+**Autor:** Claude · **Data:** 20/10/2026 · **Estado:** aprovado pelo usuário em 20/10/2026. Dados em `conteudo/itens.json`.
 
 Cada item resolve um problema que já existe no MVP (lobo, armadilha, veneno, pegadas, escuridão) ou alimenta o Seu Quincas. Nenhum cria mecânica nova. Os números são ponto de partida para teste.
 

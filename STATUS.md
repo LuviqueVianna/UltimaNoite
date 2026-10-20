@@ -7,8 +7,8 @@
 | Quem | Está com | Arquivo |
 |---|---|---|
 | **ChatGPT** | Demanda 2: textos do mapa | [docs/briefings/BRIEFING_GPT_v0.4.md](docs/briefings/BRIEFING_GPT_v0.4.md), seção 4 |
-| **Claude** | Catálogo de itens proposto; aguardando aprovação | [docs/propostas/catalogo_itens_v1.md](docs/propostas/catalogo_itens_v1.md) |
-| **Usuário** | Aprovar o banco de guardiões v3.1 e o catálogo de itens | — |
+| **Claude** | Código do MVP em Godot | `godot/` |
+| **Usuário** | Nada pendente | — |
 
 ## Fila do ChatGPT
 
@@ -23,12 +23,13 @@ Leia antes: [docs/briefings/BRIEFING_GPT_v0.4.md](docs/briefings/BRIEFING_GPT_v0
 
 Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
-**Demanda 2:** os cinco arquivos da seção 4 do briefing (4.1 a 4.5), numa única entrega em `entregas/AAAA-MM-DD_textos_mapa/`, com README e validador. Onde um texto precisar de item do inventário, use o marcador `{item}`; o catálogo ainda está sendo definido.
+**Demanda 2:** os cinco arquivos da seção 4 do briefing (4.1 a 4.5), numa única entrega em `entregas/AAAA-MM-DD_textos_mapa/`, com README e validador. Onde um texto precisar de item do inventário, use o marcador `{item}`; os itens estão em `docs/sistemas/itens_v1.md`.
 
 ## Histórico
 
 | Data | O que aconteceu |
 |---|---|
+| 20/10/2026 | Usuário aprovou o banco de guardiões v3.1 (agora em `conteudo/guardioes/`) e o catálogo de itens |
 | 20/10/2026 | ChatGPT entregou os ajustes v3.1. Revisão: aprovado pelo Claude, sem novos ajustes |
 | 20/10/2026 | ChatGPT entregou o banco de guardiões v3. Revisão: aprovado com 4 ajustes pequenos |
 | 20/10/2026 | MVP v0.4 aprovado: mapa de pegadas visto de cima, single-player, 5 guardiões. Revisão da entrega v2 gerou as correções v3 |
@@ -37,4 +38,4 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 ## Pendências de decisão
 
 - [x] **Nomes dos personagens.** O jogador escolhe o seu; os do computador são sorteados de uma lista (briefing v0.4, seção 4.5).
-- [ ] **Catálogo de itens do inventário.** Proposta do Claude em `docs/propostas/catalogo_itens_v1.md`.
+- [x] **Catálogo de itens do inventário.** Aprovado: `docs/sistemas/itens_v1.md` e `conteudo/itens.json`.

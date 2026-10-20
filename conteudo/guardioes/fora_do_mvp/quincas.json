@@ -1,0 +1,180 @@
+{
+  "guardiao": "quincas",
+  "versao_formato": 3,
+  "modificadores_tom": {
+    "firme": 0,
+    "gentil": 1,
+    "evasivo": 1
+  },
+  "reputacao": {
+    "compartilhou_dica": 1,
+    "aceitou_delacao": 1,
+    "protegeu_identidade": -1,
+    "alertou_perigo": 1
+  },
+  "status": "fora_do_mvp",
+  "motivo": "Depende de mecânica suspensa no MVP v0.4; preservada para uso futuro.",
+  "entradas": [
+    {
+      "id": "quincas_06",
+      "tipo": "pergunta",
+      "texto": "Você trocou algum item com outro jogador?",
+      "verificavel": true,
+      "verificacao": "Checar o histórico de trocas concluídas.",
+      "requer": [
+        "trocas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Sim, por algo de valor parecido.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Sim, e saí ganhando.",
+          "afinidade": 3,
+          "intencao": null,
+          "registra": [
+            "negociou_com_lucro"
+          ]
+        },
+        {
+          "texto": "Não fiz troca alguma.",
+          "afinidade": 0,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Fiz uma troca pensando na próxima, não só nesta.",
+        "afinidade": 2
+      }
+    },
+    {
+      "id": "quincas_09",
+      "tipo": "pergunta",
+      "texto": "Quantas trocas você concluiu nesta noite?",
+      "verificavel": true,
+      "verificacao": "Comparar ao número de trocas concluídas entre jogadores.",
+      "requer": [
+        "trocas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Nenhuma.",
+          "afinidade": 0,
+          "intencao": null
+        },
+        {
+          "texto": "Uma.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Duas ou mais.",
+          "afinidade": 3,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Digo o número exato e qual delas repetiria.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -2
+      }
+    },
+    {
+      "id": "quincas_11",
+      "tipo": "pergunta",
+      "texto": "Qual troca lhe deu o maior lucro nesta partida?",
+      "verificavel": true,
+      "verificacao": "Checar trocas e valores relativos dos itens entregues e recebidos.",
+      "requer": [
+        "trocas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Descrevo a troca e o ganho.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Minhas trocas foram equilibradas.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Ainda não concluí nenhuma.",
+          "afinidade": 0,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Incluo no cálculo a informação que veio junto.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -2
+      }
+    },
+    {
+      "id": "quincas_14",
+      "tipo": "pergunta",
+      "texto": "Na última troca, você entregou item ou informação?",
+      "verificavel": true,
+      "verificacao": "Checar o recurso entregue na troca mais recente.",
+      "requer": [
+        "trocas",
+        "frases_prontas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Entreguei um item.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Entreguei uma informação.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Não houve troca anterior.",
+          "afinidade": 0,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Entreguei ambos, mas por preços separados.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -2
+      }
+    }
+  ]
+}

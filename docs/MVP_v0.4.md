@@ -157,5 +157,5 @@ O **inventário** é do próprio jogador; ele pode oferecer itens a um guardião
 ## 11. Em aberto
 
 - [x] Nomes: o jogador escolhe o seu; os do computador vêm de uma lista sorteada.
-- [ ] Catálogo de itens do inventário (6 a 8 itens) — o Claude vai propor.
+- [x] Catálogo de itens aprovado: `docs/sistemas/itens_v1.md`.
 - [ ] Pontuação e condição de vitória no single-player.

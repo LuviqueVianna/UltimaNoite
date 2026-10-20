@@ -1,0 +1,66 @@
+{
+  "guardiao": "bento",
+  "versao_formato": 3,
+  "modificadores_tom": {
+    "firme": 2,
+    "gentil": -1,
+    "evasivo": -2
+  },
+  "reputacao": {
+    "confessou_mentira": 1,
+    "alertou_perigo": 1,
+    "protegeu_identidade": -1,
+    "enviou_dica_falsa": -2
+  },
+  "status": "fora_do_mvp",
+  "motivo": "Depende de mecânica suspensa no MVP v0.4; preservada para uso futuro.",
+  "entradas": [
+    {
+      "id": "bento_11",
+      "tipo": "pergunta",
+      "texto": "Você ouviu alguém dar uma dica falsa? Quem foi?",
+      "verificavel": true,
+      "verificacao": "Cruzar conversas ouvidas com frases prontas recebidas ou emitidas.",
+      "requer": [
+        "escuta",
+        "frases_prontas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Ouvi e digo quem foi.",
+          "afinidade": 3,
+          "intencao": null,
+          "registra": [
+            "delatou_jogador"
+          ]
+        },
+        {
+          "texto": "Ouvi, mas não tenho certeza de que era falsa.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Ouvi e guardo o nome para proteger a pessoa.",
+          "afinidade": -1,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_identidade"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Repito a frase exata e separo fato de suspeita.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -3
+      }
+    }
+  ]
+}

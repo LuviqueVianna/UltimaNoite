@@ -1,0 +1,92 @@
+{
+  "versao_formato": 1,
+  "capacidade": 3,
+  "itens_no_mapa": [
+    4,
+    6
+  ],
+  "valor_quincas": {
+    "comum": 1,
+    "valioso": 2,
+    "raro": 3
+  },
+  "itens": [
+    {
+      "id": "ervas",
+      "nome": "Maço de ervas",
+      "raridade": "comum",
+      "usos": 1,
+      "efeitos": {
+        "cura_lentidao": true,
+        "lobo_ferido_escolta_s": 60
+      }
+    },
+    {
+      "id": "carne_seca",
+      "nome": "Carne seca",
+      "raridade": "comum",
+      "usos": 1,
+      "efeitos": {
+        "lobo_distrai_s": 20,
+        "cao_aceita_guiar": true
+      }
+    },
+    {
+      "id": "fumo",
+      "nome": "Fumo de rolo",
+      "raridade": "comum",
+      "usos": 0,
+      "efeitos": {}
+    },
+    {
+      "id": "lamparina",
+      "nome": "Lamparina",
+      "raridade": "comum",
+      "usos": 2,
+      "efeitos": {
+        "alcance_extra_m": 6,
+        "duracao_s": 30,
+        "luz_visivel_m": 40
+      }
+    },
+    {
+      "id": "pano",
+      "nome": "Pano de saco",
+      "raridade": "valioso",
+      "usos": 1,
+      "efeitos": {
+        "esconde_calcado_s": 60
+      }
+    },
+    {
+      "id": "facao",
+      "nome": "Facão",
+      "raridade": "valioso",
+      "usos": -1,
+      "efeitos": {
+        "desarma_armadilha_s": 3,
+        "forca_extra_mata": 1
+      }
+    },
+    {
+      "id": "apito",
+      "nome": "Apito de taquara",
+      "raridade": "valioso",
+      "usos": 2,
+      "efeitos": {
+        "evento_falso": "coruja_piou"
+      }
+    },
+    {
+      "id": "raiz_amarga",
+      "nome": "Raiz amarga",
+      "raridade": "raro",
+      "usos": 1,
+      "maximo_por_mapa": 1,
+      "inicial": false,
+      "efeitos": {
+        "anula_veneno": true
+      }
+    }
+  ]
+}
