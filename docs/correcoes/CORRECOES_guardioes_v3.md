@@ -82,6 +82,9 @@ Regras de aplicação (o motor já fará assim):
 | `usou_esconderijo` | O jogador entrou em algum esconderijo |
 | `sumiu_na_mata` | O jogador usou "sumir na mata" ao menos uma vez |
 | `recebeu_frase` | O jogador recebeu ao menos uma frase pronta |
+| `recebeu_frase_panela` | O jogador recebeu uma frase pronta da categoria `panela` (acrescentada em 20/10/2026) |
+| `recebeu_frase_pedido` | O jogador recebeu uma frase pronta da categoria `pedido` (acrescentada em 20/10/2026) |
+| `viu_jogador_entrar_base` | O jogador viu outro personagem entrar numa base (acrescentada em 20/10/2026) |
 | `enviou_frase` | O jogador enviou ao menos uma frase pronta |
 | `tem_item` | O inventário do jogador não está vazio |
 | `visitou_outra_base` | O jogador já visitou outra base antes desta |
