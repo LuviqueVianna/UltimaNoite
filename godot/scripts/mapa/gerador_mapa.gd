@@ -47,6 +47,8 @@ func _tentar() -> Mapa:
 		return null
 	if _bases_com_volta(m) < BASES_COM_VOLTA_MIN:
 		return null
+	if not _escolher_saidas(m):
+		return null
 	m.finalizar()
 	return m
 
@@ -238,6 +240,27 @@ func _escolher_bases_e_partidas(m: Mapa) -> bool:
 		m.nos[melhor_bases[i]]["base"] = ids_bases[i]
 	for p in melhor_partidas:
 		m.nos[p]["partida"] = true
+	return true
+
+
+## A saída de cada personagem fica no ponto oposto do mapa ao da sua partida (espelhado pelo centro).
+func _escolher_saidas(m: Mapa) -> bool:
+	var centro := AREA / 2.0
+	for partida in m.partidas():
+		var alvo: Vector2 = centro * 2.0 - m.pos(partida)
+		var melhor := -1
+		var melhor_d := INF
+		for n in m.nos:
+			if n["base"] != "" or n["partida"] or n["saida"] or n["tipo"] == "beco":
+				continue
+			var d: float = n["pos"].distance_to(alvo)
+			if d < melhor_d:
+				melhor_d = d
+				melhor = n["id"]
+		if melhor < 0 or m.pos(melhor).distance_to(m.pos(partida)) < AREA.x * 0.5:
+			return false
+		m.nos[melhor]["saida"] = true
+		m.saidas[partida] = melhor
 	return true
 
 

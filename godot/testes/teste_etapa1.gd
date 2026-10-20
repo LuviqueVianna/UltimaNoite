@@ -34,6 +34,9 @@ func _testar_gerador(n: int) -> void:
 		_checar(clareiras >= 10 and clareiras <= 12, "semente %d: %d clareiras" % [semente, clareiras])
 		_checar(m.bases().size() == 6, "semente %d: %d bases" % [semente, m.bases().size()])
 		_checar(m.partidas().size() == 4, "semente %d: %d partidas" % [semente, m.partidas().size()])
+		_checar(m.saidas.size() == 4, "semente %d: %d saídas" % [semente, m.saidas.size()])
+		for pa in m.saidas:
+			stats.get_or_add("dist_saida", []).append(m.distancia_grafo(pa, m.saidas[pa]))
 		for e in m.arestas:
 			stats["arestas_max"] = maxf(stats["arestas_max"], e["comp"])
 		# Tudo ligado
@@ -48,6 +51,7 @@ func _testar_gerador(n: int) -> void:
 					continue
 				if Geometry2D.segment_intersects_segment(m.pos(a["a"]), m.pos(a["b"]), m.pos(b["a"]), m.pos(b["b"])) != null:
 					_checar(false, "semente %d: trilhas %d e %d se cruzam" % [semente, i, j])
+	print("Saídas: caminho até a saída %.0f-%.0f m (%.0f-%.0f s andando)" % [stats["dist_saida"].min(), stats["dist_saida"].max(), stats["dist_saida"].min() / Regras.VEL_TRILHA, stats["dist_saida"].max() / Regras.VEL_TRILHA])
 	_checar(stats["arestas_max"] <= 41.0, "trecho de trilha com %.1f m" % stats["arestas_max"])
 	print("Gerador: %d mapas | clareiras %d-%d | becos %d-%d | trilhas %.0f-%.0f m | maior trecho %.1f m" % [
 		n, stats["clareiras"].min(), stats["clareiras"].max(), stats["becos"].min(), stats["becos"].max(),

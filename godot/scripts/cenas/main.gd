@@ -15,6 +15,7 @@ var rotulo_base: Label
 var dialogo: Dialogo
 var centro: CenterContainer
 var avisos: Array = []
+var acelerar := false
 
 # Tela inicial
 var inicio: Control
@@ -155,21 +156,29 @@ func _montar_noite() -> void:
 	dialogo = Dialogo.new()
 	centro.add_child(dialogo)
 	dialogo.fechado.connect(_ao_fechar_dialogo)
+	dialogo.registrou.connect(_ao_registrar)
 
 	mundo.aviso.connect(_ao_aviso)
 	mundo.chegou_base.connect(_ao_chegar_base)
+	mundo.chegou_saida.connect(func(p):
+		p.rota = []
+		dialogo.abrir_saida(mundo))
 	mundo.amanheceu.connect(_ao_amanhecer)
 	var j := mundo.jogador()
 	_ao_aviso("Noite começa. Você usa %s." % Regras.CALCADOS[j.calcado])
+	_ao_aviso("Chegue à saída, %s, antes do amanhecer para registrar seus pontos." % Textos.direcao(j.pos, mundo.mapa.pos(j.saida)))
 
 
 func _process(dt: float) -> void:
 	if mundo == null:
 		return
-	mundo.tick(dt)
-	camera.position = mundo.jogador().pos * MapaView.ESCALA
+	var j := mundo.jogador()
+	for i in (40 if acelerar else 1):
+		mundo.tick(dt)
+	camera.position = j.pos * MapaView.ESCALA
 	var r := int(mundo.tempo_restante())
-	rotulo_relogio.text = "%s   ·   faltam %d:%02d para o amanhecer" % [mundo.jogador().nome, r / 60, r % 60]
+	var saida := "chegada registrada" if j.registrou() else "saída %s, %d m" % [Textos.direcao(j.pos, mundo.mapa.pos(j.saida)), int(j.pos.distance_to(mundo.mapa.pos(j.saida)))]
+	rotulo_relogio.text = "%s   ·   %d pontos   ·   %s   ·   faltam %d:%02d para o amanhecer" % [j.nome, j.pontos(), saida, r / 60, r % 60]
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -182,8 +191,13 @@ func _unhandled_input(event: InputEvent) -> void:
 			camera.zoom = (camera.zoom / 1.1).clamp(Vector2(0.6, 0.6), Vector2(4, 4))
 
 
+func _ao_registrar() -> void:
+	_ao_aviso("Chegada registrada com %d pontos. A noite segue sem você." % mundo.jogador().pontos())
+	acelerar = true
+
+
 func _ao_tocar(ponto: Vector2) -> void:
-	if painel_base.visible or dialogo.visible or mundo.terminou:
+	if painel_base.visible or dialogo.visible or mundo.terminou or mundo.jogador().registrou():
 		return
 	if not mundo.mover_jogador_para(ponto):
 		_ao_aviso("Você não conhece um caminho até lá.")
@@ -211,12 +225,17 @@ func _ao_fechar_dialogo() -> void:
 
 func _ao_amanhecer() -> void:
 	dialogo.visible = false
+	acelerar = false
 	var linhas := ["Amanheceu.", ""]
-	var ordem := mundo.personagens.duplicate()
-	ordem.sort_custom(func(a, b): return a.panelas_boas() > b.panelas_boas())
-	for p in ordem:
-		linhas.append("%s — %d panela(s) boa(s), %d ruim(ns)" % [p.nome, p.panelas_boas(), p.refeicoes.size() - p.panelas_boas()])
+	var pos := 1
+	for p in mundo.classificacao():
+		var detalhe := "%d panela(s) boa(s), %d ruim(ns)" % [p.panelas_boas(), p.refeicoes.size() - p.panelas_boas()]
+		if p.registrou():
+			linhas.append("%dº  %s — %d pontos (%s)" % [pos, p.nome, p.pontos(), detalhe])
+			pos += 1
+		else:
+			linhas.append("—   %s — não chegou à saída (%s)" % [p.nome, detalhe])
 	linhas.append("")
-	linhas.append("(Pontuação provisória: a regra de vitória ainda não foi definida.)")
+	linhas.append("Pontos provisórios: panela boa +%d, panela ruim %d." % [Regras.PONTOS["panela_boa"], Regras.PONTOS["panela_ruim"]])
 	rotulo_base.text = "\n".join(linhas)
 	painel_base.visible = true

@@ -26,6 +26,8 @@ func _init() -> void:
 		main.dialogo._olhar_janela()
 		main.dialogo._entrar("frente")
 		main.dialogo._responder("1")
+	if args.size() > 2 and args[2] == "longe":
+		main.camera.zoom = Vector2(0.75, 0.75)
 	for i in 10:
 		await process_frame
 	await RenderingServer.frame_post_draw

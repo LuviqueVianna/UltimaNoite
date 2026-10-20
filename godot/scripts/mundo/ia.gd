@@ -7,7 +7,11 @@ extends RefCounted
 static func decidir(p: Personagem, mundo: Mundo) -> void:
 	var mapa := mundo.mapa
 	var no := p.no_atual
-	if no < 0 or not p.rota.is_empty() or p.espera > 0.0:
+	if p.registrou() or no < 0 or not p.rota.is_empty() or p.espera > 0.0:
+		return
+
+	if hora_de_ir(p, mundo):
+		_rumo(p, mundo, mapa.pos(p.saida), p.saida)
 		return
 
 	# Hesita em bifurcações e clareiras com várias saídas.
@@ -18,12 +22,51 @@ static func decidir(p: Personagem, mundo: Mundo) -> void:
 
 	var alvo := _base_alvo(p, mapa)
 	if alvo != "":
-		var no_base: int = mapa.bases()[alvo]
-		if p.no_visto[no_base] == 1 and p.ir_para(mapa, no_base):
-			return
-		_um_passo(p, mundo, p.luzes[alvo])
+		_rumo(p, mundo, p.luzes[alvo], mapa.bases()[alvo])
 		return
 	_um_passo(p, mundo, Vector2.INF)
+
+
+## Vai até um destino usando o que já conhece: caminho conhecido até ele, ou até o ponto
+## conhecido mais próximo dele, e de lá explora na direção certa.
+static func _rumo(p: Personagem, mundo: Mundo, destino: Vector2, no_destino: int) -> void:
+	var mapa := mundo.mapa
+	if p.no_visto[no_destino] == 1 and p.ir_para(mapa, no_destino) and not p.rota.is_empty():
+		return
+	var aqui := p.no_atual
+	var melhor := aqui
+	var melhor_d := mapa.pos(aqui).distance_to(destino)
+	for n in mapa.nos:
+		if p.no_visto[n["id"]] == 0:
+			continue
+		var d: float = n["pos"].distance_to(destino)
+		if d < melhor_d - 5.0 and _tem_saida_nova(p, mapa, n["id"]):
+			melhor_d = d
+			melhor = n["id"]
+	if melhor != aqui and p.ir_para(mapa, melhor) and not p.rota.is_empty():
+		return
+	_um_passo(p, mundo, destino, true)
+
+
+static func _tem_saida_nova(p: Personagem, mapa: Mapa, no: int) -> bool:
+	for v in mapa.adj[no]:
+		if not p.aresta_percorrida(mapa, v.y):
+			return true
+	return false
+
+
+## Vai para a saída quando já visitou todos os guardiões ou quando o tempo aperta.
+static func hora_de_ir(p: Personagem, mundo: Mundo) -> bool:
+	var guardioes := Regras.BASES.keys().filter(func(b): return b != "vazia")
+	if guardioes.all(func(b): return p.bases_visitadas.has(b)):
+		return true
+	var distancia: float = p.pos.distance_to(mundo.mapa.pos(p.saida)) * Regras.FOLGA_VOLTA
+	if p.no_visto[p.saida] == 1 and p.no_atual >= 0:
+		var conhecido := mundo.mapa.caminho(p.no_atual, p.saida, Callable(p, "conhece_aresta"))
+		if not conhecido.is_empty():
+			distancia = p._comprimento(mundo.mapa, p.no_atual, conhecido)
+	var estimativa: float = distancia / p.velocidade()
+	return mundo.tempo_restante() < estimativa + Regras.MARGEM_VOLTA_S
 
 
 ## Base mais próxima, ainda não visitada, cuja luz já foi vista.
@@ -41,12 +84,16 @@ static func _base_alvo(p: Personagem, mapa: Mapa) -> String:
 
 
 ## Escolhe a próxima trilha a partir do nó atual, conforme o perfil.
-static func _um_passo(p: Personagem, mundo: Mundo, destino: Vector2) -> void:
+## so_novas: quando há trilhas ainda não percorridas aqui, escolhe só entre elas (evita ir e voltar).
+static func _um_passo(p: Personagem, mundo: Mundo, destino: Vector2, so_novas := false) -> void:
 	var mapa := mundo.mapa
 	var no := p.no_atual
 	var melhor := -1
 	var melhor_nota := -INF
+	var ha_novas := so_novas and _tem_saida_nova(p, mapa, no)
 	for v in mapa.adj[no]:
+		if ha_novas and p.aresta_percorrida(mapa, v.y):
+			continue
 		var viz: int = v.x
 		var aresta: int = v.y
 		var nota := mundo.rng.randf_range(0.0, 0.6)

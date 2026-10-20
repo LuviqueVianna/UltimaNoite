@@ -10,11 +10,12 @@ var adj: Array = []        # adj[no] = Array de Vector2i(vizinho, aresta)
 var amostras := PackedVector2Array()
 var amostra_aresta := PackedInt32Array()
 var semente := 0
+var saidas := {}            # nó de partida -> nó de saída (o ponto oposto do mapa)
 
 
 func adicionar_no(pos: Vector2, tipo: String) -> int:
 	var id := nos.size()
-	nos.append({"id": id, "pos": pos, "tipo": tipo, "base": "", "partida": false})
+	nos.append({"id": id, "pos": pos, "tipo": tipo, "base": "", "partida": false, "saida": false})
 	adj.append([])
 	return id
 

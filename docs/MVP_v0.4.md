@@ -154,8 +154,14 @@ O **inventário** é do próprio jogador; ele pode oferecer itens a um guardião
 
 ---
 
-## 11. Em aberto
+## 11. Vitória
+
+- **Ganha quem fizer mais pontos** (decidido em 20/10/2026).
+- Para pontuar, o personagem precisa **chegar ao ponto oposto do mapa** e registrar a chegada antes do amanhecer.
+- Detalhes e valores dos pontos: `docs/sistemas/pontuacao_v1.md`.
+
+## 12. Em aberto
 
 - [x] Nomes: o jogador escolhe o seu; os do computador vêm de uma lista sorteada.
 - [x] Catálogo de itens aprovado: `docs/sistemas/itens_v1.md`.
-- [ ] Pontuação e condição de vitória no single-player.
+- [ ] Valores dos pontos (proposta em `docs/sistemas/pontuacao_v1.md`).

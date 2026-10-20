@@ -4,6 +4,7 @@ extends PanelContainer
 ## A noite continua correndo enquanto o jogador conversa.
 
 signal fechado
+signal registrou
 
 const COR_PAPEL := Color("#e8d9b5")
 const COR_AMBAR := Color("#e89a3c")
@@ -99,6 +100,28 @@ func _opcao(rotulo: String, acao: Callable) -> void:
 	b.autowrap_mode = TextServer.AUTOWRAP_WORD
 	b.pressed.connect(acao)
 	caixa_opcoes.add_child(b)
+
+
+# ---------- Saída ----------
+
+func abrir_saida(m: Mundo) -> void:
+	mundo = m
+	base = ""
+	visible = true
+	estado = "saida"
+	_limpar()
+	linha_tom.visible = false
+	var j := mundo.jogador()
+	titulo.text = "O outro lado da mata"
+	var faltam := Regras.BASES.keys().filter(func(b): return b != "vazia" and not j.bases_visitadas.has(b)).size()
+	texto.text = "A mata se abre. Daqui se vê a estrada.\n\nVocê tem %d ponto(s). Registrar a chegada encerra a sua noite: não dá para visitar mais nenhuma base.%s" % [
+		j.pontos(), ("\nAinda há %d guardião(ões) que você não visitou." % faltam) if faltam > 0 else ""]
+	_opcao("Registrar minha chegada", func():
+		mundo.registrar_chegada(j)
+		visible = false
+		estado = ""
+		registrou.emit())
+	_opcao("Continuar na mata", _fechar)
 
 
 # ---------- Aproximação ----------

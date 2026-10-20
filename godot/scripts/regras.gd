@@ -43,6 +43,12 @@ const BASES := {
 
 const PERFIS := ["cauteloso", "ousado", "trapaceiro"]
 
+# ---- Pontuação e chegada (decidido em 20/10/2026: ganha quem fizer mais pontos e chegar à saída) ----
+# Valores provisórios, aguardando aprovação (docs/sistemas/pontuacao_v1.md).
+const PONTOS := {"panela_boa": 3, "panela_ruim": -1}
+const FOLGA_VOLTA := 2.5     # sem caminho conhecido, o computador estima 2,5x a distância em linha reta
+const MARGEM_VOLTA_S := 60.0
+
 # ---- Visita às bases (etapa 2) ----
 const PERGUNTAS_POR_VISITA := Vector2i(4, 6)
 const SILENCIO_S := 10.0                 # tempo para responder antes de contar como silêncio

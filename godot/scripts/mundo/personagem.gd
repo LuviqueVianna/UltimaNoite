@@ -35,6 +35,8 @@ var avisou_armadilha := false
 var escondeu_rastro := false
 var refeicoes := {}                 # base -> "boa" | "ruim"
 var ultima_pegada_vista := -1       # id de personagem dono das últimas pegadas alheias vistas
+var saida := -1                     # nó de chegada (ponto oposto à partida)
+var concluiu := -1.0                # instante em que registrou a chegada; -1 se ainda não
 var fatos_noite := {}               # premissas que aconteceram (ex.: "lobo_avancou"), preenchidas na etapa 3
 var na_base := ""
 var no_anterior := -1
@@ -85,6 +87,15 @@ func tem_marca(marca: String) -> bool:
 
 func panelas_boas() -> int:
 	return refeicoes.values().count("boa")
+
+
+func pontos() -> int:
+	var ruins := refeicoes.size() - panelas_boas()
+	return panelas_boas() * Regras.PONTOS["panela_boa"] + ruins * Regras.PONTOS["panela_ruim"]
+
+
+func registrou() -> bool:
+	return concluiu >= 0.0
 
 
 ## Veneno da panela ruim: tira 1 ponto da maior habilidade (empate: sorteio; mínimo 1).

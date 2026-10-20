@@ -88,6 +88,9 @@ func _draw() -> void:
 		draw_circle(p, 9, Color(COR_AMBAR, 0.18))
 		draw_circle(p, 4, COR_AMBAR)
 
+	# Saída do jogador: ele sabe para onde precisa ir, não o caminho.
+	_desenhar_saida(m.pos(j.saida))
+
 	# Pegadas
 	for g in mundo.pegadas:
 		if mundo.pegada_visivel_para(j, g):
@@ -121,6 +124,18 @@ func _desenhar_base(pos_m: Vector2, base: String) -> void:
 	draw_rect(Rect2(c + Vector2(tam.x / 2 / ESCALA - 0.4, -1.2) * ESCALA, Vector2(0.8, 2.4) * ESCALA), COR_AMBAR if luz else COR_PAPEL)  # janela
 	draw_circle(c + Vector2(-9, -6) * ESCALA, 2.2 * ESCALA, Color(COR_MATA, 0.9))                                         # esconderijo
 	draw_string(fonte, c + Vector2(-tam.x / 2, -tam.y / 2 - 3.5 * ESCALA), Regras.BASES[base], HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COR_PAPEL)
+
+
+## Porteira de duas estacas com travessa: o ponto oposto do mapa, onde se registra a chegada.
+func _desenhar_saida(pos_m: Vector2) -> void:
+	var c := pos_m * ESCALA
+	var cor := Color(COR_AMBAR, 0.9)
+	draw_circle(c, 7.0 * ESCALA, Color(COR_AMBAR, 0.08))
+	draw_line(c + Vector2(-3, -2) * ESCALA, c + Vector2(-3, 2.5) * ESCALA, cor, 3)
+	draw_line(c + Vector2(3, -2) * ESCALA, c + Vector2(3, 2.5) * ESCALA, cor, 3)
+	draw_line(c + Vector2(-3, -1) * ESCALA, c + Vector2(3, -1) * ESCALA, cor, 2)
+	draw_line(c + Vector2(-3, 1) * ESCALA, c + Vector2(3, 1) * ESCALA, cor, 2)
+	draw_string(fonte, c + Vector2(-14, -4 * ESCALA), "Saída", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COR_AMBAR)
 
 
 func _desenhar_pegada(g: Dictionary, j: Personagem) -> void:

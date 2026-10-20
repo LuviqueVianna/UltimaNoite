@@ -36,5 +36,13 @@ func _init() -> void:
 		main.dialogo._apresentar(main.dialogo.visita.pagar(""))
 	main.dialogo._comer("esquerda")
 	print("Diálogo: %d perguntas, afinidade %d, indicação: %s | resultado: %s" % [guarda, main.dialogo.visita.afinidade, ind_texto.replace("\n", " "), main.dialogo.texto.text.replace("\n", " ")])
+	# Chegada e amanhecer
+	main.dialogo.abrir_saida(main.mundo)
+	main._ao_registrar()
+	main.mundo.registrar_chegada(main.mundo.jogador())
+	while not main.mundo.terminou:
+		main.mundo.tick(1.0 / 10.0)
+	await process_frame
+	print("Amanhecer: ", main.rotulo_base.text.replace("\n", " | "))
 	print("Cena: tempo %.1f s | jogador andou: %s | rota aceita: %s | avisos: %s" % [main.mundo.tempo, j.pos.distance_to(inicio) > 1.0, ok, main.avisos])
 	quit()

@@ -61,7 +61,7 @@ func _testar_visita_roteirizada() -> void:
 
 
 func _testar_noites(n: int) -> void:
-	var total := {"visitas": 0, "boas": 0, "ruins": 0, "mentiras": 0, "venenos": 0}
+	var total := {"visitas": 0, "boas": 0, "ruins": 0, "mentiras": 0, "venenos": 0, "chegaram": 0, "personagens": 0}
 	for semente in n:
 		var mundo := Mundo.new()
 		mundo.iniciar(2000 + semente, {"nome": "Teste", "atributos": {"forca": 2, "inteligencia": 3, "carisma": 2, "furtividade": 3, "resistencia": 2}})
@@ -85,8 +85,13 @@ func _testar_noites(n: int) -> void:
 				soma += p.atributos[k]
 			total["venenos"] += Regras.PONTOS_TOTAIS - soma
 			_checar(soma <= Regras.PONTOS_TOTAIS, "atributos acima de 12")
-			linha.append("%s(%s) %d boas/%d ruins" % [p.nome, p.perfil, boas, ruins])
+			total["personagens"] += 1
+			if p.registrou():
+				total["chegaram"] += 1
+			linha.append("%s(%s) %d boas/%d ruins %s" % [p.nome, p.perfil, boas, ruins, ("chegou %d:%02d, %d pts" % [int(p.concluiu) / 60, int(p.concluiu) % 60, p.pontos()]) if p.registrou() else "NÃO CHEGOU"])
 		print("Noite %d: %s" % [semente, ", ".join(linha)])
 	_checar(total["visitas"] > n * 4, "poucas visitas: %d" % total["visitas"])
+	_checar(total["chegaram"] >= total["personagens"] * 0.75, "só %d de %d chegaram à saída" % [total["chegaram"], total["personagens"]])
+	print("Chegaram à saída: %d de %d" % [total["chegaram"], total["personagens"]])
 	print("Total: %d refeições, %d boas, %d ruins, %d pontos perdidos por veneno, %d mentiras" % [
 		total["visitas"], total["boas"], total["ruins"], total["venenos"], total["mentiras"]])

@@ -7,6 +7,7 @@ signal chegou_base(personagem: Personagem, base: String)
 signal aviso(texto: String)
 signal amanheceu
 signal guardiao_mentiu_para(personagem: Personagem, base: String)
+signal chegou_saida(personagem: Personagem)
 
 var mapa: Mapa
 var personagens: Array = []
@@ -51,6 +52,7 @@ func iniciar(semente: int, jogador: Dictionary) -> void:
 			p.perfil = Regras.PERFIS[rng.randi() % Regras.PERFIS.size()]
 			p.atributos = Regras.sortear_atributos(rng)
 		p.preparar(mapa, partidas[i])
+		p.saida = mapa.saidas[partidas[i]]
 		if not comuns.is_empty():
 			p.inventario.append(comuns[rng.randi() % comuns.size()])
 		personagens.append(p)
@@ -95,6 +97,13 @@ func tick(dt: float) -> void:
 
 
 func _chegou(p: Personagem, no: int) -> void:
+	if no == p.saida and not p.registrou():
+		if p.eh_jogador:
+			chegou_saida.emit(p)
+			return
+		if IA.hora_de_ir(p, self):
+			p.concluiu = tempo
+			return
 	var base: String = mapa.nos[no]["base"]
 	p.na_base = base
 	if base == "":
@@ -109,6 +118,22 @@ func _chegou(p: Personagem, no: int) -> void:
 		var res := IA.visitar(p, self, base)
 		visitante[base] = {"id": p.id, "mente": res["mente"], "ate": tempo + Regras.VISITA_BASE_S}
 		p.espera = Regras.VISITA_BASE_S
+
+
+func registrar_chegada(p: Personagem) -> void:
+	if not p.registrou():
+		p.concluiu = tempo
+		p.rota = []
+
+
+## Classificação no amanhecer: só pontua quem registrou a chegada.
+func classificacao() -> Array:
+	var ordem := personagens.duplicate()
+	ordem.sort_custom(func(a, b):
+		if a.registrou() != b.registrou():
+			return a.registrou()
+		return a.pontos() > b.pontos())
+	return ordem
 
 
 func item(id: String) -> Dictionary:
