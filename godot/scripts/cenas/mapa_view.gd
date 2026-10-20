@@ -149,7 +149,7 @@ func _plantar_arvores() -> void:
 						ok = false
 						break
 			if ok:
-				arvores.append({"pos": p, "raio": raio, "tipo": "palmeira" if rng.randf() < 0.22 else "copa",
+				arvores.append({"pos": p, "raio": raio, "tipo": "copa",
 					"giro": rng.randf() * TAU, "visivel": false})
 		y += passo * 0.87
 
@@ -246,21 +246,12 @@ func _draw() -> void:
 		draw_arc(alvo, 10, 0, TAU, 24, Color(COR_MINHA, 0.8), 2)
 
 
-## Copa vista de cima com borda recortada (folhagem), ou embaúba/palmeira em estrela.
+## Copa vista de cima: folhagem escura com borda recortada.
 func _desenhar_arvore_em(alvo: CanvasItem, a: Dictionary) -> void:
 	var c: Vector2 = a["pos"] * ESCALA
 	var r: float = a["raio"] * ESCALA
 	var giro: float = a["giro"]
 	var escura := Color("#2a1c10", 0.88)
-	if a["tipo"] == "palmeira":
-		# Embaúba/palmeira: folhas escuras em estrela
-		for k in 7:
-			var ang := giro + TAU * k / 7.0
-			var dir := Vector2(cos(ang), sin(ang))
-			var lado := dir.orthogonal() * r * 0.13
-			alvo.draw_colored_polygon(PackedVector2Array([c + lado, c + dir * r, c - lado]), escura)
-		alvo.draw_circle(c, r * 0.18, escura)
-		return
 	# Copa: folhagem escura com borda recortada e um reflexo mais claro
 	var pts := PackedVector2Array()
 	for k in 18:

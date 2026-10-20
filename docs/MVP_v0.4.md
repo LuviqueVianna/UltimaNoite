@@ -38,7 +38,7 @@ O centro do jogo é informação incompleta: quem passou por onde, quem mente, q
 ## 3. Visão noturna
 
 - O mapa é um **pergaminho que começa escuro e desfocado**. As áreas ficam nítidas conforme o jogador anda e enxerga.
-- **Mata (20/10/2026):** copas de árvore escuras e cheias, vistas de cima, e embaúbas em estrela escura, fora das trilhas e em anel em volta das clareiras. Aparecem só onde a névoa se abriu. São só desenho: nas regras, a mata já é parede.
+- **Mata (20/10/2026):** copas de árvore escuras e cheias, vistas de cima, de tamanhos variados, fora das trilhas e em anel em volta das clareiras. Aparecem só onde a névoa se abriu. São só desenho: nas regras, a mata já é parede.
 - **Contraste (20/10/2026):** a trilha é um traço leve só para indicar o caminho; as pegadas têm borda clara para se destacarem.
 - **Visual (decidido em 20/10/2026):** onde a névoa se abre aparece pergaminho bege com manchas de umidade e borda tostada; trilhas em tinta marrom; pegadas pretas em forma de sola e salto (bota, botina), sola fina (alpercata), bloco (tamanco) e pé com dedos (descalço). A noite em volta é azul-escura. Referências do usuário: pegadas de sola e salto sobre papel envelhecido e a paleta de mapa antigo, sem copiar elementos de obras existentes.
 - Aparecem as trilhas percorridas e o que está no alcance de vista.
