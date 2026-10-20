@@ -1,0 +1,528 @@
+{
+  "guardiao": "iara",
+  "versao_formato": 3,
+  "modificadores_tom": {
+    "firme": 0,
+    "gentil": 1,
+    "evasivo": -1
+  },
+  "reputacao": {
+    "delatou_jogador": -2,
+    "protegeu_identidade": 1,
+    "alertou_perigo": 1,
+    "confessou_egoismo": -2,
+    "enviou_dica_falsa": -2
+  },
+  "entradas": [
+    {
+      "id": "iara_01",
+      "tipo": "narracao",
+      "texto": "Iara sopra a superfície das tigelas e observa os sinais deixados pela floresta no visitante."
+    },
+    {
+      "id": "iara_02",
+      "tipo": "fala",
+      "texto": "Sente-se um instante. Às vezes, a pressa machuca mais do que a fome."
+    },
+    {
+      "id": "iara_03",
+      "tipo": "fala",
+      "texto": "Não preciso que pareça bom. A floresta costuma guardar a parte que as palavras escondem."
+    },
+    {
+      "id": "iara_04",
+      "tipo": "pergunta",
+      "texto": "Você encontrou o lobo ferido? O que fez?",
+      "verificavel": true,
+      "verificacao": "Checar encontro e ação do jogador diante do lobo ferido.",
+      "requer": [
+        "animais"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "respostas": [
+        {
+          "texto": "Cuidei da ferida e mantive distância.",
+          "afinidade": 3,
+          "intencao": "boa",
+          "registra": [
+            "ajudou_animal"
+          ]
+        },
+        {
+          "texto": "Afastei-me. Eu não podia arriscar um ataque.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Usei a fraqueza dele para atravessar a área.",
+          "afinidade": -1,
+          "intencao": "ma",
+          "registra": [
+            "explorou_vulneravel"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Deixei um item de cura ao alcance e saí do campo de ameaça.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -2
+      },
+      "premissa": [
+        "encontrou_lobo_ferido"
+      ]
+    },
+    {
+      "id": "iara_05",
+      "tipo": "pergunta",
+      "texto": "A coruja revelou a posição de outro jogador. Como usou o aviso?",
+      "verificavel": true,
+      "verificacao": "Checar alerta da coruja e deslocamento posterior do jogador.",
+      "requer": [
+        "animais"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "respostas": [
+        {
+          "texto": "Desviei para não levar perigo até a pessoa.",
+          "afinidade": 3,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_jogador"
+          ]
+        },
+        {
+          "texto": "Evitei a área para preservar minha rota.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Segui o sinal porque precisava saber quem estava lá.",
+          "afinidade": 0,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Observei de longe antes de escolher não interferir.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      },
+      "premissa": [
+        "coruja_avisou"
+      ]
+    },
+    {
+      "id": "iara_06",
+      "tipo": "pergunta",
+      "texto": "O cão esperou que você o seguisse. O que decidiu?",
+      "verificavel": true,
+      "verificacao": "Checar encontro com o cão e a reação do jogador.",
+      "requer": [
+        "animais"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "respostas": [
+        {
+          "texto": "Segui com cuidado e recuei quando ele ficou inquieto.",
+          "afinidade": 3,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Não segui. Eu precisava manter minha rota.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Deixei que fosse à frente para revelar qualquer armadilha.",
+          "afinidade": -1,
+          "intencao": "ma",
+          "registra": [
+            "explorou_vulneravel"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Li os sinais dele, mas não entreguei minha segurança ao guia.",
+        "afinidade": 2
+      },
+      "premissa": [
+        "cao_ofereceu_guia"
+      ]
+    },
+    {
+      "id": "iara_07",
+      "tipo": "pergunta",
+      "texto": "Você encontrou uma armadilha na trilha. O que fez depois?",
+      "verificavel": true,
+      "verificacao": "Checar armadilha encontrada e ação posterior do jogador.",
+      "requer": [
+        "armadilhas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "respostas": [
+        {
+          "texto": "Usei uma frase pronta para alertar quem viesse atrás.",
+          "afinidade": 3,
+          "intencao": "boa",
+          "registra": [
+            "alertou_perigo"
+          ]
+        },
+        {
+          "texto": "Desviei e continuei. Eu estava sendo seguido.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Deixei como estava para atrasar os demais.",
+          "afinidade": -1,
+          "intencao": "ma"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Passei sem acioná-la, mas não revelei minha rota.",
+        "afinidade": 0
+      },
+      "premissa": [
+        "notou_armadilha"
+      ]
+    },
+    {
+      "id": "iara_08",
+      "tipo": "pergunta",
+      "texto": "Você recebeu uma dica sobre uma panela. Repassou a alguém?",
+      "verificavel": true,
+      "verificacao": "Cruzar frases prontas recebidas e enviadas sobre panelas.",
+      "requer": [
+        "frases_prontas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "respostas": [
+        {
+          "texto": "Repeti a dica como a recebi, avisando que não tinha certeza.",
+          "afinidade": 3,
+          "intencao": "boa",
+          "registra": [
+            "compartilhou_dica"
+          ]
+        },
+        {
+          "texto": "Guardei para mim; eu ainda precisava confirmar.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Usei a dica primeiro e só depois a repassei.",
+          "afinidade": 0,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Perguntei o que a pessoa sabia antes de decidir compartilhar.",
+        "afinidade": 3
+      },
+      "silencio": {
+        "afinidade": -1
+      },
+      "premissa": [
+        "recebeu_frase_panela"
+      ]
+    },
+    {
+      "id": "iara_09",
+      "tipo": "pergunta",
+      "texto": "Você protegeria quem lhe deu uma dica falsa?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Se estivesse em perigo, sim; depois pediria a verdade.",
+          "afinidade": 3,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Não me arriscaria de novo por essa pessoa.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Entregaria sua posição em troca de informação correta.",
+          "afinidade": -1,
+          "intencao": "ma",
+          "registra": [
+            "aceitou_delacao"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Ofereceria ajuda com uma condição clara: nada de nova mentira.",
+        "afinidade": 3
+      }
+    },
+    {
+      "id": "iara_10",
+      "tipo": "pergunta",
+      "texto": "Você acionou uma armadilha nesta noite?",
+      "verificavel": true,
+      "verificacao": "Checar armadilhas acionadas e circunstâncias registradas.",
+      "requer": [
+        "armadilhas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "respostas": [
+        {
+          "texto": "Sim, por acidente; avisei pela frase disponível.",
+          "afinidade": 3,
+          "intencao": "boa",
+          "registra": [
+            "alertou_perigo"
+          ]
+        },
+        {
+          "texto": "Sim. Eu precisava escapar de quem me seguia.",
+          "afinidade": 0,
+          "intencao": null
+        },
+        {
+          "texto": "Não acionei nenhuma.",
+          "afinidade": 3,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Não acionei; mantive-me na trilha já visível.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -2
+      }
+    },
+    {
+      "id": "iara_11",
+      "tipo": "pergunta",
+      "texto": "Por que quer chegar ao amanhecer?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Quero vencer sem transformar todos em inimigos.",
+          "afinidade": 3,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Quero sobreviver e terminar à frente.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Quero usar qualquer vantagem que a noite me der.",
+          "afinidade": -1,
+          "intencao": null
+        }
+      ],
+      "silencio": {
+        "afinidade": 0
+      }
+    },
+    {
+      "id": "iara_12",
+      "tipo": "pergunta",
+      "texto": "Ao encontrar o lobo perto de uma base, como passou por ele?",
+      "verificavel": true,
+      "verificacao": "Checar a rota e as ações do jogador durante o encontro com o lobo.",
+      "requer": [
+        "animais",
+        "aproximacao"
+      ],
+      "premissa": [
+        "encontrou_lobo"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "respostas": [
+        {
+          "texto": "Desviei sem conduzi-lo até a base.",
+          "afinidade": 3,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_jogador"
+          ]
+        },
+        {
+          "texto": "Recuei e procurei outra aproximação.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Esperei outro jogador chamar a atenção dele.",
+          "afinidade": -1,
+          "intencao": "ma",
+          "registra": [
+            "explorou_vulneravel"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Passei oculto e deixei o lobo onde estava.",
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "iara_13",
+      "tipo": "pergunta",
+      "texto": "Você viu outro jogador entrar numa base por um caminho perigoso. Avisou?",
+      "verificavel": true,
+      "verificacao": "Cruzar jogador detectado, aproximação observada e frase pronta enviada.",
+      "requer": [
+        "jogadores_vistos",
+        "aproximacao",
+        "frases_prontas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "respostas": [
+        {
+          "texto": "Avisei do risco sem exigir nada.",
+          "afinidade": 3,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Não avisei; revelar-me também seria perigoso.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Esperei a pessoa escolher antes de avisar.",
+          "afinidade": 0,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Usei uma frase curta e saí antes de revelar minha posição.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -1
+      },
+      "premissa": [
+        "viu_jogador_entrar_base"
+      ]
+    },
+    {
+      "id": "iara_14",
+      "tipo": "pergunta",
+      "texto": "Alguém lhe enviou uma frase pedindo ajuda? Como respondeu?",
+      "verificavel": true,
+      "verificacao": "Checar frases prontas recebidas e a resposta enviada ou ausência dela.",
+      "requer": [
+        "frases_prontas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "respostas": [
+        {
+          "texto": "Respondi com a informação segura que eu tinha.",
+          "afinidade": 3,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Não respondi; eu não sabia se era uma isca.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Mandei uma direção falsa para proteger minha rota.",
+          "afinidade": -1,
+          "intencao": "ma",
+          "registra": [
+            "enviou_dica_falsa"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Respondi apenas o que podia confirmar.",
+        "afinidade": 2
+      },
+      "premissa": [
+        "recebeu_frase_pedido"
+      ]
+    },
+    {
+      "id": "iara_15",
+      "tipo": "pergunta",
+      "texto": "Se a tigela boa puder ser negociada, o que pediria por ela?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Nada de quem estivesse em pior condição.",
+          "afinidade": 3,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Um item justo; também preciso atravessar a noite.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "A rota de outro jogador.",
+          "afinidade": -1,
+          "intencao": "ma"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Uma troca que não deixe a outra pessoa sem recurso.",
+        "afinidade": 3
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    }
+  ]
+}
