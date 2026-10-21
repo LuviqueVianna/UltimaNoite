@@ -8,7 +8,7 @@
 
 ## 1. Resumo
 
-O primeiro MVP é jogado num **mapa visto de cima**, onde o jogador controla **apenas as pegadas** do seu personagem. A câmera isométrica fica para depois que o MVP provar que o jogo é divertido.
+O primeiro MVP é jogado num **mapa visto de cima**, onde o jogador controla **apenas as pegadas** do seu personagem. A câmera isométrica fica para depois que o MVP provar que o jogo é divertido. O caminho até o 3D está em [caminho_3D_v1.md](caminho_3D_v1.md) (aprovado em 21/10/2026).
 
 O centro do jogo é informação incompleta: quem passou por onde, quem mente, qual panela é a boa.
 
