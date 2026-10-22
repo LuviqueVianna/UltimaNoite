@@ -49,8 +49,8 @@ Regra comum: **quem fica parado diante do perigo se sai melhor que quem corre.**
 
 ## Para os guardiões (premissas e verificação)
 - Premissas preenchidas: `encontrou_lobo`, `lobo_avancou` (rosnou e avançou), `encontrou_lobo_ferido`, `coruja_notou`, `coruja_avisou`, `cao_ofereceu_guia`.
-- Novos fatos verificáveis: `lobo_reacao` ("ficou" ou "correu"), `seguiu_cao` (sim ou não).
-- Fatos extras da noite: `cobra_picou`, `cobra_avisou` (ainda sem perguntas).
+- Premissas novas (demanda 4): `cobra_avisou`, `cobra_picou`, `cobra_desviou` (ficou parado e ela foi embora), `lobo_derrubou`.
+- Fatos verificáveis: `lobo_reacao` ("ficou" ou "correu"), `seguiu_cao` (sim ou não), `cobra_reacao` ("parou" ou "passou").
 
 ## Textos
 - Uivo, ataque, pio e latido usam `conteudo/textos/eventos_distancia.json`.

@@ -342,6 +342,7 @@ func _cobra(a: Animal, dt: float, andou: Dictionary) -> void:
 			if d <= Regras.COBRA_PICA_M:
 				var r: String = p.envenenar(mundo.rng)
 				p.fatos_noite["cobra_picou"] = true
+				p.fatos_noite["cobra_reacao"] = "passou"
 				_falar(p, "cobra_resistiu" if r == "resistiu" else "cobra_pica")
 				if p.eh_jogador and r != "" and r != "resistiu":
 					mundo.aviso.emit("Você perdeu 1 ponto de %s." % Dialogo.NOMES_ATRIBUTO.get(r, r))
@@ -350,6 +351,9 @@ func _cobra(a: Animal, dt: float, andou: Dictionary) -> void:
 		else:
 			a.ouviu[p.id] += dt
 			if a.ouviu[p.id] >= Regras.COBRA_DESISTE_S:
+				p.fatos_noite["cobra_desviou"] = true
+				if not p.fatos_noite.has("cobra_reacao"):
+					p.fatos_noite["cobra_reacao"] = "parou"
 				_falar(p, "cobra_some")
 				_mudar_cobra(a)
 				return
