@@ -47,7 +47,7 @@
       "respostas": [
         {
           "texto": "Corri, sim. Quis continuar vivo.",
-          "afinidade": 1,
+          "afinidade": 2,
           "intencao": null,
           "registra": [
             "confessou_fuga"
@@ -58,7 +58,7 @@
         },
         {
           "texto": "Fiquei e sustentei o olhar.",
-          "afinidade": 3,
+          "afinidade": 2,
           "intencao": null,
           "registra": [
             "alegou_coragem"
@@ -69,7 +69,7 @@
         },
         {
           "texto": "Recuei sem virar as costas.",
-          "afinidade": 2,
+          "afinidade": 1,
           "intencao": null
         }
       ],
@@ -77,7 +77,7 @@
         "atributo": "inteligencia",
         "minimo": 4,
         "texto": "Observei as orelhas e só recuei quando ele marcou ataque.",
-        "afinidade": 2
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": -2
@@ -103,7 +103,7 @@
       "respostas": [
         {
           "texto": "Reconheci o calçado; digo quem era.",
-          "afinidade": 3,
+          "afinidade": 2,
           "intencao": null,
           "registra": [
             "delatou_jogador"
@@ -111,7 +111,7 @@
         },
         {
           "texto": "Digo o calçado e a direção, mas não conheço o dono.",
-          "afinidade": 2,
+          "afinidade": 1,
           "intencao": null,
           "registra": [
             "descreveu_pegadas"
@@ -130,7 +130,7 @@
         "atributo": "furtividade",
         "minimo": 4,
         "texto": "Digo direção e idade do rastro, sem inventar um nome.",
-        "afinidade": 2
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": -2
@@ -155,7 +155,7 @@
       "respostas": [
         {
           "texto": "Rondei. Queria saber onde estava pisando.",
-          "afinidade": 1,
+          "afinidade": 2,
           "intencao": null,
           "registra": [
             "confessou_cautela"
@@ -163,7 +163,7 @@
         },
         {
           "texto": "Vim pela frente, sem me esconder.",
-          "afinidade": 3,
+          "afinidade": 1,
           "intencao": null,
           "registra": [
             "entrou_de_frente"
@@ -188,29 +188,29 @@
     {
       "id": "bento_07",
       "tipo": "pergunta",
-      "texto": "Uma trilha está tomada por perigo e a outra custa tempo. Qual você pega?",
+      "texto": "A trilha curta tem perigo; a volta custa tempo. Qual risco você põe na sua conta?",
       "verificavel": false,
       "respostas": [
         {
-          "texto": "A perigosa. Não entrego a noite ao medo.",
-          "afinidade": 3,
+          "texto": "Espero alguém chegar. Assim posso impedir que entre sozinho.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Pego a curta. Já perdi tempo demais para dar outra volta.",
+          "afinidade": 1,
           "intencao": null
         },
         {
-          "texto": "A longa. Escolho o risco que consigo sustentar.",
+          "texto": "Dou a volta. Ainda não sei atravessar a curta e digo isso sem gosto.",
           "afinidade": 2,
-          "intencao": null
-        },
-        {
-          "texto": "Espero outro passar primeiro e sigo o resultado.",
-          "afinidade": -2,
           "intencao": null
         }
       ],
       "opcao_extra": {
         "atributo": "resistencia",
         "minimo": 4,
-        "texto": "Pego a longa e mantenho o passo até o fim.",
+        "texto": "Dou a volta, mesmo sabendo que o cansaço vai cobrar depois.",
         "afinidade": 1
       }
     },
@@ -230,12 +230,12 @@
       "respostas": [
         {
           "texto": "Nenhuma.",
-          "afinidade": 3,
+          "afinidade": 2,
           "intencao": null
         },
         {
           "texto": "Uma vez. Ouvi perigo e me preservei.",
-          "afinidade": 2,
+          "afinidade": 1,
           "intencao": null
         },
         {
@@ -251,7 +251,7 @@
         "atributo": "carisma",
         "minimo": 4,
         "texto": "Digo o número exato e por que me escondi.",
-        "afinidade": 3
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": -2
@@ -260,30 +260,30 @@
     {
       "id": "bento_09",
       "tipo": "pergunta",
-      "texto": "Tem coragem de escolher uma panela sem pedir garantia?",
+      "texto": "Se esperar mais pela panela custar sua saída, ainda procura uma garantia?",
       "verificavel": false,
       "respostas": [
         {
-          "texto": "Tenho. Escolho e aceito o resultado.",
-          "afinidade": 3,
+          "texto": "Espero. Quero sair sabendo que a escolha foi minha, não da pressa.",
+          "afinidade": 1,
           "intencao": null
         },
         {
-          "texto": "Não. Prefiro admitir que preciso de informação.",
+          "texto": "Deixo você escolher por mim. Não quero lhe fazer desfeita.",
+          "afinidade": 0,
+          "intencao": null
+        },
+        {
+          "texto": "Escolho agora. Posso estar lendo errado, mas não troco a saída por uma garantia.",
           "afinidade": 2,
-          "intencao": null
-        },
-        {
-          "texto": "Exijo que você prove qual é a boa.",
-          "afinidade": -2,
           "intencao": null
         }
       ],
       "opcao_extra": {
-        "atributo": "resistencia",
+        "atributo": "inteligencia",
         "minimo": 4,
-        "texto": "Escolho, mas não chamo resistência de coragem.",
-        "afinidade": 2
+        "texto": "Arrisco a panela agora e aceito sair daqui com uma dúvida.",
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": 1
@@ -292,33 +292,30 @@
     {
       "id": "bento_10",
       "tipo": "pergunta",
-      "texto": "Um rival sabe a rota segura. Como consegue a informação?",
+      "texto": "Se um rival souber a rota segura e não quiser falar, até onde você insiste?",
       "verificavel": false,
       "respostas": [
         {
-          "texto": "Peço de frente e ofereço troca justa.",
-          "afinidade": 3,
+          "texto": "Peço outra vez, na frente dele. Um silêncio pode ser só desconfiança.",
+          "afinidade": 1,
           "intencao": null
         },
         {
-          "texto": "Digo que preciso e aceito um não.",
+          "texto": "Digo por que preciso e sigo sem a resposta se ele fechar a boca.",
           "afinidade": 2,
           "intencao": null
         },
         {
-          "texto": "Uso uma frase falsa para fazê-lo falar.",
-          "afinidade": -3,
-          "intencao": "ma",
-          "registra": [
-            "admitiu_engano"
-          ]
+          "texto": "Ofereço acompanhá-lo, mesmo sem saber se acompanho o passo.",
+          "afinidade": 0,
+          "intencao": "boa"
         }
       ],
       "opcao_extra": {
         "atributo": "carisma",
         "minimo": 4,
-        "texto": "Proponho seguirmos juntos, deixando o risco claro.",
-        "afinidade": 3
+        "texto": "Deixo claro o que ganho com a pergunta antes de insistir uma vez.",
+        "afinidade": 1
       }
     },
     {
@@ -338,7 +335,7 @@
       "respostas": [
         {
           "texto": "Enviei. Preferi arriscar a informação.",
-          "afinidade": 2,
+          "afinidade": 1,
           "intencao": null,
           "registra": [
             "confessou_imprudencia"
@@ -346,7 +343,7 @@
         },
         {
           "texto": "Não. Só enviei o que podia sustentar.",
-          "afinidade": 3,
+          "afinidade": 2,
           "intencao": null,
           "registra": [
             "afirmou_dica_segura"
@@ -354,7 +351,7 @@
         },
         {
           "texto": "Enviei porque precisava tirar alguém da minha rota.",
-          "afinidade": 1,
+          "afinidade": 0,
           "intencao": "ma",
           "registra": [
             "enviou_dica_falsa"
@@ -365,7 +362,7 @@
         "atributo": "inteligencia",
         "minimo": 4,
         "texto": "Enviei como suspeita, deixando claro que não era certeza.",
-        "afinidade": 2
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": -3
@@ -377,23 +374,23 @@
     {
       "id": "bento_12",
       "tipo": "pergunta",
-      "texto": "O que vale mais: chegar primeiro ou não disfarçar o caminho que tomou?",
+      "texto": "Uma vitória pode exigir que você esconda o caminho. Até onde sustenta o que fez?",
       "verificavel": false,
       "respostas": [
         {
-          "texto": "Não disfarçar. Vitória não muda o que fiz.",
-          "afinidade": 3,
-          "intencao": null
+          "texto": "Divido a rota com todos. Ninguém merece atravessar sem saber.",
+          "afinidade": 0,
+          "intencao": "boa"
         },
         {
-          "texto": "Chegar primeiro e assumir o preço.",
+          "texto": "Assumo a escolha, mas guardo a rota enquanto ainda serve para me alcançar.",
           "afinidade": 2,
           "intencao": null
         },
         {
-          "texto": "Chegar primeiro e contar a versão que convier.",
-          "afinidade": -4,
-          "intencao": "ma"
+          "texto": "Conto o caminho inteiro. Prefiro perder a chegada a deixar dúvida.",
+          "afinidade": 1,
+          "intencao": null
         }
       ],
       "silencio": {
@@ -416,7 +413,7 @@
       "respostas": [
         {
           "texto": "Avancei pela trilha que já tinha escolhido.",
-          "afinidade": 3,
+          "afinidade": 1,
           "intencao": null
         },
         {
@@ -434,7 +431,7 @@
         "atributo": "furtividade",
         "minimo": 4,
         "texto": "Avancei fora da trilha para não oferecer outro sinal.",
-        "afinidade": 2
+        "afinidade": 0
       },
       "silencio": {
         "afinidade": -2
@@ -446,21 +443,21 @@
     {
       "id": "bento_14",
       "tipo": "pergunta",
-      "texto": "Se eu disser que a panela da esquerda é ruim, vai acreditar?",
+      "texto": "Se minha palavra mandar à esquerda e seu juízo puxar à direita, qual peso carrega?",
       "verificavel": false,
       "respostas": [
         {
-          "texto": "Acredito na sua palavra e assumo minha escolha.",
-          "afinidade": 3,
-          "intencao": null
-        },
-        {
-          "texto": "Vou observar seus gestos antes de decidir.",
+          "texto": "Vou à direita e digo por quê, mesmo que isso lhe ofenda.",
           "afinidade": 2,
           "intencao": null
         },
         {
-          "texto": "Só acredito se ganhar alguma garantia.",
+          "texto": "Vou à esquerda. Você conhece as panelas melhor do que eu.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Peço que sirva primeiro. Assim não rejeito sua palavra.",
           "afinidade": 0,
           "intencao": null
         }
@@ -468,7 +465,7 @@
       "opcao_extra": {
         "atributo": "inteligencia",
         "minimo": 4,
-        "texto": "Comparo sua fala ao que sei desta base.",
+        "texto": "Adio a escolha por um instante e digo qual detalhe me fez duvidar.",
         "afinidade": 1
       },
       "silencio": {
@@ -478,30 +475,30 @@
     {
       "id": "bento_15",
       "tipo": "pergunta",
-      "texto": "Diga sem rodeio: do que você teve medo esta noite?",
+      "texto": "Se o medo apertar junto da saída, você conta isso ou guarda para atravessar?",
       "verificavel": false,
       "respostas": [
         {
-          "texto": "De falhar quando fosse posto à prova.",
-          "afinidade": 3,
+          "texto": "Conto na hora. Esconder o medo é começar a mentir.",
+          "afinidade": 1,
           "intencao": null
         },
         {
-          "texto": "De ser eliminado antes do amanhecer.",
+          "texto": "Fico para acalmar quem estiver atrás, mesmo sem saber se aguento.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Atravesso primeiro; depois conto quanto pesou dar o passo.",
           "afinidade": 2,
-          "intencao": null
-        },
-        {
-          "texto": "Não tive medo de nada.",
-          "afinidade": -2,
           "intencao": null
         }
       ],
       "opcao_extra": {
         "atributo": "carisma",
         "minimo": 4,
-        "texto": "Tive medo e quase recuei. Essa é a verdade inteira.",
-        "afinidade": 3
+        "texto": "Digo só que preciso seguir; não ofereço coragem que ainda não tenho.",
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": -2
@@ -531,12 +528,12 @@
         },
         {
           "texto": "Passei e fui picado. Arrisquei o couro e assumo.",
-          "afinidade": 3,
+          "afinidade": 2,
           "intencao": null
         },
         {
           "texto": "Só ouvi o aviso. Não esperei cobra sair nem levei picada; não vou inventar coragem.",
-          "afinidade": 3,
+          "afinidade": 2,
           "intencao": null
         }
       ],
@@ -544,7 +541,7 @@
         "atributo": "carisma",
         "minimo": 4,
         "texto": "Parei até ela sair, sem picada. Enfrentar não exige pisar em cima.",
-        "afinidade": 2
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": -2
@@ -553,7 +550,7 @@
     {
       "id": "bento_17",
       "tipo": "pergunta",
-      "texto": "O lobo pôs você no chão. Como vai contar isso?",
+      "texto": "O lobo pôs você no chão. Quanto dessa queda vai contar antes de voltar à mata?",
       "verificavel": false,
       "requer": [
         "animais"
@@ -563,29 +560,244 @@
       ],
       "respostas": [
         {
-          "texto": "De frente. Ele me alcançou e me derrubou.",
-          "afinidade": 3,
-          "intencao": null
+          "texto": "Chamo de tropeço. Preciso sair daqui sem parecer presa fácil.",
+          "afinidade": 0,
+          "intencao": "ma"
         },
         {
-          "texto": "Só conto se perguntarem. A queda não conta minha noite inteira.",
+          "texto": "Conto tudo agora. A queda foi minha, inclusive o susto.",
           "afinidade": 1,
           "intencao": null
         },
         {
-          "texto": "Direi que apenas tropecei. Não quero virar presa fácil.",
-          "afinidade": -2,
-          "intencao": "ma"
+          "texto": "Digo que ele me derrubou; guardo os detalhes até conseguir pôr ordem neles.",
+          "afinidade": 2,
+          "intencao": null
         }
       ],
       "opcao_extra": {
         "atributo": "resistencia",
         "minimo": 4,
-        "texto": "Conto a queda sem fazer dela medalha.",
-        "afinidade": 2
+        "texto": "Conto que fui derrubado e peço tempo para explicar o resto.",
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": -2
+      }
+    },
+    {
+      "id": "bento_18",
+      "tipo": "pergunta",
+      "texto": "Você viu a armadilha antes de pisar. O que faz com a sorte de ter visto?",
+      "verificavel": false,
+      "requer": [
+        "armadilhas"
+      ],
+      "premissa": [
+        "notou_armadilha"
+      ],
+      "respostas": [
+        {
+          "texto": "Fico olhando até entender tudo. Quero ter certeza de que não vou recuar depois.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Espero quem vier atrás para conduzir cada passo, mesmo sem saber sua intenção.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Passo pelo lado e sigo. Não preciso provar nada a um laço escondido.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Desvio e guardo a dúvida sobre quem a deixou, sem gastar a noite procurando.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "bento_19",
+      "tipo": "pergunta",
+      "texto": "Quantas armadilhas já seguraram seu pé nesta noite? Diga o número, sem enfeitar.",
+      "verificavel": true,
+      "requer": [
+        "armadilhas"
+      ],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Nenhuma. Esse laço ainda não segurou meu pé.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Uma. É o número que tenho para contar.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Duas ou mais. Não vou diminuir a conta.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Não fixo um número, mas pelo menos uma eu acionei.",
+        "afinidade": 0
+      },
+      "silencio": {
+        "afinidade": -1
+      },
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "verificacao": "Checar armadilhas_acionadas: resposta 0 exige == 0; resposta 1 exige == 1; resposta 2 exige >= 2; opção extra exige >= 1. Não verificar sentimentos nem motivos. O contador começa em zero; nenhum disparo recebe afinidade igual aos demais relatos honestos."
+    },
+    {
+      "id": "bento_20",
+      "tipo": "pergunta",
+      "texto": "Se uma falha escondida ainda puser outra pessoa em risco, você promete segredo?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Não prometo. Vou contar o risco, mesmo que perca quem confiou em mim.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Peço que a pessoa conte antes. Posso esperar pouco, mas não falo por ela de saída.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Prometo guardar tudo. Já deve ser difícil carregar a vergonha sozinho.",
+          "afinidade": 0,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Prometo calar só enquanto o segredo não empurrar o risco para outra pessoa.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "bento_21",
+      "tipo": "pergunta",
+      "texto": "A volta pode custar a saída; a trilha à frente só lhe dá medo. Como decide?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Espero companhia e prometo ir na frente para tranquilizá-la.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Volto. Quero chegar por um caminho que consiga defender, mesmo que chegue tarde.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Dou o passo com medo. Não digo que está seguro só porque preciso seguir.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Dou o primeiro passo sem dizer que o resto está seguro.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "bento_22",
+      "tipo": "pergunta",
+      "texto": "Se a única indicação vier de quem você desconfia, aceita depender dessa palavra?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Aceito só o trecho que posso conferir; o restante atravesso por minha conta.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Aceito e guardo o nome para cobrar depois, se sair errado.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Aceito inteira para mostrar que ainda há confiança entre nós.",
+          "afinidade": 0,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "resistencia",
+        "minimo": 4,
+        "texto": "Recuso a indicação se ainda puder pagar a volta com minhas pernas.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "bento_23",
+      "tipo": "pergunta",
+      "texto": "A saída está perto. Se pedirem uma explicação que atrase sua chegada, quanto você dá?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Dou a explicação inteira. Não quero chegar com uma pergunta nas costas.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Fico até todos entenderem. Ninguém deve atravessar carregando uma dúvida minha.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Digo o essencial agora e assumo que estou saindo com parte por explicar.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Respondo uma pergunta concreta e digo qual ficará sem resposta.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
       }
     }
   ]

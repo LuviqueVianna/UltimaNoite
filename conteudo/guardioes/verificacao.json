@@ -12,12 +12,13 @@
     "mentiu_antes": "alguma resposta anterior falhou na verificação",
     "mentiu_inventario": "mentiu numa pergunta sobre inventário em outra base",
     "usou_silencio": "vezes que ficou em silêncio em outras bases",
-    "armadilhas_acionadas": "armadilhas em que pisou",
+    "armadilhas_acionadas": "armadilhas em que pisou na noite",
     "avisou_armadilha": "enviou frase de perigo depois de acionar ou notar armadilha",
     "escondeu_rastro": "usou pano de saco ou sumir na mata na última trilha",
     "lobo_reacao": "'ficou' se ficou parado enquanto o lobo rosnava; 'correu' se se mexeu",
     "seguiu_cao": "true se chegou perto do cão quando ele ofereceu guia; false se não",
-    "cobra_reacao": "'parou' se ficou parado e a cobra foi embora; 'passou' se foi picado ao seguir andando (vale para a noite toda: uma picada prevalece). Ausente se ainda não houve desfecho"
+    "cobra_reacao": "'parou' se ficou parado e a cobra foi embora; 'passou' se foi picado ao seguir andando (vale para a noite toda: uma picada prevalece). Ausente se ainda não houve desfecho",
+    "notou_armadilha": "true se o jogador viu uma armadilha antes de pisar"
   },
   "condicoes": {
     "bento_05": {
@@ -556,6 +557,156 @@
           "fato": "cobra_reacao",
           "op": "==",
           "valor": "passou"
+        }
+      ]
+    },
+    "bento_19": {
+      "0": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": "==",
+          "valor": 0
+        }
+      ],
+      "1": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": "==",
+          "valor": 1
+        }
+      ],
+      "2": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": ">=",
+          "valor": 2
+        }
+      ],
+      "extra": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": ">=",
+          "valor": 1
+        }
+      ]
+    },
+    "iara_19": {
+      "0": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": "==",
+          "valor": 0
+        }
+      ],
+      "1": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": "==",
+          "valor": 1
+        }
+      ],
+      "2": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": ">=",
+          "valor": 2
+        }
+      ],
+      "extra": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": ">=",
+          "valor": 1
+        }
+      ]
+    },
+    "anselmo_19": {
+      "0": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": "==",
+          "valor": 0
+        }
+      ],
+      "1": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": "==",
+          "valor": 1
+        }
+      ],
+      "2": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": ">=",
+          "valor": 2
+        }
+      ],
+      "extra": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": ">=",
+          "valor": 1
+        }
+      ]
+    },
+    "marta_19": {
+      "0": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": "==",
+          "valor": 0
+        }
+      ],
+      "1": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": "==",
+          "valor": 1
+        }
+      ],
+      "2": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": ">=",
+          "valor": 2
+        }
+      ],
+      "extra": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": ">=",
+          "valor": 1
+        }
+      ]
+    },
+    "quincas_19": {
+      "0": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": "==",
+          "valor": 0
+        }
+      ],
+      "1": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": "==",
+          "valor": 1
+        }
+      ],
+      "2": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": ">=",
+          "valor": 2
+        }
+      ],
+      "extra": [
+        {
+          "fato": "armadilhas_acionadas",
+          "op": ">=",
+          "valor": 1
         }
       ]
     }

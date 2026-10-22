@@ -34,6 +34,7 @@ var blocos := {}               # Vector2i -> CamadaArvores
 var _ultimo_revelado := Vector2.INF
 var _alvo: CanvasItem = self    # onde os desenhos caem: o próprio mapa ou a camada viva
 var camada_viva: CamadaViva
+var ondas: Array = []            # {pos, t0}: sons ouvidos (uivo, pio, latido, estalo) desenhados como ondas
 
 
 ## Camada por cima do mapa com o que se mexe; redesenhada a cada quadro.
@@ -214,6 +215,12 @@ func _plantar_arvores() -> void:
 		y += passo * 0.87
 
 
+## Ondas de um som ouvido, numa região perto de onde ele aconteceu (por cima da névoa).
+func onda(origem: Vector2) -> void:
+	var desvio := Vector2.from_angle(randf() * TAU) * randf() * Regras.ONDA_IMPRECISAO_M
+	ondas.append({"pos": origem + desvio, "t0": mundo.tempo})
+
+
 ## Liga ou desliga a névoa durante a noite (tecla N).
 func alternar_nevoa() -> void:
 	Regras.sem_nevoa = not Regras.sem_nevoa
@@ -318,6 +325,7 @@ func _desenhar_vivo() -> void:
 	var j := mundo.jogador()
 	var m := mundo.mapa
 	var agora := mundo.tempo
+	_desenhar_ondas(agora)
 	for g in mundo.pegadas:
 		if mundo.pegada_visivel_para(j, g):
 			_desenhar_pegada(g, j)
@@ -424,6 +432,22 @@ func _desenhar_animal(a: Fauna.Animal) -> void:
 	if mundo.tempo < a.sinal_ate:
 		rotulo += " — " + a.sinal
 	_texto(c + Vector2(2.6 * u, 0.4 * u), rotulo, 9)
+
+
+## Três anéis que se abrem e somem em 2,5 s, claros com contorno escuro: aparecem sobre a névoa.
+func _desenhar_ondas(agora: float) -> void:
+	const DURACAO := 2.5
+	ondas = ondas.filter(func(o): return agora - o["t0"] < DURACAO)
+	for o in ondas:
+		var c: Vector2 = o["pos"] * ESCALA
+		for k in 3:
+			var t: float = (agora - o["t0"]) / DURACAO - k * 0.18
+			if t <= 0.0 or t >= 1.0:
+				continue
+			var r := (3.0 + t * 14.0) * ESCALA
+			var alfa := (1.0 - t) * 0.9
+			_alvo.draw_arc(c, r, 0, TAU, 40, Color(COR_CONTORNO, alfa * 0.8), 4.0)
+			_alvo.draw_arc(c, r, 0, TAU, 40, Color(COR_TEXTO, alfa), 2.0)
 
 
 func _desenhar_armadilha(a: Armadilhas.Armadilha) -> void:

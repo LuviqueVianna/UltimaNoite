@@ -340,6 +340,8 @@ func _tocar_som(evento: String, origem: Vector2) -> void:
 	var cfg: Dictionary = Regras.SONS.get(evento, {})
 	if cfg.is_empty() or acelerar:
 		return
+	if cfg.get("onda", false) and mundo.jogador().pos.distance_to(origem) <= float(cfg["alcance"]):
+		vista.onda(origem)
 	var arquivos: Array = cfg["arquivos"]
 	var stream = load("res://sons/%s.ogg" % arquivos[randi() % arquivos.size()])
 	if stream == null:

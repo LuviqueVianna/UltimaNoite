@@ -6,7 +6,7 @@
 
 | Quem | Está com | Arquivo |
 |---|---|---|
-| **ChatGPT** | **Demanda 5**: guardiões menos previsíveis (revisar perguntas e 6 novas por guardião) e textos de armadilha na trilha | [docs/briefings/DEMANDA_5_guardioes_mais_dificeis.md](docs/briefings/DEMANDA_5_guardioes_mais_dificeis.md) |
+| **ChatGPT** | Sem demanda aberta. Aguardando a próxima | — |
 | **Claude** | Código do MVP em Godot: etapas 1 e 2 prontas, animais prontos (modo de teste ligado); segue a etapa 3 (armadilhas, itens, sumir na mata) | [godot/README.md](godot/README.md) |
 | **Usuário** | Aprovar os valores dos pontos; testar os animais; mandar a demanda 4 ao ChatGPT | [docs/sistemas/pontuacao_v1.md](docs/sistemas/pontuacao_v1.md) |
 
@@ -22,7 +22,7 @@ Leia antes: [docs/briefings/BRIEFING_GPT_v0.4.md](docs/briefings/BRIEFING_GPT_v0
 | 3 | Quadro de estilo do pergaminho | Briefing v0.4, seção 5 | **Em pausa, provavelmente será descontinuada** (visual definido pelo usuário em 20/10; ver `docs/MVP_v0.4.md`, seção 3). Não fazer |
 | 4 | Animais e diálogos dos guardiões | `docs/briefings/DEMANDA_4_animais_e_guardioes.md` | Entregue em 22/10 e revisada: A, B, E e F aprovadas; C aguarda o usuário ouvir os sons |
 | 4b | Refazer a parte D (perguntas sobre cobra e lobo), pontos D1 a D4 | `revisoes/2026-10-22_demanda4.md` | Entregue em 22/10, aprovada e integrada |
-| 5 | Guardiões menos previsíveis e armadilhas | `docs/briefings/DEMANDA_5_guardioes_mais_dificeis.md` | **Fazer agora** |
+| 5 | Guardiões menos previsíveis e armadilhas | `docs/briefings/DEMANDA_5_guardioes_mais_dificeis.md` | Entregue em 22/10, aprovada e integrada |
 
 Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
@@ -34,6 +34,7 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
+| 22/10/2026 | Demanda 5 aprovada e integrada: 20 perguntas por guardião, dilemas em vez de estereótipos, textos de armadilha na trilha. Marta começa com −2. Ondas no mapa mostram de onde vêm os sons |
 | 22/10/2026 | Tela de configurações (névoa, tracejado das trilhas, alcance dos animais) e tutorial "Como jogar". Jogo mais difícil: panela ruim −3, opção de não comer, afinidade alta só no máximo, Marta e Bento começam desconfiados, gesto de mentira nem sempre percebido. Armadilhas no mapa. Desempenho no navegador e sons mais altos |
 | 22/10/2026 | Demanda 5 criada para o ChatGPT: perguntas dos guardiões menos previsíveis, 6 novas por guardião e textos de armadilha |
 | 22/10/2026 | Névoa de volta, com chave para o usuário ligar e desligar (tela inicial e tecla N). Cobra corrigida: o chacoalhar vem com tempo de parar em qualquer velocidade e mostra no mapa de onde vem. Ainda em modo de teste: jogador a 10 m/s e alcance dos animais desenhado |

@@ -45,7 +45,7 @@
       "respostas": [
         {
           "texto": "Cuidei da ferida e mantive distância.",
-          "afinidade": 3,
+          "afinidade": 2,
           "intencao": "boa",
           "registra": [
             "ajudou_animal"
@@ -69,7 +69,7 @@
         "atributo": "inteligencia",
         "minimo": 4,
         "texto": "Deixei um item de cura ao alcance e saí do campo de ameaça.",
-        "afinidade": 2
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": -2
@@ -94,7 +94,7 @@
       "respostas": [
         {
           "texto": "Desviei para não levar perigo até a pessoa.",
-          "afinidade": 3,
+          "afinidade": 1,
           "intencao": "boa",
           "registra": [
             "protegeu_jogador"
@@ -102,7 +102,7 @@
         },
         {
           "texto": "Evitei a área para preservar minha rota.",
-          "afinidade": 1,
+          "afinidade": 2,
           "intencao": null
         },
         {
@@ -140,17 +140,17 @@
       "respostas": [
         {
           "texto": "Segui com cuidado e recuei quando ele ficou inquieto.",
-          "afinidade": 3,
+          "afinidade": 0,
           "intencao": "boa"
         },
         {
           "texto": "Não segui. Eu precisava manter minha rota.",
-          "afinidade": 1,
+          "afinidade": 2,
           "intencao": null
         },
         {
           "texto": "Deixei que fosse à frente para revelar qualquer armadilha.",
-          "afinidade": -1,
+          "afinidade": 1,
           "intencao": "ma",
           "registra": [
             "explorou_vulneravel"
@@ -161,7 +161,7 @@
         "atributo": "inteligencia",
         "minimo": 4,
         "texto": "Li os sinais dele, mas não entreguei minha segurança ao guia.",
-        "afinidade": 2
+        "afinidade": 1
       },
       "premissa": [
         "cao_ofereceu_guia"
@@ -183,7 +183,7 @@
       "respostas": [
         {
           "texto": "Usei uma frase pronta para alertar quem viesse atrás.",
-          "afinidade": 3,
+          "afinidade": 0,
           "intencao": "boa",
           "registra": [
             "alertou_perigo"
@@ -191,7 +191,7 @@
         },
         {
           "texto": "Desviei e continuei. Eu estava sendo seguido.",
-          "afinidade": 1,
+          "afinidade": 2,
           "intencao": null
         },
         {
@@ -204,7 +204,7 @@
         "atributo": "furtividade",
         "minimo": 4,
         "texto": "Passei sem acioná-la, mas não revelei minha rota.",
-        "afinidade": 0
+        "afinidade": 1
       },
       "premissa": [
         "notou_armadilha"
@@ -226,7 +226,7 @@
       "respostas": [
         {
           "texto": "Repeti a dica como a recebi, avisando que não tinha certeza.",
-          "afinidade": 3,
+          "afinidade": 0,
           "intencao": "boa",
           "registra": [
             "compartilhou_dica"
@@ -234,12 +234,12 @@
         },
         {
           "texto": "Guardei para mim; eu ainda precisava confirmar.",
-          "afinidade": 1,
+          "afinidade": 2,
           "intencao": null
         },
         {
           "texto": "Usei a dica primeiro e só depois a repassei.",
-          "afinidade": 0,
+          "afinidade": 1,
           "intencao": null
         }
       ],
@@ -247,7 +247,7 @@
         "atributo": "carisma",
         "minimo": 4,
         "texto": "Perguntei o que a pessoa sabia antes de decidir compartilhar.",
-        "afinidade": 3
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": -1
@@ -259,33 +259,30 @@
     {
       "id": "iara_09",
       "tipo": "pergunta",
-      "texto": "Você protegeria quem lhe deu uma dica falsa?",
+      "texto": "Se quem lhe deu uma dica falsa pedir ajuda, como impede que a ajuda vire outro risco?",
       "verificavel": false,
       "respostas": [
         {
-          "texto": "Se estivesse em perigo, sim; depois pediria a verdade.",
-          "afinidade": 3,
+          "texto": "Ofereço só o que posso confirmar, sem me aproximar por enquanto.",
+          "afinidade": 2,
           "intencao": "boa"
         },
         {
-          "texto": "Não me arriscaria de novo por essa pessoa.",
+          "texto": "Peço que explique a dica primeiro. Preciso saber com quem estou lidando.",
           "afinidade": 1,
           "intencao": null
         },
         {
-          "texto": "Entregaria sua posição em troca de informação correta.",
-          "afinidade": -1,
-          "intencao": "ma",
-          "registra": [
-            "aceitou_delacao"
-          ]
+          "texto": "Vou até a pessoa. Estar em perigo já basta para eu esquecer a dica.",
+          "afinidade": 0,
+          "intencao": "boa"
         }
       ],
       "opcao_extra": {
         "atributo": "carisma",
         "minimo": 4,
-        "texto": "Ofereceria ajuda com uma condição clara: nada de nova mentira.",
-        "afinidade": 3
+        "texto": "Pergunto o que ela precisa antes de decidir quanto posso oferecer.",
+        "afinidade": 1
       }
     },
     {
@@ -304,7 +301,7 @@
       "respostas": [
         {
           "texto": "Sim, por acidente; avisei pela frase disponível.",
-          "afinidade": 3,
+          "afinidade": 1,
           "intencao": "boa",
           "registra": [
             "alertou_perigo"
@@ -317,7 +314,7 @@
         },
         {
           "texto": "Não acionei nenhuma.",
-          "afinidade": 3,
+          "afinidade": 1,
           "intencao": null
         }
       ],
@@ -325,7 +322,7 @@
         "atributo": "inteligencia",
         "minimo": 4,
         "texto": "Não acionei; mantive-me na trilha já visível.",
-        "afinidade": 1
+        "afinidade": 0
       },
       "silencio": {
         "afinidade": -2
@@ -334,22 +331,22 @@
     {
       "id": "iara_11",
       "tipo": "pergunta",
-      "texto": "Por que quer chegar ao amanhecer?",
+      "texto": "Se vencer exigir que você deixe de ajudar alguém, o que aceita levar até o amanhecer?",
       "verificavel": false,
       "respostas": [
         {
-          "texto": "Quero vencer sem transformar todos em inimigos.",
-          "afinidade": 3,
+          "texto": "Fico ajudando até onde pedirem. A chegada pode esperar por mim.",
+          "afinidade": 0,
           "intencao": "boa"
         },
         {
-          "texto": "Quero sobreviver e terminar à frente.",
-          "afinidade": 1,
-          "intencao": null
+          "texto": "Dou a informação que tenho e sigo, mesmo sabendo que pode não bastar.",
+          "afinidade": 2,
+          "intencao": "boa"
         },
         {
-          "texto": "Quero usar qualquer vantagem que a noite me der.",
-          "afinidade": -1,
+          "texto": "Sigo sem responder. Na volta penso no que deveria ter feito.",
+          "afinidade": 1,
           "intencao": null
         }
       ],
@@ -377,7 +374,7 @@
       "respostas": [
         {
           "texto": "Desviei sem conduzi-lo até a base.",
-          "afinidade": 3,
+          "afinidade": 1,
           "intencao": "boa",
           "registra": [
             "protegeu_jogador"
@@ -401,7 +398,7 @@
         "atributo": "furtividade",
         "minimo": 4,
         "texto": "Passei oculto e deixei o lobo onde estava.",
-        "afinidade": 1
+        "afinidade": 0
       }
     },
     {
@@ -422,17 +419,17 @@
       "respostas": [
         {
           "texto": "Avisei do risco sem exigir nada.",
-          "afinidade": 3,
+          "afinidade": 0,
           "intencao": "boa"
         },
         {
           "texto": "Não avisei; revelar-me também seria perigoso.",
-          "afinidade": 1,
+          "afinidade": 2,
           "intencao": null
         },
         {
           "texto": "Esperei a pessoa escolher antes de avisar.",
-          "afinidade": 0,
+          "afinidade": 1,
           "intencao": null
         }
       ],
@@ -440,7 +437,7 @@
         "atributo": "furtividade",
         "minimo": 4,
         "texto": "Usei uma frase curta e saí antes de revelar minha posição.",
-        "afinidade": 2
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": -1
@@ -465,12 +462,12 @@
       "respostas": [
         {
           "texto": "Respondi com a informação segura que eu tinha.",
-          "afinidade": 3,
+          "afinidade": 1,
           "intencao": "boa"
         },
         {
           "texto": "Não respondi; eu não sabia se era uma isca.",
-          "afinidade": 1,
+          "afinidade": 2,
           "intencao": null
         },
         {
@@ -486,7 +483,7 @@
         "atributo": "inteligencia",
         "minimo": 4,
         "texto": "Respondi apenas o que podia confirmar.",
-        "afinidade": 2
+        "afinidade": 1
       },
       "premissa": [
         "recebeu_frase_pedido"
@@ -495,30 +492,30 @@
     {
       "id": "iara_15",
       "tipo": "pergunta",
-      "texto": "Se a tigela boa puder ser negociada, o que pediria por ela?",
+      "texto": "Se alguém pedir uma indicação que você ainda não confirmou, o que oferece?",
       "verificavel": false,
       "respostas": [
         {
-          "texto": "Nada de quem estivesse em pior condição.",
-          "afinidade": 3,
+          "texto": "Peço que espere enquanto tento entender de onde veio a informação.",
+          "afinidade": 1,
           "intencao": "boa"
         },
         {
-          "texto": "Um item justo; também preciso atravessar a noite.",
-          "afinidade": 1,
-          "intencao": null
+          "texto": "Digo que não sei. Posso fazer companhia à dúvida, não escolher por ela.",
+          "afinidade": 2,
+          "intencao": "boa"
         },
         {
-          "texto": "A rota de outro jogador.",
-          "afinidade": -1,
-          "intencao": "ma"
+          "texto": "Ofereço minha melhor suspeita. A pessoa talvez precise de um ponto de onde começar.",
+          "afinidade": 0,
+          "intencao": "boa"
         }
       ],
       "opcao_extra": {
-        "atributo": "carisma",
+        "atributo": "inteligencia",
         "minimo": 4,
-        "texto": "Uma troca que não deixe a outra pessoa sem recurso.",
-        "afinidade": 3
+        "texto": "Conto de onde veio a dica e deixo a decisão com quem perguntou.",
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": -1
@@ -543,7 +540,7 @@
       "respostas": [
         {
           "texto": "Deixei que saísse, ficando parado. Nenhuma me picou nesta noite.",
-          "afinidade": 3,
+          "afinidade": 2,
           "intencao": null
         },
         {
@@ -553,7 +550,7 @@
         },
         {
           "texto": "Ouvi as folhas, meu bem. Ainda não esperei uma cobra sair nem sofri picada.",
-          "afinidade": 3,
+          "afinidade": 2,
           "intencao": null
         }
       ],
@@ -561,7 +558,7 @@
         "atributo": "inteligencia",
         "minimo": 4,
         "texto": "Passei e fui picado. Agora entendo que o caminho também era dela.",
-        "afinidade": 1
+        "afinidade": 0
       },
       "silencio": {
         "afinidade": 0
@@ -570,7 +567,7 @@
     {
       "id": "iara_17",
       "tipo": "pergunta",
-      "texto": "O lobo derrubou você, meu bem. Como quer seguir depois desse susto?",
+      "texto": "Depois da queda com o lobo, quanto pode oferecer a quem também estiver assustado?",
       "verificavel": false,
       "requer": [
         "animais"
@@ -580,29 +577,244 @@
       ],
       "respostas": [
         {
-          "texto": "Quero recuperar o fôlego sem descontar meu medo em quem encontrar.",
-          "afinidade": 3,
+          "texto": "Um aviso curto e depois sossego. Ainda não sei quanto consigo sustentar.",
+          "afinidade": 2,
           "intencao": "boa"
         },
         {
-          "texto": "Quero continuar logo. Cada instante parado me afasta da chegada.",
+          "texto": "O que precisarem. Talvez cuidar deles me faça esquecer a queda.",
           "afinidade": 0,
-          "intencao": null
+          "intencao": "boa"
         },
         {
-          "texto": "Quero um instante de sossego antes de voltar à trilha.",
-          "afinidade": 2,
+          "texto": "Meu silêncio por enquanto. Não quero que percebam o que aconteceu.",
+          "afinidade": 1,
           "intencao": null
         }
       ],
       "opcao_extra": {
         "atributo": "resistencia",
         "minimo": 4,
-        "texto": "Quero seguir no passo que aguento, sem tentar recuperar tudo de uma vez.",
-        "afinidade": 2
+        "texto": "Posso escutar um pedido antes de dizer se tenho forças para atender.",
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": 1
+      }
+    },
+    {
+      "id": "iara_18",
+      "tipo": "pergunta",
+      "texto": "Você desviou da armadilha que viu. Se houver alguém atrás, quanto consegue oferecer?",
+      "verificavel": false,
+      "requer": [
+        "armadilhas"
+      ],
+      "premissa": [
+        "notou_armadilha"
+      ],
+      "respostas": [
+        {
+          "texto": "Fico esperando para acompanhar a pessoa, mesmo sem saber se quer aproximação.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Guardo distância e observo antes de decidir se aviso.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Dou o aviso possível e sigo. Não sei se minha presença ajudaria mais.",
+          "afinidade": 2,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Aviso só o perigo que reconheci, sem prometer um caminho inteiro seguro.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 0
+      }
+    },
+    {
+      "id": "iara_19",
+      "tipo": "pergunta",
+      "texto": "Quantas armadilhas você acionou nesta noite, meu bem?",
+      "verificavel": true,
+      "requer": [
+        "armadilhas"
+      ],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Ainda nenhuma nesta noite.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Uma nesta noite.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Mais de uma nesta noite.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Uma ou mais; prefiro não trocar a conta por um palpite.",
+        "afinidade": 0
+      },
+      "silencio": {
+        "afinidade": 0
+      },
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "verificacao": "Checar armadilhas_acionadas: resposta 0 exige == 0; resposta 1 exige == 1; resposta 2 exige >= 2; opção extra exige >= 1. Não verificar sentimentos nem motivos. O contador começa em zero; nenhum disparo recebe afinidade igual aos demais relatos honestos."
+    },
+    {
+      "id": "iara_20",
+      "tipo": "pergunta",
+      "texto": "Um pedido vago pode ser tudo o que uma pessoa assustada consegue dizer. Como começa a ajuda?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Espero uma mensagem mais clara. Preciso guardar atenção para quem consigo entender.",
+          "afinidade": 0,
+          "intencao": null
+        },
+        {
+          "texto": "Respondo que ouvi e pergunto uma coisa por vez. Ainda não ofereço uma direção.",
+          "afinidade": 2,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Peço primeiro que explique o perigo. Posso assustar mais, mas não quero orientar no escuro.",
+          "afinidade": 1,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Digo que ainda não entendi e peço uma informação curta para começar.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 0
+      }
+    },
+    {
+      "id": "iara_21",
+      "tipo": "pergunta",
+      "texto": "Se sua presença acalmar alguém, mas sua companhia aumentar o risco dos dois, o que oferece?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Digo por que vou me afastar, mesmo sabendo que pode parecer abandono.",
+          "afinidade": 2,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Saio sem explicar, para não prolongar um medo que não posso resolver.",
+          "afinidade": 0,
+          "intencao": null
+        },
+        {
+          "texto": "Fico por perto. A pessoa talvez não consiga continuar sozinha.",
+          "afinidade": 1,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Mantenho distância sem prometer que conseguirei acompanhar toda a travessia.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 0
+      }
+    },
+    {
+      "id": "iara_22",
+      "tipo": "pergunta",
+      "texto": "Se a verdade sobre uma panela assustar quem perguntou, você a adoça?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Começo pela chance de dar certo. Sem ânimo, talvez ela nem consiga escolher.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Conto o que sei e paro aí, mesmo que a pessoa peça uma certeza maior.",
+          "afinidade": 2,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Peço que pergunte a outro guardião; prefiro não ser a voz que a assusta.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Dou a informação aos poucos, mas sem esconder a parte que pode mudar a escolha.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 0
+      }
+    },
+    {
+      "id": "iara_23",
+      "tipo": "pergunta",
+      "texto": "Se uma pessoa recusar sua ajuda sem entender a oferta, você pergunta de novo?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Retiro a oferta inteira; preciso guardar forças para quem quiser recebê-la.",
+          "afinidade": 0,
+          "intencao": null
+        },
+        {
+          "texto": "Aceito de imediato. Talvez ela precisasse ouvir mais, mas não quero vencer sua recusa.",
+          "afinidade": 1,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Pergunto uma vez o que ela entendeu. Posso incomodar, mas não quero deixá-la recusar um engano.",
+          "afinidade": 2,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Pergunto se a recusa é ao que ofereço ou à minha aproximação.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 0
       }
     }
   ]

@@ -66,6 +66,15 @@ func _init() -> void:
 		var arm2 = main.mundo.armadilhas.lista[1]
 		arm2.pos = j.pos + Vector2(8, 4)
 		arm2.disparada = true
+	if args.size() > 2 and args[2] == "ondas":
+		main.camera.zoom = Vector2(1.6, 1.6)
+		main.mundo.dirigir_jogador(Vector2.ZERO)
+		main._tocar_som("lobo_uivou", j.pos + Vector2(70, -35))
+		for i in 25:
+			await process_frame
+		main._tocar_som("coruja_piou", j.pos + Vector2(-60, 25))
+		for i in 20:
+			await process_frame
 	if args.size() > 2 and args[2] == "sem_nevoa":
 		main.camera.zoom = Vector2(1.0, 1.0)
 		main.vista.alternar_nevoa()

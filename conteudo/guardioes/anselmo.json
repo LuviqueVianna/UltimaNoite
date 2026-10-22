@@ -89,7 +89,7 @@
       "respostas": [
         {
           "texto": "Sim. Menti para obter vantagem.",
-          "afinidade": 3,
+          "afinidade": 1,
           "intencao": null,
           "registra": [
             "confessou_mentira"
@@ -119,7 +119,7 @@
         "atributo": "carisma",
         "minimo": 4,
         "texto": "Menti. Posso explicar, mas não vou mudar o nome do que fiz.",
-        "afinidade": 2
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": -2
@@ -145,7 +145,7 @@
       "respostas": [
         {
           "texto": "Sim. Quis desviar outro jogador.",
-          "afinidade": 3,
+          "afinidade": 1,
           "intencao": "ma",
           "registra": [
             "confessou_dica_falsa"
@@ -184,33 +184,30 @@
     {
       "id": "anselmo_07",
       "tipo": "pergunta",
-      "texto": "Você afirma que agiu por medo. O medo torna o ato menos seu?",
+      "texto": "Se o medo apertar sua escolha, o que deve caber numa confissão?",
       "verificavel": false,
       "respostas": [
         {
-          "texto": "Não. A escolha ainda foi minha.",
-          "afinidade": 3,
-          "intencao": null,
-          "registra": [
-            "assumiu_escolha"
-          ]
+          "texto": "Só a escolha. Explicar o medo pode parecer um pedido de desconto.",
+          "afinidade": 1,
+          "intencao": null
         },
         {
-          "texto": "Explica por que escolhi, mas não apaga o resultado.",
+          "texto": "A escolha e o medo. Calar um deles também mudaria a história.",
           "afinidade": 2,
           "intencao": null
         },
         {
-          "texto": "Sim. Sob medo, ninguém responde pelo que faz.",
-          "afinidade": -3,
-          "intencao": null
+          "texto": "O que poupar quem me escuta. O susto já fez estrago bastante.",
+          "afinidade": 0,
+          "intencao": "boa"
         }
       ],
       "opcao_extra": {
         "atributo": "inteligencia",
         "minimo": 4,
-        "texto": "O medo limita escolhas; não transfere minha autoria.",
-        "afinidade": 2
+        "texto": "Conto o medo, mesmo sem saber quanto ele pesou na decisão.",
+        "afinidade": 1
       }
     },
     {
@@ -275,7 +272,7 @@
       "respostas": [
         {
           "texto": "Sim. Disse que não tinha nada.",
-          "afinidade": 3,
+          "afinidade": 1,
           "intencao": null,
           "registra": [
             "confessou_omissao"
@@ -302,36 +299,36 @@
     {
       "id": "anselmo_10",
       "tipo": "pergunta",
-      "texto": "Uma verdade que expõe outro jogador deve ser dita?",
+      "texto": "Se uma verdade sua expuser outra pessoa, que parte deve chegar até esta mesa?",
       "verificavel": false,
       "respostas": [
         {
-          "texto": "Sim, se eu assumir o dano que causar.",
-          "afinidade": 3,
-          "intencao": null,
-          "registra": [
-            "aceitou_delacao"
-          ]
-        },
-        {
-          "texto": "Não, se o silêncio impedir um dano desnecessário.",
-          "afinidade": 2,
+          "texto": "Nada que a exponha. Prefiro guardar também minha parte do erro.",
+          "afinidade": 0,
           "intencao": "boa",
           "registra": [
             "protegeu_identidade"
           ]
         },
         {
-          "texto": "Somente se me trouxer vantagem.",
-          "afinidade": 0,
-          "intencao": "ma"
+          "texto": "O que fiz e o dano que causei; só dou o nome se fizer diferença.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Tudo, inclusive quem estava lá. Uma confissão não combina com recorte.",
+          "afinidade": 1,
+          "intencao": null,
+          "registra": [
+            "aceitou_delacao"
+          ]
         }
       ],
       "opcao_extra": {
         "atributo": "inteligencia",
         "minimo": 4,
-        "texto": "Primeiro separo verdade necessária de crueldade conveniente.",
-        "afinidade": 2
+        "texto": "Conto minha parte primeiro e pergunto por que o nome seria necessário.",
+        "afinidade": 1
       }
     },
     {
@@ -357,7 +354,7 @@
       "respostas": [
         {
           "texto": "Sim. O silêncio me protegeu.",
-          "afinidade": 3,
+          "afinidade": 1,
           "intencao": null,
           "registra": [
             "confessou_omissao"
@@ -373,7 +370,7 @@
         },
         {
           "texto": "Não usei o silêncio para esconder nada.",
-          "afinidade": 3,
+          "afinidade": 2,
           "intencao": null,
           "contradiz": [
             "confessou_omissao"
@@ -387,7 +384,7 @@
     {
       "id": "anselmo_12",
       "tipo": "pergunta",
-      "texto": "Antes você se apresentou como alguém que não mente. Sustenta essa resposta?",
+      "texto": "Você declarou que não mente. Como sustenta essa palavra sem fazer dela um esconderijo?",
       "verificavel": false,
       "requer": [
         "historico_respostas"
@@ -397,7 +394,15 @@
       },
       "respostas": [
         {
-          "texto": "Sustento: não menti nesta noite.",
+          "texto": "Retiro a garantia. Prefiro rever cada ato sem me declarar limpo antes da conta.",
+          "afinidade": 2,
+          "intencao": null,
+          "registra": [
+            "admitiu_incerteza"
+          ]
+        },
+        {
+          "texto": "Mantenho a declaração e aceito que confiram cada resposta, mesmo sem confiar em mim.",
           "afinidade": 2,
           "intencao": null,
           "contradiz": [
@@ -406,23 +411,9 @@
           ]
         },
         {
-          "texto": "Não. Minha resposta anterior foi falsa.",
-          "afinidade": 3,
-          "intencao": null,
-          "registra": [
-            "corrigiu_contradicao"
-          ],
-          "contradiz": [
-            "negou_mentira"
-          ]
-        },
-        {
-          "texto": "Sustento apenas que não contei toda a verdade.",
-          "afinidade": 1,
-          "intencao": null,
-          "contradiz": [
-            "confessou_mentira"
-          ]
+          "texto": "Guardo a declaração. Quem confiou em mim precisa de algum chão durante a noite.",
+          "afinidade": 0,
+          "intencao": "boa"
         }
       ],
       "silencio": {
@@ -449,7 +440,7 @@
       "respostas": [
         {
           "texto": "Avisei com a frase disponível.",
-          "afinidade": 2,
+          "afinidade": 0,
           "intencao": "boa"
         },
         {
@@ -467,7 +458,7 @@
         "atributo": "inteligencia",
         "minimo": 4,
         "texto": "Descrevo o mecanismo exato, sem aumentar meu mérito.",
-        "afinidade": 2
+        "afinidade": 1
       },
       "premissa": [
         "notou_armadilha"
@@ -476,22 +467,22 @@
     {
       "id": "anselmo_14",
       "tipo": "pergunta",
-      "texto": "Confessaria uma falha se isso lhe custasse a vitória?",
+      "texto": "Confessaria uma falha antes de saber se ainda dá tempo de reparar?",
       "verificavel": false,
       "respostas": [
         {
-          "texto": "Sim. A vitória não corrige uma mentira.",
-          "afinidade": 3,
+          "texto": "Confessaria logo. Se esperar, talvez encontre uma razão para calar.",
+          "afinidade": 1,
           "intencao": null
         },
         {
-          "texto": "Confessaria se a falha ainda pudesse ferir alguém.",
-          "afinidade": 2,
+          "texto": "Tentaria reparar em silêncio, para ninguém carregar minha culpa comigo.",
+          "afinidade": 0,
           "intencao": "boa"
         },
         {
-          "texto": "Só se houvesse como prová-la.",
-          "afinidade": -2,
+          "texto": "Daria o aviso necessário primeiro; depois contaria minha parte sem diminuir.",
+          "afinidade": 2,
           "intencao": null
         }
       ],
@@ -502,43 +493,26 @@
     {
       "id": "anselmo_15",
       "tipo": "pergunta",
-      "texto": "Diga sua pior escolha desta noite, sem justificá-la.",
+      "texto": "Ao confessar uma falha, precisa decidir que aquilo diz tudo sobre você?",
       "verificavel": false,
       "requer": [
         "historico_respostas"
       ],
-      "contradicao": {
-        "afinidade": -3
-      },
       "respostas": [
         {
-          "texto": "Menti para obter vantagem.",
-          "afinidade": 3,
-          "intencao": null,
-          "registra": [
-            "confessou_mentira"
-          ],
-          "contradiz": [
-            "negou_mentira"
-          ]
+          "texto": "Prefiro não contar. Quem me escuta não merece levar esse peso.",
+          "afinidade": 0,
+          "intencao": "boa"
         },
         {
-          "texto": "Protegi meu caminho às custas de outro jogador.",
+          "texto": "Preciso. Se eu aliviar o juízo, posso aliviar também o relato.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Conto o que fiz sem concluir que essa é minha natureza. Posso estar me poupando.",
           "afinidade": 2,
-          "intencao": "ma",
-          "registra": [
-            "confessou_egoismo"
-          ]
-        },
-        {
-          "texto": "Não fiz escolha ruim alguma.",
-          "afinidade": -2,
-          "intencao": null,
-          "contradiz": [
-            "confessou_mentira",
-            "confessou_dica_falsa",
-            "confessou_imprudencia"
-          ]
+          "intencao": null
         }
       ],
       "silencio": {
@@ -564,17 +538,17 @@
       "respostas": [
         {
           "texto": "Parei até ela partir. Nenhuma cobra me picou nesta noite; é o que houve.",
-          "afinidade": 2,
+          "afinidade": 1,
           "intencao": null
         },
         {
           "texto": "Segui andando e fui picado. Essa parte não retiro da confissão.",
-          "afinidade": 2,
+          "afinidade": 1,
           "intencao": null
         },
         {
           "texto": "Tenho apenas o aviso para contar: nenhuma espera concluída, nenhuma picada.",
-          "afinidade": 2,
+          "afinidade": 1,
           "intencao": null
         }
       ],
@@ -582,7 +556,7 @@
         "atributo": "carisma",
         "minimo": 4,
         "texto": "Fui picado ao seguir andando. A pressa explica; não muda o que fiz.",
-        "afinidade": 2
+        "afinidade": 0
       },
       "silencio": {
         "afinidade": -1
@@ -591,7 +565,7 @@
     {
       "id": "anselmo_17",
       "tipo": "pergunta",
-      "texto": "O lobo o derrubou. A vergonha lhe daria direito a outra versão?",
+      "texto": "A queda diante do lobo precisa de uma explicação antes de ser contada?",
       "verificavel": false,
       "requer": [
         "animais"
@@ -601,26 +575,241 @@
       ],
       "respostas": [
         {
-          "texto": "Não. Posso guardar silêncio, mas a queda continua sendo minha.",
-          "afinidade": 3,
-          "intencao": null
-        },
-        {
-          "texto": "Eu esconderia a queda para não oferecer vantagem aos outros.",
+          "texto": "Digo o que houve e separo o que sei do que ainda tento entender.",
           "afinidade": 2,
           "intencao": null
         },
         {
-          "texto": "Chamaria de tropeço. Preciso seguir sem carregar essa vergonha.",
+          "texto": "Conto só que me levantei. Quem me espera precisa de ânimo, não de susto.",
           "afinidade": 0,
-          "intencao": "ma"
+          "intencao": "boa"
+        },
+        {
+          "texto": "Conto sem explicar. Qualquer motivo pode servir de desculpa.",
+          "afinidade": 1,
+          "intencao": null
         }
       ],
       "opcao_extra": {
         "atributo": "inteligencia",
         "minimo": 4,
-        "texto": "Prefiro reconhecer o que houve sem exigir absolvição.",
-        "afinidade": 2
+        "texto": "Admito a queda antes de escolher uma razão para ela.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "anselmo_18",
+      "tipo": "pergunta",
+      "texto": "Você viu o laço antes de pisar. Se contar isso, precisa dizer que foi mérito seu?",
+      "verificavel": false,
+      "requer": [
+        "armadilhas"
+      ],
+      "premissa": [
+        "notou_armadilha"
+      ],
+      "respostas": [
+        {
+          "texto": "Conto como escapei. Se omitir meu juízo, a história fica incompleta.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Conto o que vi, sem decidir se foi juízo ou sorte que me fez olhar.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Conto primeiro que escapei, para acalmar quem ainda está na trilha.",
+          "afinidade": 0,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Descrevo o laço, mas não faço dele prova de que saberei ver o próximo.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "anselmo_19",
+      "tipo": "pergunta",
+      "texto": "Quantas armadilhas disparou ao passar, nesta noite? Conte sem fazer disso uma culpa maior.",
+      "verificavel": true,
+      "requer": [
+        "armadilhas"
+      ],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Nenhuma na minha conta.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Uma. É esse o número.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Pelo menos duas. Não retiro nenhuma do relato.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Não dou a conta exata; posso afirmar que houve ao menos uma.",
+        "afinidade": 0
+      },
+      "silencio": {
+        "afinidade": -1
+      },
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "verificacao": "Checar armadilhas_acionadas: resposta 0 exige == 0; resposta 1 exige == 1; resposta 2 exige >= 2; opção extra exige >= 1. Não verificar sentimentos nem motivos. O contador começa em zero; nenhum disparo recebe afinidade igual aos demais relatos honestos."
+    },
+    {
+      "id": "anselmo_20",
+      "tipo": "pergunta",
+      "texto": "Se uma história errada ainda orientar alguém até o perigo, quando você a corrige?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Deixo como está. Prefiro que a pessoa conserve o pouco sossego que tem.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Procuro quem contou primeiro. Talvez perder um instante lhe dê ocasião de corrigir.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Corrijo já, diante de quem ouviu. Aceito ferir a confiança de quem contou.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Peço na hora que refaça o trecho incerto, antes de chamar a história de mentira.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "anselmo_21",
+      "tipo": "pergunta",
+      "texto": "Uma confissão pode lhe render a panela boa. Isso tira o valor de contar?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Não tira o fato, mas digo também que estou esperando receber algo.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Tira. Se espero ganhar, prefiro calar até não haver recompensa.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Conto só a parte que lhe traga paz; a minha vantagem fica comigo.",
+          "afinidade": 0,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Conto sem pedir que você decida se meu motivo é todo limpo.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "anselmo_22",
+      "tipo": "pergunta",
+      "texto": "Se um nome não mudar o perigo, ele precisa entrar na sua confissão?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Precisa. Tirar nomes pode ser o primeiro jeito de tirar responsabilidades.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Guardo também a ação. A pessoa merece ficar fora desta conversa.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Conto minha ação inteira e guardo o nome, aceitando que perguntem por ele.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Explico por que retiro o nome em vez de fingir que não o conheço.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "anselmo_23",
+      "tipo": "pergunta",
+      "texto": "Se contar agora exigir um motivo que você ainda não entende, o que entrega à confissão?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Escolho a explicação menos dura. Ela ajuda quem me escuta a perdoar.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Digo que não sei o motivo e paro nessa parte. Não preencho a lacuna para continuar.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Conto a escolha e as razões que suspeito, mesmo arriscando uma explicação errada.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Digo o que fiz antes de oferecer as duas razões que ainda disputam lugar.",
+        "afinidade": 1
       },
       "silencio": {
         "afinidade": -1

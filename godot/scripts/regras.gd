@@ -67,7 +67,7 @@ const SILENCIO_S := 50.0                 # tempo para responder antes de contar 
 const AFINIDADE_LIMITE := 10
 const AFINIDADE_ALTA := 10              # 22/10/2026: era 8; agora só quem acerta quase tudo chega lá
 ## Afinidade com que cada guardião começa a visita (GDD: Marta desconfia de todos).
-const AFINIDADE_INICIAL := {"marta": -3, "bento": -1}
+const AFINIDADE_INICIAL := {"marta": -2, "bento": -1}
 ## Chance de perceber o gesto do guardião ao indicar a panela: base + por nível de Inteligência.
 ## Sem perceber, o jogador só ouve a fala (que serve tanto para a verdade quanto para a mentira).
 const GESTO_CHANCE := Vector2(0.35, 0.1)
@@ -133,17 +133,19 @@ const COBRA_PICA_M := 3.0               # o bote alcança até aqui
 const COBRA_REACAO_S := 1.2             # o chacoalhar vem cedo o bastante para dar esse tempo de parar, em qualquer velocidade
 const COBRA_DESISTE_S := 2.0
 const COBRA_LONGE_M := 25.0             # não aparece tão perto de partidas e bases
+const ONDA_IMPRECISAO_M := 12.0          # as ondas mostram a região do som, não o ponto exato
 const OUVE_M := 250.0                   # distância de que se ouve pio, latido e ataque
 const ANIMAL_PARA := Vector2(0.3, 0.12) # chance do computador ficar parado: base + por nível de Inteligência
 ## Sons de cada evento: arquivos em godot/sons (créditos em sons/CREDITOS.md) e de quão longe se ouvem.
+## "onda": desenha ondas no mapa, mesmo sobre a névoa, na região de onde veio o som.
 const SONS := {
-	"lobo_uivou": {"arquivos": ["lobo_uivo_1", "lobo_uivo_2"], "alcance": 700.0},
+	"lobo_uivou": {"arquivos": ["lobo_uivo_1", "lobo_uivo_2"], "alcance": 700.0, "onda": true},
 	"lobo_rosna": {"arquivos": ["lobo_rosna"], "alcance": 60.0},
-	"lobo_atacou": {"arquivos": ["lobo_ataque", "lobo_rosna"], "alcance": 250.0},
-	"coruja_piou": {"arquivos": ["coruja_1", "coruja_2", "coruja_3"], "alcance": 250.0},
-	"cao_latiu": {"arquivos": ["cao_late_1", "cao_late_2", "cao_late_3"], "alcance": 250.0},
+	"lobo_atacou": {"arquivos": ["lobo_ataque", "lobo_rosna"], "alcance": 250.0, "onda": true},
+	"coruja_piou": {"arquivos": ["coruja_1", "coruja_2", "coruja_3"], "alcance": 250.0, "onda": true},
+	"cao_latiu": {"arquivos": ["cao_late_1", "cao_late_2", "cao_late_3"], "alcance": 250.0, "onda": true},
 	"cobra_folhas": {"arquivos": ["cobra_folhas"], "alcance": 15.0},
-	"armadilha": {"arquivos": ["armadilha"], "alcance": 250.0},
+	"armadilha": {"arquivos": ["armadilha"], "alcance": 250.0, "onda": true},
 }
 
 # ---- Armadilhas (docs/MVP_v0.4.md, seção 6; implementadas em 22/10/2026). Números provisórios. ----
