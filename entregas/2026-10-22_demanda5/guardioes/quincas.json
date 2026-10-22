@@ -1,0 +1,758 @@
+{
+  "guardiao": "quincas",
+  "versao_formato": 3,
+  "modificadores_tom": {
+    "firme": 0,
+    "gentil": 1,
+    "evasivo": 1
+  },
+  "reputacao": {
+    "compartilhou_dica": 1,
+    "aceitou_delacao": 1,
+    "protegeu_identidade": -1,
+    "alertou_perigo": 1
+  },
+  "entradas": [
+    {
+      "id": "quincas_01",
+      "tipo": "narracao",
+      "texto": "Quincas gira uma moeda entre os dedos enquanto as pás do moinho gemem no escuro."
+    },
+    {
+      "id": "quincas_02",
+      "tipo": "fala",
+      "texto": "Duas panelas, dois preços. Não confunda sorriso grátis com mercadoria grátis."
+    },
+    {
+      "id": "quincas_03",
+      "tipo": "fala",
+      "texto": "Mão vazia não fecha negócio, mas uma boa informação ainda pode render juros."
+    },
+    {
+      "id": "quincas_04",
+      "tipo": "pergunta",
+      "texto": "Pela indicação, prefere pôr seu melhor item na mesa ou começar com uma oferta menor?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Começo menor e explico a oferta. Posso perder tempo, mas guardo margem.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Ponho o melhor. Quero fechar logo, antes que o valor da indicação caia.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Deixo um item por gratidão, mesmo que você não queira indicar nada.",
+          "afinidade": 0,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Mostro o que aceito ceder e deixo um intervalo para a contraproposta.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      },
+      "premissa": [
+        "tem_item"
+      ],
+      "requer": [
+        "inventario"
+      ]
+    },
+    {
+      "id": "quincas_05",
+      "tipo": "pergunta",
+      "texto": "Quantos itens você carrega agora?",
+      "verificavel": true,
+      "verificacao": "Comparar ao inventário atual do jogador.",
+      "requer": [
+        "inventario"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Nenhum.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Um.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Dois ou mais.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Digo a quantidade e separo o que aceito negociar.",
+        "afinidade": 0
+      },
+      "silencio": {
+        "afinidade": -2
+      }
+    },
+    {
+      "id": "quincas_06",
+      "tipo": "pergunta",
+      "texto": "Qual item do seu inventário oferece pela indicação certa?",
+      "verificavel": true,
+      "verificacao": "Checar se o item declarado está no inventário atual.",
+      "requer": [
+        "inventario"
+      ],
+      "premissa": [
+        "tem_item"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Ofereço o item mais útil que posso dispensar.",
+          "afinidade": 1,
+          "intencao": null,
+          "registra": [
+            "ofereceu_item_valioso"
+          ]
+        },
+        {
+          "texto": "Ofereço o de menor utilidade para mim.",
+          "afinidade": 2,
+          "intencao": null,
+          "registra": [
+            "ofereceu_item"
+          ]
+        },
+        {
+          "texto": "Tenho itens, mas não ofereço nenhum.",
+          "afinidade": 0,
+          "intencao": null,
+          "registra": [
+            "recusou_negociar"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Mostro duas opções e deixo você escolher uma.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -2
+      }
+    },
+    {
+      "id": "quincas_07",
+      "tipo": "pergunta",
+      "texto": "Uma dica ainda não confirmada vale mais vendida agora ou oferecida para ganhar confiança?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Cobro agora. Se esperar confirmação, outra boca pode chegar antes.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Dou sem cobrar, junto com a dúvida. Prefiro que a pessoa não escolha sem nada.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Conto a dúvida junto e cobro pouco. Talvez a confiança pague o resto.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Ofereço a fonte da dica junto com o risco, mesmo que isso baixe o preço.",
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "quincas_08",
+      "tipo": "pergunta",
+      "texto": "Se eu oferecer uma informação valiosa por seu último recurso, onde você fecha a conta?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Entrego sem acertar preço; prefiro que nenhum dos dois saia desconfiado.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Aceito. Informação boa pode render mais do que guardo na mão.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Peço só uma parte da informação por menos. Fico com uma dúvida e um recurso.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "quincas_09",
+      "tipo": "pergunta",
+      "texto": "O item lhe faz falta, mas também me serve. O que sustenta a oferta?",
+      "verificavel": false,
+      "requer": [
+        "inventario"
+      ],
+      "premissa": [
+        "tem_item"
+      ],
+      "respostas": [
+        {
+          "texto": "Aceito um pouco menos se a indicação resolver o problema que ele resolveria.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Cedo pelo que você puder pagar. Sua necessidade deve vir primeiro.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Peço pelo que ele me custa perder, mesmo que você não aceite.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Ponho na conta o uso que perco, não só a raridade do item.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "quincas_10",
+      "tipo": "pergunta",
+      "texto": "Uma rota curta poupa tempo, mas o preço é seu último item. Quando vale?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Quando a fonte é conhecida. Prefiro pagar do que carregar uma oportunidade perdida.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Quando o tempo que ganho vale mais que o uso que perco. Senão, dou a volta.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Pago também pela rota de quem vem atrás, mesmo ficando sem nada.",
+          "afinidade": 0,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Aceito uma rota menos curta se o preço deixar alguma reserva.",
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "quincas_11",
+      "tipo": "pergunta",
+      "texto": "Eu só aceito seu item mais útil. Você precisa mesmo desta indicação?",
+      "verificavel": false,
+      "requer": [
+        "inventario"
+      ],
+      "premissa": [
+        "tem_item"
+      ],
+      "respostas": [
+        {
+          "texto": "Deixo o item para facilitar seu próximo negócio, mesmo saindo sem indicação.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Abro mão do negócio e guardo o item. A próxima base talvez cobre diferente.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Pago. Se começo a recuar no preço, posso perder a indicação inteira.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Ofereço menos por uma informação menor; aceito que a boa fique com você.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "quincas_12",
+      "tipo": "pergunta",
+      "texto": "Uma dica sua interessa a quem está com pressa. Cobra o máximo ou deixa motivo para voltar?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Cobro menos e digo o limite da dica. Talvez não volte, mas não sai enganado.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Cobro o que a urgência permite. Outra chance assim pode não aparecer.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Dou a dica antes e deixo o preço para depois. Não quero prolongar o aperto.",
+          "afinidade": 0,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Ofereço um pedaço por pouco e guardo o restante para outra conversa.",
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "quincas_13",
+      "tipo": "pergunta",
+      "texto": "Só você conhece uma rota. Dividir a informação não acaba com o seu preço?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Acaba. Vendo uma vez pelo máximo antes que corra de boca em boca.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Conto inteira para aliviar a noite de quem perguntar, sem esperar nada.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Baixa o preço, mas pode abrir outra fonte. Conto só o trecho que já conferi.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "silencio": {
+        "afinidade": 0
+      }
+    },
+    {
+      "id": "quincas_14",
+      "tipo": "pergunta",
+      "texto": "Você trouxe algum item para negociar comigo?",
+      "verificavel": true,
+      "verificacao": "Checar o inventário atual e se o item declarado realmente está disponível.",
+      "requer": [
+        "inventario"
+      ],
+      "premissa": [
+        "tem_item"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Sim. Digo qual item separei.",
+          "afinidade": 1,
+          "intencao": null,
+          "registra": [
+            "ofereceu_item"
+          ]
+        },
+        {
+          "texto": "Tenho itens, mas ainda quero ouvir seu preço.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Tenho, mas nenhum está à venda.",
+          "afinidade": 0,
+          "intencao": null,
+          "registra": [
+            "recusou_negociar"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Declaro o que tenho e negocio só uma parte.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -2
+      }
+    },
+    {
+      "id": "quincas_15",
+      "tipo": "pergunta",
+      "texto": "Se minha indicação ainda não foi testada, o que você paga sem vender o que não tem?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Ofereço acertar depois, quando os dois tiverem tempo. Não quero pressionar sua escolha.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Uma parte do próximo ganho. Se eu vencer, nenhum dos dois perde.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Um preço pequeno do que tenho agora. Pode valer menos do que você espera.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Pago só pelo pedaço que posso conferir antes de sair daqui.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "quincas_16",
+      "tipo": "pergunta",
+      "texto": "Feche a conta da cobra: o que sua escolha lhe custou?",
+      "verificavel": true,
+      "verificacao": "Resumo cumulativo da noite, não do último encontro: resposta 0 exige cobra_reacao = 'parou' (houve espera concluída e nenhuma picada); resposta 1 exige cobra_reacao = 'passou' (houve picada ao seguir andando, mesmo que também tenha parado em outro encontro); resposta 2 exige cobra_reacao ausente, com cobra_avisou verdadeiro. Opção extra exige cobra_reacao = 'passou'. Verificar apenas esses fatos; justificativas, avaliações e motivos não são fatos adicionais. A ausência de desfecho vale tanto quanto a melhor resposta comum. Não atribuir perda de habilidade à picada: o jogador pode ter resistido ao veneno.",
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "cobra_avisou"
+      ],
+      "respostas": [
+        {
+          "texto": "Custou a espera até ela sair. Picada nenhuma; achei melhor gastar tempo.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Passei e fui picado. Apostei que economizaria tempo; saiu caro.",
+          "afinidade": 0,
+          "intencao": null
+        },
+        {
+          "texto": "Por enquanto, só o aviso: nem picada nem espera concluída para pôr na conta.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Passei e fui picado. Perdi a aposta; não vou chamar prejuízo de lucro.",
+        "afinidade": 0
+      },
+      "silencio": {
+        "afinidade": 0
+      }
+    },
+    {
+      "id": "quincas_17",
+      "tipo": "pergunta",
+      "texto": "O lobo atrasou você. Quanto vale encerrar a conversa e levar uma indicação?",
+      "verificavel": false,
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "lobo_derrubou"
+      ],
+      "respostas": [
+        {
+          "texto": "Mais do que antes, mas guardo algo. O atraso não acabou com os outros riscos.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Deixo a escolha do preço com você; prefiro confiar quando estou fraco.",
+          "afinidade": 0,
+          "intencao": null
+        },
+        {
+          "texto": "O que eu puder pagar. Cada pergunta sobre o preço também custa tempo.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Pago por uma certeza menor se isso me deixa sair com alguma reserva.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "quincas_18",
+      "tipo": "pergunta",
+      "texto": "A armadilha pode disparar e tornar o aviso público. Se esta for sua última troca, quanto cobra?",
+      "verificavel": false,
+      "requer": [
+        "armadilhas"
+      ],
+      "premissa": [
+        "notou_armadilha"
+      ],
+      "respostas": [
+        {
+          "texto": "Cobro agora e aviso que o valor acaba quando o laço ficar visível.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Cobro pouco para deixar confiança, mesmo sem saber se haverá outra conversa.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Dou o lugar sem cobrar; basta que a pessoa não tenha o atraso que eu evitei.",
+          "afinidade": 0,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Cobro só por onde está o laço, sem vender junto uma rota que não conferi.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "quincas_19",
+      "tipo": "pergunta",
+      "texto": "Quantas armadilhas já entraram na sua conta nesta noite?",
+      "verificavel": true,
+      "requer": [
+        "armadilhas"
+      ],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Nenhuma entrou nessa conta.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Uma por enquanto.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Ao menos duas nessa conta.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Já entrou pelo menos uma. Não fecho aqui o número exato.",
+        "afinidade": 0
+      },
+      "silencio": {
+        "afinidade": -1
+      },
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "verificacao": "Checar armadilhas_acionadas: resposta 0 exige == 0; resposta 1 exige == 1; resposta 2 exige >= 2; opção extra exige >= 1. Não verificar sentimentos nem motivos. O contador começa em zero; nenhum disparo recebe afinidade igual aos demais relatos honestos."
+    },
+    {
+      "id": "quincas_20",
+      "tipo": "pergunta",
+      "texto": "Se eu recusar sua oferta, você melhora o preço ou deixa um negócio possível passar?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Deixo o item como sinal de apreço, mesmo sem levar nada.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Saio com o que ainda tenho. O tempo gasto não torna a oferta melhor.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Melhoro logo. Se eu sair, perco tudo o que esta conversa já custou.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Faço uma última oferta menor, aceitando uma informação também menor.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "quincas_21",
+      "tipo": "pergunta",
+      "texto": "Se outra base puder pagar mais pelo seu item, por que fechar comigo?",
+      "verificavel": false,
+      "requer": [
+        "inventario"
+      ],
+      "premissa": [
+        "tem_item"
+      ],
+      "respostas": [
+        {
+          "texto": "Aceito um pouco menos agora se a diferença pagar o tempo que não gasto indo.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Só fecho se cobrir o que espero receber lá. O risco da viagem é meu.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Fecho por qualquer preço justo para não tratar sua confiança como leilão.",
+          "afinidade": 0,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Peço que reduza a indicação junto com o preço, sem fingir que recebo o mesmo.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "quincas_22",
+      "tipo": "pergunta",
+      "texto": "Se contar uma dica de graça puder render confiança, quando deixa de ser desperdício?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Quando houver uma promessa de retribuição. Sem ela, só eu assino o risco.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Sempre. Quem precisa de ajuda deve receber tudo o que eu souber.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Quando eu puder perder aquela dica e ainda atravessar. Confiança não vem com recibo.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Dou um trecho que a pessoa possa conferir, guardando o que ainda não posso perder.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "quincas_23",
+      "tipo": "pergunta",
+      "texto": "Uma informação sobe de preço com a pressa de quem compra. Você espera mais um pouco?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Corto o preço antes de perguntarem. Prefiro aliviar a pressa a sustentar a cobrança.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Espero. A urgência faz a pessoa mostrar quanto de fato pode pagar.",
+          "afinidade": 1,
+          "intencao": "ma"
+        },
+        {
+          "texto": "Fecho antes. Posso perder o preço alto, mas ainda teremos motivo para conversar.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Mantenho o preço enquanto explico qual parte da informação ainda é incerta.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    }
+  ]
+}

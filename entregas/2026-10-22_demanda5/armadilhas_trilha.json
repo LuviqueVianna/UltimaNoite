@@ -1,0 +1,41 @@
+{
+  "versao_formato": 1,
+  "descobertas": [
+    {
+      "id": "trilha_armadilha_notada_01",
+      "local": "trilha",
+      "conteudo": "armadilha_notada",
+      "texto": "Um laço entre as folhas corta a trilha. Você desvia sem tocá-lo."
+    },
+    {
+      "id": "trilha_armadilha_notada_02",
+      "local": "trilha",
+      "conteudo": "armadilha_notada",
+      "texto": "Você percebe a armadilha sob as folhas e passa ao lado, sem dispará-la."
+    },
+    {
+      "id": "trilha_armadilha_notada_03",
+      "local": "trilha",
+      "conteudo": "armadilha_notada",
+      "texto": "Folhas escondem um laço no caminho. Você o nota e desvia."
+    },
+    {
+      "id": "trilha_armadilha_acionada_01",
+      "local": "trilha",
+      "conteudo": "armadilha_acionada",
+      "texto": "Um estalo sob as folhas. A armadilha prende seu passo."
+    },
+    {
+      "id": "trilha_armadilha_acionada_02",
+      "local": "trilha",
+      "conteudo": "armadilha_acionada",
+      "texto": "Você pisa; o laço fecha antes que consiga retirar o pé."
+    },
+    {
+      "id": "trilha_armadilha_acionada_03",
+      "local": "trilha",
+      "conteudo": "armadilha_acionada",
+      "texto": "As folhas cedem sob seu pé. A trilha responde com um estalo."
+    }
+  ]
+}

@@ -1,0 +1,495 @@
+{
+  "base": "c4d6f83",
+  "perguntas": {
+    "bento_04": {
+      "choque": "",
+      "est": 1,
+      "gentil": null
+    },
+    "bento_05": {
+      "choque": "",
+      "est": 0,
+      "gentil": 2
+    },
+    "bento_06": {
+      "choque": "",
+      "est": 1,
+      "gentil": null
+    },
+    "bento_08": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "bento_11": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "bento_13": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "bento_16": {
+      "choque": "",
+      "est": 1,
+      "gentil": null
+    },
+    "bento_07": {
+      "choque": "Ousadia × franqueza sobre o próprio limite",
+      "est": 1,
+      "gentil": 0
+    },
+    "bento_09": {
+      "choque": "Decisão rápida × assumir o desconhecimento",
+      "est": 0,
+      "gentil": 1
+    },
+    "bento_10": {
+      "choque": "Insistência corajosa × reconhecer a escolha alheia",
+      "est": 0,
+      "gentil": 2
+    },
+    "bento_12": {
+      "choque": "Franqueza × preservar a própria travessia",
+      "est": 2,
+      "gentil": 0
+    },
+    "bento_14": {
+      "choque": "Confiança direta × coragem de discordar",
+      "est": 1,
+      "gentil": 2
+    },
+    "bento_15": {
+      "choque": "Confissão imediata × sustentar a ação sob medo",
+      "est": 0,
+      "gentil": 1
+    },
+    "bento_17": {
+      "choque": "Franqueza × recobrar domínio da própria experiência",
+      "est": 1,
+      "gentil": null
+    },
+    "iara_04": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "iara_05": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "iara_06": {
+      "choque": "",
+      "est": 0,
+      "gentil": 0
+    },
+    "iara_07": {
+      "choque": "Avisar quem vem atrás × não expor a própria fuga",
+      "est": 0,
+      "gentil": 0
+    },
+    "iara_08": {
+      "choque": "Partilhar ajuda incerta × não espalhar um risco",
+      "est": 0,
+      "gentil": 0
+    },
+    "iara_10": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "iara_12": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "iara_13": {
+      "choque": "Dar aviso gratuito × evitar uma segunda pessoa em perigo",
+      "est": 0,
+      "gentil": 0
+    },
+    "iara_14": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "iara_16": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "iara_09": {
+      "choque": "Acolhimento imediato × confiança ferida",
+      "est": 2,
+      "gentil": 2
+    },
+    "iara_11": {
+      "choque": "Cuidar do outro × admitir o limite da própria ajuda",
+      "est": 0,
+      "gentil": 0
+    },
+    "iara_15": {
+      "choque": "Conforto × honestidade sobre a incerteza",
+      "est": 2,
+      "gentil": 2
+    },
+    "iara_17": {
+      "choque": "Generosidade × não usar o outro para fugir do próprio susto",
+      "est": 1,
+      "gentil": 1
+    },
+    "anselmo_05": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "anselmo_06": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "anselmo_09": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "anselmo_11": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "anselmo_13": {
+      "choque": "",
+      "est": 0,
+      "gentil": 0
+    },
+    "anselmo_16": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "anselmo_07": {
+      "choque": "Responsabilidade × inteireza do relato",
+      "est": 0,
+      "gentil": 2
+    },
+    "anselmo_10": {
+      "choque": "Confissão completa × não transformar o outro em prova",
+      "est": 2,
+      "gentil": 0
+    },
+    "anselmo_12": {
+      "choque": "Corrigir a própria palavra × preservar a confiança recebida",
+      "est": 2,
+      "gentil": 2
+    },
+    "anselmo_14": {
+      "choque": "Confessar sem demora × fazer o reparo antes do alívio",
+      "est": 0,
+      "gentil": 1
+    },
+    "anselmo_15": {
+      "choque": "Severidade consigo × precisão da confissão",
+      "est": 1,
+      "gentil": 0
+    },
+    "anselmo_17": {
+      "choque": "Confissão direta × prudência ao interpretar a própria falha",
+      "est": 2,
+      "gentil": 1
+    },
+    "marta_04": {
+      "choque": "",
+      "est": 1,
+      "gentil": null
+    },
+    "marta_05": {
+      "choque": "",
+      "est": 0,
+      "gentil": 2
+    },
+    "marta_06": {
+      "choque": "",
+      "est": 0,
+      "gentil": 2
+    },
+    "marta_08": {
+      "choque": "",
+      "est": 0,
+      "gentil": 2
+    },
+    "marta_10": {
+      "choque": "",
+      "est": 1,
+      "gentil": null
+    },
+    "marta_11": {
+      "choque": "",
+      "est": 0,
+      "gentil": 2
+    },
+    "marta_14": {
+      "choque": "",
+      "est": 0,
+      "gentil": 2
+    },
+    "marta_16": {
+      "choque": "",
+      "est": 1,
+      "gentil": null
+    },
+    "marta_07": {
+      "choque": "Informação imediata × conservar uma fonte possível",
+      "est": 2,
+      "gentil": 0
+    },
+    "marta_09": {
+      "choque": "Utilidade da informação × controle de sua circulação",
+      "est": 1,
+      "gentil": 2
+    },
+    "marta_12": {
+      "choque": "Extração de informação × continuidade de uma fonte leal",
+      "est": 0,
+      "gentil": 1
+    },
+    "marta_13": {
+      "choque": "Informação nova × proteção da própria rota",
+      "est": 1,
+      "gentil": 0
+    },
+    "marta_15": {
+      "choque": "Vigilância da pessoa × verificação independente do relato",
+      "est": 2,
+      "gentil": 1
+    },
+    "marta_17": {
+      "choque": "Negociar informação × ocultar vulnerabilidade útil aos outros",
+      "est": 0,
+      "gentil": 2
+    },
+    "quincas_05": {
+      "choque": "",
+      "est": null,
+      "gentil": null
+    },
+    "quincas_06": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "quincas_14": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "quincas_16": {
+      "choque": "",
+      "est": 0,
+      "gentil": null
+    },
+    "quincas_04": {
+      "choque": "Fechar rápido × preservar margem de negociação",
+      "est": 1,
+      "gentil": 2
+    },
+    "quincas_07": {
+      "choque": "Lucro imediato × crédito para negócios futuros",
+      "est": 0,
+      "gentil": 1
+    },
+    "quincas_08": {
+      "choque": "Valor da informação × reserva para continuar negociando",
+      "est": 1,
+      "gentil": 0
+    },
+    "quincas_09": {
+      "choque": "Preço próprio × utilidade do que se recebe",
+      "est": 2,
+      "gentil": 1
+    },
+    "quincas_10": {
+      "choque": "Comprar tempo × conservar recurso para o próximo risco",
+      "est": 0,
+      "gentil": 2
+    },
+    "quincas_11": {
+      "choque": "Persistir no negócio × suportar a perda da oportunidade",
+      "est": 2,
+      "gentil": 0
+    },
+    "quincas_12": {
+      "choque": "Preço de ocasião × confiança sem garantia de retorno",
+      "est": 1,
+      "gentil": 2
+    },
+    "quincas_13": {
+      "choque": "Exclusividade × abertura de uma fonte futura",
+      "est": 0,
+      "gentil": 1
+    },
+    "quincas_15": {
+      "choque": "Preço atraente × compromisso que já pode ser cumprido",
+      "est": 1,
+      "gentil": 0
+    },
+    "quincas_17": {
+      "choque": "Comprar alívio imediato × manter capacidade de atravessar",
+      "est": 2,
+      "gentil": 1
+    },
+    "bento_18": {
+      "choque": "Coragem de seguir × aceitar uma dúvida que não pode resolver",
+      "est": 0,
+      "gentil": 1
+    },
+    "bento_20": {
+      "choque": "Franqueza que custa uma confiança × dar ao outro tempo de assumir",
+      "est": 2,
+      "gentil": 2
+    },
+    "bento_21": {
+      "choque": "Determinação × reconhecer o limite do que enxerga",
+      "est": 1,
+      "gentil": 0
+    },
+    "bento_22": {
+      "choque": "Autonomia × necessidade de confiar em alguém",
+      "est": 1,
+      "gentil": 2
+    },
+    "bento_23": {
+      "choque": "Dar satisfação × sustentar a própria prioridade sem disfarce",
+      "est": 0,
+      "gentil": 1
+    },
+    "iara_18": {
+      "choque": "Amparo pessoal × não impor proximidade e segurança que desconhece",
+      "est": 0,
+      "gentil": 0
+    },
+    "iara_20": {
+      "choque": "Acolher antes de entender × exigir precisão antes de responder",
+      "est": 0,
+      "gentil": null
+    },
+    "iara_21": {
+      "choque": "Acolhimento × não confundir companhia com proteção",
+      "est": 2,
+      "gentil": null
+    },
+    "iara_22": {
+      "choque": "Consolar × respeitar a decisão informada de quem escuta",
+      "est": 0,
+      "gentil": 0
+    },
+    "iara_23": {
+      "choque": "Respeitar a recusa imediatamente × esclarecer antes de aceitar o afastamento",
+      "est": 1,
+      "gentil": null
+    },
+    "anselmo_18": {
+      "choque": "Confissão do próprio acerto × não fabricar mérito",
+      "est": 0,
+      "gentil": 2
+    },
+    "anselmo_20": {
+      "choque": "Verdade urgente que expõe alguém × correção que preserva sua dignidade",
+      "est": 0,
+      "gentil": 0
+    },
+    "anselmo_21": {
+      "choque": "Pureza do motivo × honestidade sobre o próprio interesse",
+      "est": 1,
+      "gentil": 2
+    },
+    "anselmo_22": {
+      "choque": "Inteireza do relato × responsabilidade por quem será exposto",
+      "est": 0,
+      "gentil": 1
+    },
+    "anselmo_23": {
+      "choque": "Não completar o desconhecido × desejo de oferecer uma confissão inteira",
+      "est": 2,
+      "gentil": 0
+    },
+    "marta_18": {
+      "choque": "Exclusividade × utilidade de uma informação que pode circular",
+      "est": 2,
+      "gentil": 0
+    },
+    "marta_20": {
+      "choque": "Informação precisa × conservar a lealdade de uma fonte",
+      "est": 2,
+      "gentil": 2
+    },
+    "marta_21": {
+      "choque": "Valor de revenda × duração do acesso à fonte",
+      "est": 0,
+      "gentil": 1
+    },
+    "marta_22": {
+      "choque": "Preço da informação × precisão que preserva crédito",
+      "est": 1,
+      "gentil": 0
+    },
+    "marta_23": {
+      "choque": "Informação confirmada que exige exposição × conservar a própria posição",
+      "est": 0,
+      "gentil": 1
+    },
+    "quincas_18": {
+      "choque": "Receita da última oportunidade × confiança que talvez não tenha retorno",
+      "est": 1,
+      "gentil": 2
+    },
+    "quincas_20": {
+      "choque": "Recuperar o custo da conversa × não ampliar o prejuízo",
+      "est": 2,
+      "gentil": 0
+    },
+    "quincas_21": {
+      "choque": "Melhor preço possível × valor de encerrar um negócio presente",
+      "est": 1,
+      "gentil": 2
+    },
+    "quincas_22": {
+      "choque": "Retorno assegurado × investimento que aceita não ser pago",
+      "est": 0,
+      "gentil": 1
+    },
+    "quincas_23": {
+      "choque": "Extrair o preço máximo × conservar a possibilidade de outro negócio",
+      "est": 1,
+      "gentil": 0
+    },
+    "bento_19": {
+      "choque": "",
+      "est": null,
+      "gentil": null
+    },
+    "iara_19": {
+      "choque": "",
+      "est": null,
+      "gentil": null
+    },
+    "anselmo_19": {
+      "choque": "",
+      "est": null,
+      "gentil": null
+    },
+    "marta_19": {
+      "choque": "",
+      "est": null,
+      "gentil": null
+    },
+    "quincas_19": {
+      "choque": "",
+      "est": null,
+      "gentil": null
+    }
+  }
+}

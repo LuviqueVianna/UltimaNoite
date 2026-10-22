@@ -1,0 +1,789 @@
+{
+  "guardiao": "marta",
+  "versao_formato": 3,
+  "modificadores_tom": {
+    "firme": 1,
+    "gentil": -1,
+    "evasivo": 0
+  },
+  "reputacao": {
+    "delatou_jogador": 2,
+    "protegeu_identidade": -2,
+    "protegeu_jogador": -2,
+    "alertou_perigo": -1
+  },
+  "entradas": [
+    {
+      "id": "marta_01",
+      "tipo": "narracao",
+      "texto": "Marta permanece junto à janela alta; da torre, as trilhas parecem confissões feitas com pegadas."
+    },
+    {
+      "id": "marta_02",
+      "tipo": "fala",
+      "texto": "Poupe gentileza. Diga algo que eu ainda não possa ver daqui."
+    },
+    {
+      "id": "marta_03",
+      "tipo": "fala",
+      "texto": "Quem protege informação protege concorrente. Eu não confundo lealdade com inteligência."
+    },
+    {
+      "id": "marta_04",
+      "tipo": "pergunta",
+      "texto": "Quantos jogadores estão perto desta torre?",
+      "verificavel": true,
+      "verificacao": "Comparar ao número de jogadores no raio da Torre.",
+      "requer": [
+        "jogadores_vistos"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Nenhum.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Um; digo em qual direção.",
+          "afinidade": 1,
+          "intencao": null,
+          "registra": [
+            "delatou_jogador"
+          ]
+        },
+        {
+          "texto": "Dois ou mais; não distingui todos.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Um ao sul; outro rastro já se afasta a leste.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -2
+      }
+    },
+    {
+      "id": "marta_05",
+      "tipo": "pergunta",
+      "texto": "Quem visitou a base mais próxima antes de você?",
+      "verificavel": true,
+      "requer": [
+        "jogadores_vistos",
+        "rastros",
+        "bases_visitadas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Digo quem foi e por onde saiu.",
+          "afinidade": 1,
+          "intencao": null,
+          "registra": [
+            "delatou_jogador"
+          ]
+        },
+        {
+          "texto": "Tenho uma suspeita e a apresento como suspeita.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Reconheci, mas não vou entregar.",
+          "afinidade": -1,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_identidade"
+          ]
+        }
+      ],
+      "silencio": {
+        "afinidade": -2
+      },
+      "premissa": [
+        "visitou_outra_base",
+        "viu_pegadas_alheias"
+      ],
+      "verificacao": "Checar o calçado e a rota nas pegadas vistas. Um nome só é válido se o jogador já viu o dono daquele calçado."
+    },
+    {
+      "id": "marta_06",
+      "tipo": "pergunta",
+      "texto": "Das últimas pegadas alheias, o que conseguiu ler?",
+      "verificavel": true,
+      "verificacao": "Checar detalhes realmente revelados pela Furtividade; um nome só vale se o jogador já viu o dono do calçado.",
+      "requer": [
+        "rastros",
+        "jogadores_vistos"
+      ],
+      "premissa": [
+        "viu_pegadas_alheias"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Digo o calçado e a direção.",
+          "afinidade": 2,
+          "intencao": null,
+          "registra": [
+            "descreveu_pegadas"
+          ]
+        },
+        {
+          "texto": "Só sei que alguém passou.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Reconheci o calçado, mas guardo o nome.",
+          "afinidade": -1,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_identidade"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Digo também se o rastro era recente ou antigo.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_07",
+      "tipo": "pergunta",
+      "texto": "Se uma pessoa escondida puder lhe dar informação depois, você entrega o lugar agora?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Não entrego. Estar escondido já mostra que ela precisa de algum resguardo.",
+          "afinidade": 0,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_identidade"
+          ]
+        },
+        {
+          "texto": "Guardo o lugar por enquanto. Posso perder a troca de agora por uma melhor.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Entrego se receber algo já. Amanhã essa pessoa pode não ter mais serventia.",
+          "afinidade": 1,
+          "intencao": "ma",
+          "registra": [
+            "aceitou_delacao"
+          ]
+        }
+      ],
+      "silencio": {
+        "afinidade": 2
+      }
+    },
+    {
+      "id": "marta_08",
+      "tipo": "pergunta",
+      "texto": "Para onde foi o último jogador que você viu?",
+      "verificavel": true,
+      "verificacao": "Checar o último personagem visto e a direção observada, sem inferir inventário.",
+      "requer": [
+        "jogadores_vistos",
+        "rastros"
+      ],
+      "premissa": [
+        "viu_jogador"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Digo a direção e a trilha.",
+          "afinidade": 2,
+          "intencao": null,
+          "registra": [
+            "delatou_jogador"
+          ]
+        },
+        {
+          "texto": "Vi a direção, mas perdi a trilha.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Sei para onde foi, mas não entrego.",
+          "afinidade": -1,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_identidade"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Digo também o calçado, sem afirmar mais do que vi.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_09",
+      "tipo": "pergunta",
+      "texto": "Uma informação certa permitiria seguir alguém até a saída. Você a passa inteira?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Dou o trecho que vi, mas guardo o último rumo para não perder minha vantagem.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Passo. Uma informação pela metade perde valor na mão de quem compra.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Guardo tudo. Não quero facilitar uma perseguição contra quem tenta chegar.",
+          "afinidade": 0,
+          "intencao": "boa"
+        }
+      ],
+      "silencio": {
+        "afinidade": 2
+      }
+    },
+    {
+      "id": "marta_10",
+      "tipo": "pergunta",
+      "texto": "Você deixou rastros na última trilha?",
+      "verificavel": true,
+      "verificacao": "Checar rastros deixados pelo jogador na última trilha percorrida.",
+      "requer": [
+        "rastros"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Deixei; minha direção está clara.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Deixei sinais e depois mudei de rota.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Não deixei rastro perceptível.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Deixei apenas o necessário para sugerir uma rota incompleta.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_11",
+      "tipo": "pergunta",
+      "texto": "Diga a rota de quem passou por você por último.",
+      "verificavel": true,
+      "verificacao": "Checar o último jogador detectado e sua direção registrada.",
+      "requer": [
+        "jogadores_vistos"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Digo a direção exata.",
+          "afinidade": 1,
+          "intencao": null,
+          "registra": [
+            "delatou_jogador"
+          ]
+        },
+        {
+          "texto": "Digo apenas de onde veio.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Não entrego a rota.",
+          "afinidade": -1,
+          "intencao": "boa",
+          "registra": [
+            "protegeu_identidade"
+          ]
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Dou a direção e o destino provável, marcando a inferência.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": -2
+      },
+      "premissa": [
+        "viu_jogador"
+      ]
+    },
+    {
+      "id": "marta_12",
+      "tipo": "pergunta",
+      "texto": "Uma fonte leal lhe traz uma informação incompleta. O que preserva primeiro?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "A informação. Pressiono até ela contar o pedaço que falta.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "A confiança dela. Aceito sem conferir para não parecer uma cobrança.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "A fonte, por enquanto. Confiro o pedaço recebido antes de cobrar outro.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "silencio": {
+        "afinidade": 2
+      }
+    },
+    {
+      "id": "marta_13",
+      "tipo": "pergunta",
+      "texto": "Se expor seu plano render uma boa informação, quanto dele você conta?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Conto o que ajudar os dois a atravessar, mesmo sem receber nada.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Tudo, se a informação servir agora. Plano guardado também perde hora.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "O primeiro trecho. Aceito uma resposta menor para conservar o resto.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Digo duas rotas possíveis e assumo que ainda não escolhi uma.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_14",
+      "tipo": "pergunta",
+      "texto": "Você avisou alguém sobre uma armadilha que descobriu?",
+      "verificavel": true,
+      "verificacao": "Checar armadilha detectada e frase pronta enviada depois.",
+      "requer": [
+        "armadilhas",
+        "frases_prontas"
+      ],
+      "mentira": {
+        "afinidade": -4,
+        "intencao": null
+      },
+      "respostas": [
+        {
+          "texto": "Não. Guardei a informação.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Avisei só a direção, guardando os detalhes.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Avisei sem pedir nada.",
+          "afinidade": 0,
+          "intencao": "boa",
+          "registra": [
+            "alertou_perigo"
+          ]
+        }
+      ],
+      "silencio": {
+        "afinidade": 1
+      },
+      "premissa": [
+        "notou_armadilha"
+      ]
+    },
+    {
+      "id": "marta_15",
+      "tipo": "pergunta",
+      "texto": "Se uma fonte pedir resguardo para continuar falando, onde você põe seu olhar?",
+      "verificavel": false,
+      "respostas": [
+        {
+          "texto": "Na trilha que descreveu. Confiro o relato sem gastar a fonte inteira.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Em mim. Prefiro que observem minha rota a expor quem pediu proteção.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Nela. Quem pede resguardo pode estar escondendo o melhor pedaço.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "silencio": {
+        "afinidade": 2
+      }
+    },
+    {
+      "id": "marta_16",
+      "tipo": "pergunta",
+      "texto": "Do aviso da cobra, que resultado você pode afirmar? Poupe suposições.",
+      "verificavel": true,
+      "verificacao": "Resumo cumulativo da noite, não do último encontro: resposta 0 exige cobra_reacao = 'parou' (houve espera concluída e nenhuma picada); resposta 1 exige cobra_reacao = 'passou' (houve picada ao seguir andando, mesmo que também tenha parado em outro encontro); resposta 2 exige cobra_reacao ausente, com cobra_avisou verdadeiro. Opção extra exige igualmente cobra_reacao ausente. Verificar apenas esses fatos; justificativas, avaliações e motivos não são fatos adicionais. A ausência de desfecho vale tanto quanto a melhor resposta comum. Não atribuir perda de habilidade à picada: o jogador pode ter resistido ao veneno.",
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "cobra_avisou"
+      ],
+      "respostas": [
+        {
+          "texto": "Esperei parado até ela sair. Nenhuma cobra me picou nesta noite.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Passei andando. Houve picada; não estou chamando um susto de ataque.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Aviso ouvido. Sem picada e sem espera até a cobra sair. Não tenho outro resultado.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Só confirmei o aviso: não houve picada nem espera concluída. O resto seria suposição.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_17",
+      "tipo": "pergunta",
+      "texto": "Depois da queda com o lobo, vende a notícia do seu atraso ou guarda?",
+      "verificavel": false,
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "lobo_derrubou"
+      ],
+      "respostas": [
+        {
+          "texto": "Vendo a quem pagar. Uma fraqueza também pode render informação.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Conto só que me atrasei. Posso perder preço, mas guardo quanto ainda me custa.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Conto tudo sem cobrar. O susto pode evitar que outra pessoa caia.",
+          "afinidade": 0,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Espero saber quem já notou a queda antes de pôr preço nela.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 2
+      }
+    },
+    {
+      "id": "marta_18",
+      "tipo": "pergunta",
+      "texto": "Você viu uma armadilha. Revela o lugar ou guarda uma informação que ainda vale?",
+      "verificavel": false,
+      "requer": [
+        "armadilhas"
+      ],
+      "premissa": [
+        "notou_armadilha"
+      ],
+      "respostas": [
+        {
+          "texto": "Revelo tudo sem cobrar. Quero que ninguém precise pensar nisso outra vez.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Revelo o risco, guardo minha aproximação. Perco exclusividade sem entregar toda a rota.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Guardo o lugar inteiro. Quem vier depois que pague para saber.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Digo onde começa o risco sem afirmar quem o deixou ali.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_19",
+      "tipo": "pergunta",
+      "texto": "Quantas armadilhas você acionou? Preciso separar um atraso de vários.",
+      "verificavel": true,
+      "requer": [
+        "armadilhas"
+      ],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Zero disparos meus.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Um disparo meu.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Dois ou mais disparos meus.",
+          "afinidade": 1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Ao menos um disparo meu. Não ofereço um número exato.",
+        "afinidade": 0
+      },
+      "silencio": {
+        "afinidade": 1
+      },
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "verificacao": "Checar armadilhas_acionadas: resposta 0 exige == 0; resposta 1 exige == 1; resposta 2 exige >= 2; opção extra exige >= 1. Não verificar sentimentos nem motivos. O contador começa em zero; nenhum disparo recebe afinidade igual aos demais relatos honestos."
+    },
+    {
+      "id": "marta_20",
+      "tipo": "pergunta",
+      "texto": "Se duas fontes discordarem e só a menos leal apontar uma rota conferível, qual segue?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "A leal, até conseguir conferir as duas. Posso perder a rota melhor enquanto espero.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "A menos leal, só no trecho conferível. Posso perder a outra fonte por isso.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "A leal. Se a abandonar agora, estarei cobrando confiança que não devolvo.",
+          "afinidade": 0,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Pergunto a cada uma por um detalhe que a outra não tenha oferecido.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_21",
+      "tipo": "pergunta",
+      "texto": "Se uma fonte lhe der o caminho e pedir segredo, vale pagar esse custo?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Repito se receber uma informação melhor. Segredo também tem preço.",
+          "afinidade": 1,
+          "intencao": "ma"
+        },
+        {
+          "texto": "Guardo sempre. Quem confiou não deveria precisar fazer outra pergunta.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Guardo por enquanto e comparo com o que posso descobrir sem ela.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Respeito o pedido e negocio só o que vi por conta própria, recebendo menos.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_22",
+      "tipo": "pergunta",
+      "texto": "Se lhe contarem um rumo sem saber o destino, você vende o rumo como?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Dou o rumo sem cobrar para ajudar quem está perdido, mesmo perdendo uma troca.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Como caminho provável. Uma margem de erro não tira o valor todo.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Como rumo visto. Cobro menos para não perder a próxima pergunta de quem comprar.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Digo qual parte é direção e qual seria destino apenas suposto.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_23",
+      "tipo": "pergunta",
+      "texto": "Se uma observação curta deixar apenas um rumo incerto, você aceita se expor para conferir?",
+      "verificavel": false,
+      "requer": [],
+      "premissa": [],
+      "respostas": [
+        {
+          "texto": "Saio agora e aviso que é incerto. Guardo minha posição, mesmo levando menos para trocar.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Mostro que estou ali para a outra pessoa não se sentir seguida.",
+          "afinidade": 0,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Fico mais um pouco e aceito ser visto. Não vendo esse rumo como se o tivesse confirmado.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Mudo o ponto de observação, aceitando perder a pessoa de vista.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    }
+  ]
+}

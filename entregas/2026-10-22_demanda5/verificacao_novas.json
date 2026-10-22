@@ -1,0 +1,36 @@
+{
+  "versao_formato": 1,
+  "descricao": "Suplemento para integração após aprovação. Apenas condições das cinco perguntas novas de contagem; armadilhas_acionadas já existe e começa em zero. Não substituir o arquivo completo de verificação por este suplemento.",
+  "condicoes": {
+    "bento_19": {
+      "0": [{"fato": "armadilhas_acionadas", "op": "==", "valor": 0}],
+      "1": [{"fato": "armadilhas_acionadas", "op": "==", "valor": 1}],
+      "2": [{"fato": "armadilhas_acionadas", "op": ">=", "valor": 2}],
+      "extra": [{"fato": "armadilhas_acionadas", "op": ">=", "valor": 1}]
+    },
+    "iara_19": {
+      "0": [{"fato": "armadilhas_acionadas", "op": "==", "valor": 0}],
+      "1": [{"fato": "armadilhas_acionadas", "op": "==", "valor": 1}],
+      "2": [{"fato": "armadilhas_acionadas", "op": ">=", "valor": 2}],
+      "extra": [{"fato": "armadilhas_acionadas", "op": ">=", "valor": 1}]
+    },
+    "anselmo_19": {
+      "0": [{"fato": "armadilhas_acionadas", "op": "==", "valor": 0}],
+      "1": [{"fato": "armadilhas_acionadas", "op": "==", "valor": 1}],
+      "2": [{"fato": "armadilhas_acionadas", "op": ">=", "valor": 2}],
+      "extra": [{"fato": "armadilhas_acionadas", "op": ">=", "valor": 1}]
+    },
+    "marta_19": {
+      "0": [{"fato": "armadilhas_acionadas", "op": "==", "valor": 0}],
+      "1": [{"fato": "armadilhas_acionadas", "op": "==", "valor": 1}],
+      "2": [{"fato": "armadilhas_acionadas", "op": ">=", "valor": 2}],
+      "extra": [{"fato": "armadilhas_acionadas", "op": ">=", "valor": 1}]
+    },
+    "quincas_19": {
+      "0": [{"fato": "armadilhas_acionadas", "op": "==", "valor": 0}],
+      "1": [{"fato": "armadilhas_acionadas", "op": "==", "valor": 1}],
+      "2": [{"fato": "armadilhas_acionadas", "op": ">=", "valor": 2}],
+      "extra": [{"fato": "armadilhas_acionadas", "op": ">=", "valor": 1}]
+    }
+  }
+}
