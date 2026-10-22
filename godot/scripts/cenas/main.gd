@@ -139,15 +139,27 @@ func _montar_noite() -> void:
 	rotulo_avisos.add_theme_constant_override("outline_size", 6)
 	hud.add_child(rotulo_avisos)
 
+	# Painel do amanhecer, centralizado na tela qualquer que seja o tamanho da janela
+	var centro_painel := CenterContainer.new()
+	centro_painel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	centro_painel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hud.add_child(centro_painel)
 	painel_base = PanelContainer.new()
-	painel_base.set_anchors_preset(Control.PRESET_CENTER)
+	var estilo_painel := StyleBoxFlat.new()
+	estilo_painel.bg_color = Color("#16212e")
+	estilo_painel.border_color = Color(COR_PAPEL, 0.5)
+	estilo_painel.set_border_width_all(2)
+	estilo_painel.set_corner_radius_all(8)
+	estilo_painel.set_content_margin_all(20)
+	painel_base.add_theme_stylebox_override("panel", estilo_painel)
 	painel_base.visible = false
-	hud.add_child(painel_base)
+	centro_painel.add_child(painel_base)
 	var caixa := VBoxContainer.new()
 	painel_base.add_child(caixa)
 	rotulo_base = Label.new()
 	rotulo_base.autowrap_mode = TextServer.AUTOWRAP_WORD
-	rotulo_base.custom_minimum_size = Vector2(420, 0)
+	rotulo_base.custom_minimum_size = Vector2(560, 0)
+	rotulo_base.add_theme_color_override("font_color", COR_PAPEL)
 	caixa.add_child(rotulo_base)
 	var sair := Button.new()
 	sair.text = "Voltar para a trilha"
@@ -169,9 +181,10 @@ func _montar_noite() -> void:
 		p.rota = []
 		dialogo.abrir_saida(mundo))
 	mundo.amanheceu.connect(_ao_amanhecer)
+	mundo.som.connect(_tocar_som)
 	var j := mundo.jogador()
 	_ao_aviso("Noite começa. Você usa %s." % Regras.CALCADOS[j.calcado])
-	_ao_aviso("Ande com as setas, WASD ou clicando numa trilha visível.")
+	_ao_aviso("Ande com as setas, WASD ou clicando numa trilha visível. Espaço para parar.")
 	_ao_aviso("Chegue à saída, %s, antes do amanhecer para registrar seus pontos." % Textos.direcao(j.pos, mundo.mapa.pos(j.saida)))
 
 
@@ -183,20 +196,43 @@ func _process(dt: float) -> void:
 	_ler_teclado()
 	for i in (40 if acelerar else 1):
 		mundo.tick(dt)
-	camera.position = j.pos * MapaView.ESCALA
+	camera.position = _enquadrar(j.pos * MapaView.ESCALA)
 	var r := int(mundo.tempo_restante())
 	var saida := "chegada registrada" if j.registrou() else "saída %s, %d m" % [Textos.direcao(j.pos, mundo.mapa.pos(j.saida)), int(j.pos.distance_to(mundo.mapa.pos(j.saida)))]
 	rotulo_relogio.text = "%s   ·   %d pontos   ·   %s   ·   faltam %d:%02d para o amanhecer" % [j.nome, j.pontos(), saida, r / 60, r % 60]
+
+
+## Segue o jogador sem mostrar a escuridão fora do mapa: perto da borda a câmera para;
+## se o mapa inteiro cabe na tela (câmera bem afastada), ele fica centralizado.
+func _enquadrar(alvo: Vector2) -> Vector2:
+	var margem := MapaView.MARGEM * MapaView.ESCALA
+	var ini := -Vector2.ONE * margem
+	var fim := mundo.mapa.tamanho * MapaView.ESCALA + Vector2.ONE * margem
+	var meia := get_viewport().get_visible_rect().size / camera.zoom / 2.0
+	var r := alvo
+	for eixo in 2:
+		if fim[eixo] - ini[eixo] <= meia[eixo] * 2.0:
+			r[eixo] = (ini[eixo] + fim[eixo]) / 2.0
+		else:
+			r[eixo] = clampf(alvo[eixo], ini[eixo] + meia[eixo], fim[eixo] - meia[eixo])
+	return r
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if camera == null:
 		return
 	if event is InputEventMouseButton and event.pressed:
+		# Afastar para no máximo o ponto em que o mapa ainda enche a tela (sem bordas escuras)
+		var tela := get_viewport().get_visible_rect().size
+		var mapa_px := (mundo.mapa.tamanho + Vector2.ONE * MapaView.MARGEM * 2.0) * MapaView.ESCALA
+		var minimo := maxf(tela.x / mapa_px.x, tela.y / mapa_px.y)
+		var z := camera.zoom.x
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			camera.zoom = (camera.zoom * 1.1).clamp(Vector2(0.6, 0.6), Vector2(4, 4))
+			z *= 1.1
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			camera.zoom = (camera.zoom / 1.1).clamp(Vector2(0.6, 0.6), Vector2(4, 4))
+			z /= 1.1
+		z = clampf(z, minimo, 4.0)
+		camera.zoom = Vector2(z, z)
 
 
 ## Setas ou WASD movem pelas trilhas. Soltar a tecla para o personagem onde está.
@@ -212,12 +248,37 @@ func _ler_teclado() -> void:
 		dir.x -= 1
 	if Input.is_physical_key_pressed(KEY_RIGHT) or Input.is_physical_key_pressed(KEY_D):
 		dir.x += 1
+	if Input.is_physical_key_pressed(KEY_SPACE):
+		# Espaço: para onde está (útil diante do lobo e da cobra)
+		usando_teclado = false
+		mundo.dirigir_jogador(Vector2.ZERO)
+		return
 	if dir != Vector2.ZERO:
 		usando_teclado = true
 		mundo.dirigir_jogador(dir)
 	elif usando_teclado:
 		usando_teclado = false
 		mundo.dirigir_jogador(Vector2.ZERO)
+
+
+## Toca o barulho no ponto do mapa onde aconteceu: mais baixo de longe, e do lado de onde veio.
+func _tocar_som(evento: String, origem: Vector2) -> void:
+	var cfg: Dictionary = Regras.SONS.get(evento, {})
+	if cfg.is_empty() or acelerar:
+		return
+	var arquivos: Array = cfg["arquivos"]
+	var stream = load("res://sons/%s.ogg" % arquivos[randi() % arquivos.size()])
+	if stream == null:
+		return
+	var tocador := AudioStreamPlayer2D.new()
+	tocador.stream = stream
+	tocador.position = origem * MapaView.ESCALA
+	tocador.max_distance = float(cfg["alcance"]) * MapaView.ESCALA
+	tocador.attenuation = 1.2
+	tocador.panning_strength = 1.5
+	vista.add_child(tocador)
+	tocador.finished.connect(tocador.queue_free)
+	tocador.play()
 
 
 func _ao_registrar() -> void:

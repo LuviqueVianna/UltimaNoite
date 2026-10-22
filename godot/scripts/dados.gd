@@ -16,6 +16,12 @@ static func ler_json(relativo: String) -> Variant:
 	if _cache.has(relativo):
 		return _cache[relativo]
 	var caminho := _pasta_conteudo().path_join(relativo)
+	# Na versão exportada (web), o Godot guarda os .json como recurso convertido: lê pelo ResourceLoader.
+	if caminho.begins_with("res://") and ResourceLoader.exists(caminho):
+		var recurso = ResourceLoader.load(caminho)
+		if recurso is JSON:
+			_cache[relativo] = recurso.data
+			return recurso.data
 	var f := FileAccess.open(caminho, FileAccess.READ)
 	if f == null:
 		push_error("Não encontrei %s" % caminho)
@@ -41,7 +47,8 @@ static func itens() -> Dictionary:
 
 
 static func nomes_computador() -> Array:
-	var d = ler_json("nomes.json") if FileAccess.file_exists(_pasta_conteudo().path_join("nomes.json")) else null
+	var caminho := _pasta_conteudo().path_join("nomes.json")
+	var d = ler_json("nomes.json") if (FileAccess.file_exists(caminho) or ResourceLoader.exists(caminho)) else null
 	if d is Dictionary and d.has("nomes"):
 		return d["nomes"].map(func(n): return n["nome"])
 	return Regras.NOMES_PROVISORIOS.duplicate()

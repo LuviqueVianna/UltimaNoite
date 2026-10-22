@@ -14,7 +14,9 @@
     "usou_silencio": "vezes que ficou em silêncio em outras bases",
     "armadilhas_acionadas": "armadilhas em que pisou",
     "avisou_armadilha": "enviou frase de perigo depois de acionar ou notar armadilha",
-    "escondeu_rastro": "usou pano de saco ou sumir na mata na última trilha"
+    "escondeu_rastro": "usou pano de saco ou sumir na mata na última trilha",
+    "lobo_reacao": "'ficou' se ficou parado enquanto o lobo rosnava; 'correu' se se mexeu",
+    "seguiu_cao": "true se chegou perto do cão quando ele ofereceu guia; false se não"
   },
   "condicoes": {
     "bento_05": {
@@ -357,6 +359,52 @@
           "fato": "itens",
           "op": ">=",
           "valor": 1
+        }
+      ]
+    },
+    "bento_04": {
+      "0": [
+        {
+          "fato": "lobo_reacao",
+          "op": "==",
+          "valor": "correu"
+        }
+      ],
+      "1": [
+        {
+          "fato": "lobo_reacao",
+          "op": "==",
+          "valor": "ficou"
+        }
+      ],
+      "2": [
+        {
+          "fato": "lobo_reacao",
+          "op": "==",
+          "valor": "correu"
+        }
+      ]
+    },
+    "iara_06": {
+      "0": [
+        {
+          "fato": "seguiu_cao",
+          "op": "==",
+          "valor": true
+        }
+      ],
+      "1": [
+        {
+          "fato": "seguiu_cao",
+          "op": "==",
+          "valor": false
+        }
+      ],
+      "2": [
+        {
+          "fato": "seguiu_cao",
+          "op": "==",
+          "valor": true
         }
       ]
     }

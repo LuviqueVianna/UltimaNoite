@@ -45,6 +45,24 @@ func _init() -> void:
 		main.camera.zoom = Vector2(0.75, 0.75)
 	if args.size() > 2 and args[2] == "media":
 		main.camera.zoom = Vector2(1.3, 1.3)
+	if args.size() > 2 and args[2] == "animais":
+		# Traz um de cada animal para perto do jogador, só para ver o desenho
+		main.camera.zoom = Vector2(3.0, 3.0)
+		var k := 0
+		var feitos := {}
+		for a in main.mundo.fauna.animais:
+			if feitos.has(a.tipo):
+				continue
+			feitos[a.tipo] = true
+			a.pos = j.pos + Vector2.from_angle(k * TAU / 4.0 + 0.4) * 14.0
+			a.caminho = []
+			a.ferido = false
+			k += 1
+	if args.size() > 2 and args[2] == "amanhecer":
+		main.camera.zoom = Vector2(1.0, 1.0)
+		main.mundo.registrar_chegada(j)
+		while not main.mundo.terminou:
+			main.mundo.tick(0.5)
 	if args.size() > 2 and args[2] == "perto":
 		main.camera.zoom = Vector2(3.2, 3.2)
 	for i in 10:

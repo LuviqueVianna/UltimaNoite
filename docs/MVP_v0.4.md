@@ -87,8 +87,10 @@ O centro do jogo é informação incompleta: quem passou por onde, quem mente, q
 - Nenhuma habilidade cai abaixo de 1. Com todas em 1, o veneno não afeta as habilidades.
 
 ### Animais
-- Lobo, coruja e cão entram no MVP, como na v0.3.
-- **O lobo fica perto das bases.**
+- Lobo, coruja e cão entram no MVP, como na v0.3, **e também a cobra** (decidido em 21/10/2026).
+- **O lobo fica perto das bases.** Quando alcança alguém, derruba e atrasa.
+- A picada da cobra é veneno, como a panela ruim.
+- Regras completas e números: `docs/sistemas/animais_v1.md`.
 
 ---
 

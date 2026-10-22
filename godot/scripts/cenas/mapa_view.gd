@@ -49,7 +49,7 @@ func preparar(m: Mundo) -> void:
 	mundo = m
 	var area := mundo.mapa.tamanho + Vector2.ONE * MARGEM * 2.0
 	mascara = Image.create(int(area.x), int(area.y), false, Image.FORMAT_L8)
-	mascara.fill(Color.BLACK)
+	mascara.fill(Color.WHITE if Regras.MAPA_ABERTO else Color.BLACK)
 	textura_mascara = ImageTexture.create_from_image(mascara)
 
 	var ruido := NoiseTexture2D.new()
@@ -100,6 +100,8 @@ func _process(dt: float) -> void:
 
 ## Abre a névoa em volta do jogador, de forma permanente (borda suave).
 func _revelar() -> void:
+	if Regras.MAPA_ABERTO:
+		return
 	var j := mundo.jogador()
 	var centro := j.pos + Vector2.ONE * MARGEM
 	var r := j.alcance() * 1.2
@@ -167,7 +169,7 @@ func _plantar_arvores() -> void:
 				ok = mais_perto >= 1.8 + raio and mais_perto <= 30.0
 			if ok:
 				arvores.append({"pos": p, "raio": raio, "tipo": "copa", "tom": rng.randf_range(-1.0, 1.0),
-					"giro": rng.randf() * TAU, "visivel": false})
+					"giro": rng.randf() * TAU, "visivel": Regras.MAPA_ABERTO})
 		y += passo * 0.87
 
 
@@ -249,6 +251,11 @@ func _draw() -> void:
 		if mundo.pegada_visivel_para(j, g):
 			_desenhar_pegada(g, j)
 
+	# Animais
+	for a in mundo.fauna.animais:
+		if mundo.fauna.visivel_para_jogador(a):
+			_desenhar_animal(a)
+
 	# Personagens
 	for o in mundo.personagens:
 		if o.eh_jogador:
@@ -270,6 +277,103 @@ func _draw() -> void:
 	if not j.rota.is_empty():
 		var alvo := m.pos(j.rota[-1]) * ESCALA
 		draw_arc(alvo, 10, 0, TAU, 24, Color(COR_MINHA, 0.8), 2)
+
+
+## Animais vistos de cima: silhuetas escuras com borda clara, cada uma com um formato
+## (não depende de cor), e o nome do animal ao lado.
+func _desenhar_animal(a: Fauna.Animal) -> void:
+	var c: Vector2 = a.pos * ESCALA
+	if Regras.MOSTRAR_ALCANCE_ANIMAIS:
+		_alcance_animal(a)
+	var u := ESCALA * 1.35         # desenhados maiores que o real, para leitura (como as pegadas)
+	var borda := Color(COR_TEXTO, 0.9)
+	var rotulo: String = {"lobo": "lobo", "coruja": "coruja", "cao": "cão", "cobra": "cobra"}[a.tipo]
+	match a.tipo:
+		"lobo", "cao":
+			# Corpo alongado, cabeça e orelhas; o lobo é maior e tem orelhas pontudas
+			var t := 1.0 if a.tipo == "lobo" else 0.75
+			var dir := Vector2.RIGHT
+			if not a.caminho.is_empty():
+				dir = (a.caminho[0] - a.pos).normalized() if a.caminho[0] != a.pos else dir
+			elif a.alvo >= 0:
+				dir = (mundo.personagens[a.alvo].pos - a.pos).normalized()
+			var lado := dir.orthogonal()
+			var corpo := PackedVector2Array()
+			for k in 14:
+				var ang := TAU * k / 14.0
+				corpo.append(c + dir * cos(ang) * 2.2 * u * t + lado * sin(ang) * 0.9 * u * t)
+			var cabeca := c + dir * 2.4 * u * t
+			var orelha := 0.9 if a.tipo == "lobo" else 0.5
+			draw_colored_polygon(corpo, COR_CONTORNO)
+			corpo.append(corpo[0])
+			draw_polyline(corpo, borda, 1.5)
+			draw_circle(cabeca, 0.8 * u * t, COR_CONTORNO)
+			draw_arc(cabeca, 0.8 * u * t, 0, TAU, 12, borda, 1.5)
+			for sinal in [-1.0, 1.0]:
+				var base_orelha: Vector2 = cabeca + lado * sinal * 0.45 * u * t
+				draw_colored_polygon(PackedVector2Array([base_orelha - dir * 0.3 * u * t, base_orelha + dir * 0.3 * u * t,
+					base_orelha + lado * sinal * orelha * u * t]), COR_CONTORNO)
+			# Rabo
+			draw_line(c - dir * 2.0 * u * t, c - dir * 3.3 * u * t + lado * (0.6 if a.tipo == "cao" else 0.0) * u, borda, 2.0)
+			if a.tipo == "lobo" and a.ferido:
+				rotulo = "lobo (mancando)"
+			elif a.tipo == "lobo" and a.estado in ["rosnando", "perseguindo"]:
+				rotulo = "lobo (rosnando)"
+			elif a.tipo == "cao" and a.estado in ["esperando", "guiando"]:
+				rotulo = "cão (abanando o rabo)"
+		"coruja":
+			# Corpo redondo com dois olhos claros
+			draw_circle(c, 1.4 * u, COR_CONTORNO)
+			draw_arc(c, 1.4 * u, 0, TAU, 16, borda, 1.5)
+			draw_circle(c + Vector2(-0.5, -0.3) * u, 0.38 * u, COR_TEXTO)
+			draw_circle(c + Vector2(0.5, -0.3) * u, 0.38 * u, COR_TEXTO)
+			draw_circle(c + Vector2(-0.5, -0.3) * u, 0.15 * u, COR_CONTORNO)
+			draw_circle(c + Vector2(0.5, -0.3) * u, 0.15 * u, COR_CONTORNO)
+		"cobra":
+			# Linha em zigue-zague grossa, escura com contorno claro
+			var pts := PackedVector2Array()
+			for k in 9:
+				var x := (k - 4) * 0.6 * u
+				pts.append(c + Vector2(x, sin(k * 1.4) * 0.7 * u))
+			draw_polyline(pts, borda, 0.9 * u)
+			draw_polyline(pts, COR_CONTORNO, 0.55 * u)
+			draw_circle(pts[pts.size() - 1], 0.45 * u, COR_CONTORNO)
+	if mundo.tempo < a.sinal_ate:
+		rotulo += " — " + a.sinal
+	_texto(c + Vector2(2.6 * u, 0.4 * u), rotulo, 9)
+
+
+## Ajuda de teste: a distância em que o animal percebe alguém (tracejado) e o tempo que falta
+## no encontro (arco cheio que vai se fechando).
+func _alcance_animal(a: Fauna.Animal) -> void:
+	var c: Vector2 = a.pos * ESCALA
+	var raio := {"lobo": Regras.LOBO_VE_M, "coruja": Regras.CORUJA_VE_M, "cao": Regras.CAO_VE_M, "cobra": Regras.COBRA_AVISO_M}[a.tipo] as float
+	# Tracejado claro com contorno escuro: aparece tanto no papel quanto sobre a mata
+	for k in 32:
+		if k % 2 == 0:
+			var a0 := TAU * k / 32.0
+			var a1 := TAU * (k + 1) / 32.0
+			draw_arc(c, raio * ESCALA, a0, a1, 4, Color(COR_CONTORNO, 0.8), 3.5)
+			draw_arc(c, raio * ESCALA, a0, a1, 4, Color(COR_TEXTO, 0.9), 1.5)
+	if a.tipo == "cobra":
+		draw_arc(c, Regras.COBRA_PICA_M * ESCALA, 0, TAU, 20, Color(COR_CONTORNO, 0.9), 3.5)
+		draw_arc(c, Regras.COBRA_PICA_M * ESCALA, 0, TAU, 20, Color(COR_TEXTO, 0.9), 1.5)
+		var j := mundo.jogador()
+		var parado: float = a.ouviu.get(j.id, 0.0)
+		if a.ouviu.has(j.id) and parado > 0.0:
+			_contagem(c, Regras.COBRA_AVISO_M * 0.5 * ESCALA, parado / Regras.COBRA_DESISTE_S, "%.1f s parado" % parado)
+	elif a.tipo == "lobo" and a.estado == "rosnando":
+		_contagem(c, 5.0 * ESCALA, 1.0 - a.relogio / Regras.LOBO_ROSNA_S, "fique parado: %.1f s" % maxf(a.relogio, 0.0))
+	elif a.tipo == "lobo" and a.estado == "perseguindo":
+		_texto(c + Vector2(-20, -5.5 * ESCALA), "atacando! corra para uma base", 9)
+	elif a.tipo == "cao" and a.estado == "esperando":
+		_contagem(c, 5.0 * ESCALA, 1.0 - a.relogio / Regras.CAO_ESPERA_S, "chegue a 5 m: %.0f s" % maxf(a.relogio, 0.0))
+
+
+func _contagem(c: Vector2, r: float, fracao: float, texto: String) -> void:
+	draw_arc(c, r, -PI / 2.0, -PI / 2.0 + TAU * clampf(fracao, 0.0, 1.0), 32, COR_CONTORNO, 5.0)
+	draw_arc(c, r, -PI / 2.0, -PI / 2.0 + TAU * clampf(fracao, 0.0, 1.0), 32, COR_AMBAR, 2.5)
+	_texto(c + Vector2(-r, -r - 6), texto, 9)
 
 
 ## Copa vista de cima: folhagem escura com borda recortada.

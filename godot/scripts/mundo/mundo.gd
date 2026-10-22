@@ -8,6 +8,7 @@ signal aviso(texto: String)
 signal amanheceu
 signal guardiao_mentiu_para(personagem: Personagem, base: String)
 signal chegou_saida(personagem: Personagem)
+signal som(evento: String, origem: Vector2)   # barulho no mapa (Regras.SONS); a cena decide se o jogador ouve
 
 var mapa: Mapa
 var personagens: Array = []
@@ -16,6 +17,7 @@ var tempo := 0.0
 var terminou := false
 var rng := RandomNumberGenerator.new()
 var panela_boa := {}         # base -> "esquerda" | "direita"
+var fauna: Fauna
 var visitante := {}          # base -> {"id": personagem, "mente": bool} enquanto um personagem do computador está lá
 var _verificacao := {}
 var _proxima_pegada := 0
@@ -56,6 +58,13 @@ func iniciar(semente: int, jogador: Dictionary) -> void:
 		if not comuns.is_empty():
 			p.inventario.append(comuns[rng.randi() % comuns.size()])
 		personagens.append(p)
+	if Regras.MAPA_ABERTO:
+		var j: Personagem = personagens[0]
+		j.no_visto.fill(1)
+		j.aresta_conhecida.fill(1)
+		j.amostra_percorrida.fill(1)
+	fauna = Fauna.new(self)
+	fauna.preparar()
 	for p in personagens:
 		_perceber(p)
 
@@ -85,6 +94,7 @@ func tick(dt: float) -> void:
 					_proxima_pegada += 1
 				"chegou":
 					_chegou(p, ev["no"])
+	fauna.tick(dt)
 	_acumulado_percepcao += dt
 	if _acumulado_percepcao >= Regras.PERCEPCAO_INTERVALO:
 		_acumulado_percepcao = 0.0
@@ -202,7 +212,8 @@ func fato(p: Personagem, base: String, nome: String) -> Variant:
 			return p.avisou_armadilha
 		"escondeu_rastro":
 			return p.escondeu_rastro
-	return null
+	# Fatos dos animais e outros guardados na noite (ex.: "lobo_reacao", "seguiu_cao")
+	return p.fatos_noite.get(nome)
 
 
 func resposta_verdadeira(p: Personagem, base: String, id_pergunta: String, chave: String) -> bool:

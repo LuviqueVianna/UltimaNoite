@@ -31,7 +31,11 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
+<<<<<<< Updated upstream
 | 21/10/2026 | Caminho para o 3D aprovado: lógica separada da apresentação no código, etapa intermediária em 3D com câmera isométrica ortográfica, 3D completo no futuro ([docs/caminho_3D_v1.md](docs/caminho_3D_v1.md)) |
+=======
+| 21/10/2026 | Animais no jogo: lobo, coruja, cão e cobra, com sons livres (CC0) e regras em `docs/sistemas/animais_v1.md`. Câmera presa ao mapa, placar do amanhecer centralizado, versão para navegador. **Modo de teste ligado** (`regras.gd`): mapa sem névoa, jogador a 10 m/s e alcance dos animais desenhado |
+>>>>>>> Stashed changes
 | 20/10/2026 | Segunda rodada de ajustes: jogador a 5 m/s, computador acelera até a saída depois da chegada do jogador, caixas de resposta do diálogo corrigidas |
 | 20/10/2026 | Rodada de ajustes do usuário: 50 s para responder, jogador 2x mais rápido, mensagens somem em 6 s, mapa 450 × 450 m, computador mais lento, mata fechada, trilha tracejada e contraste para daltonismo |
 | 20/10/2026 | Mata desenhada no mapa: copas e embaúbas em tinta, reveladas com a névoa. Conversa entre jogadores fica para depois (decisão do usuário) |

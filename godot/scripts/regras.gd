@@ -3,7 +3,7 @@ extends RefCounted
 ## Números do MVP v0.4 (docs/MVP_v0.4.md). Unidade de distância: metros.
 
 const NOITE_S := 720.0               # duração da noite no MVP (provisório)
-const VEL_TRILHA := 5.0              # m/s do jogador (aumentada a pedido do usuário em 20/10/2026, depois do mapa maior)
+const VEL_TRILHA := 10.0             # m/s do jogador (dobrada de novo a pedido do usuário em 20/10/2026, para testes)
 const VEL_COMPUTADOR := 1.5          # m/s dos personagens do computador (mais lentos, a pedido do usuário)
 const ACELERA_COMPUTADOR := 3.0      # depois que o jogador registra a chegada, o computador anda 3x mais rápido
 const ESPACO_PEGADA := 2.6           # m entre pegadas desenhadas (o desenho é maior que o real)
@@ -15,6 +15,9 @@ const HESITACAO := Vector2(2.0, 5.0) # pausa dos personagens do computador em bi
 const VISITA_BASE_S := 25.0          # tempo de visita do computador (provisório, até a etapa 2)
 const CLIQUE_RAIO := 15.0            # m de tolerância ao tocar no mapa
 const AVISO_S := 6.0                 # s que cada mensagem fica na tela
+## TEMPORÁRIO, para testes (pedido do usuário em 20/10/2026): sem névoa, o jogador já conhece todas as trilhas.
+## Voltar para false quando os testes de caminho e de visita terminarem.
+const MAPA_ABERTO := true
 
 const ATRIBUTOS := ["forca", "inteligencia", "carisma", "furtividade", "resistencia"]
 const PONTOS_TOTAIS := 12
@@ -89,6 +92,68 @@ const INDICACAO := {
 	"quincas": {"fala": "Pra você, a da {lado}. Palavra de comerciante.", "nada": "Sem mercadoria, sem conselho.",
 		"preco": "Uma indicação dessas tem preço. O que você me dá?",
 		"verdade": "Quincas fala com as mãos paradas sobre o balcão.", "mentira": "Quincas esfrega as mãos e solta uma risadinha."},
+}
+
+# ---- Animais (docs/sistemas/animais_v1.md, decidido em 21/10/2026). Números provisórios. ----
+const ANIMAIS_QTD := {"lobo": 1, "coruja": 2, "cao": 1, "cobra": 4}
+const LOBO_VE_M := 16.0
+const LOBO_ROSNA_S := 2.5
+const LOBO_VEL := 1.4
+const LOBO_VEL_FERIDO := 0.6
+const LOBO_VEL_ATAQUE := 7.0
+const LOBO_PERSEGUE_S := 15.0
+const LOBO_CHANCE_FERIDO := 0.3
+const LOBO_UIVO_S := Vector2(70.0, 130.0)
+const LOBO_TROCA_BASE_S := Vector2(120.0, 200.0)
+const LOBO_RONDA_M := 45.0              # anda pelas trilhas até essa distância da base
+const LENTO_S := 10.0                   # metade da velocidade depois de derrubado (reduzido pela Resistência)
+const CORUJA_VE_M := 20.0
+const CORUJA_AVISA_M := 60.0
+const CORUJA_POUSO_S := Vector2(70.0, 110.0)
+const CORUJA_VOO := 9.0
+const CAO_VE_M := 14.0
+const CAO_VEL := 1.8
+const CAO_VEL_GUIA := 2.5
+const CAO_ESPERA_S := 8.0
+const CAO_CHANCE_GUIA := 0.55
+const CAO_LONGE_M := 18.0
+const COBRA_AVISO_M := 6.0
+const COBRA_PICA_M := 1.6
+const COBRA_DESISTE_S := 2.0
+const COBRA_LONGE_M := 25.0             # não aparece tão perto de partidas e bases
+const OUVE_M := 250.0                   # distância de que se ouve pio, latido e ataque
+const ANIMAL_PARA := Vector2(0.3, 0.12) # chance do computador ficar parado: base + por nível de Inteligência
+## TEMPORÁRIO, para testes: desenha em volta de cada animal visível a distância em que ele percebe
+## e o tempo que falta (rosnado, cobra). Pedido do usuário em 21/10/2026 para entender as distâncias.
+const MOSTRAR_ALCANCE_ANIMAIS := true
+## Sons de cada evento: arquivos em godot/sons (créditos em sons/CREDITOS.md) e de quão longe se ouvem.
+const SONS := {
+	"lobo_uivou": {"arquivos": ["lobo_uivo_1", "lobo_uivo_2"], "alcance": 700.0},
+	"lobo_rosna": {"arquivos": ["lobo_rosna"], "alcance": 60.0},
+	"lobo_atacou": {"arquivos": ["lobo_ataque", "lobo_rosna"], "alcance": 250.0},
+	"coruja_piou": {"arquivos": ["coruja_1", "coruja_2", "coruja_3"], "alcance": 250.0},
+	"cao_latiu": {"arquivos": ["cao_late_1", "cao_late_2", "cao_late_3"], "alcance": 250.0},
+	"cobra_folhas": {"arquivos": ["cobra_folhas"], "alcance": 15.0},
+}
+
+## Falas provisórias dos animais (o banco definitivo será pedido ao ChatGPT).
+const FALAS_ANIMAIS := {
+	"lobo_rosna": "Um lobo rosna para você, orelhas para trás. Fique parado até ele se afastar.",
+	"lobo_desiste": "O lobo fareja o ar e se afasta.",
+	"lobo_derruba": "O lobo te derruba. Você demora a levantar e segue mancando.",
+	"lobo_escapou": "O lobo para na beira da clareira e não entra.",
+	"lobo_ferido": "Um lobo passa mancando, sem forças para atacar.",
+	"coruja_olha": "Uma coruja olha para você e pia.",
+	"coruja_avisa": "Uma coruja olha para você e vira a cabeça {direcao}.",
+	"cao_guia": "Um cão sem dono abana o rabo e espera por você. Chegue perto dele.",
+	"cao_seguindo": "O cão sai trotando pela trilha. Siga-o.",
+	"cao_chegou": "O cão para diante da luz da base e volta para a mata.",
+	"cao_late": "Um cão inquieto rosna e late para você.",
+	"cobra_som": "Folhas secas chacoalham bem perto. Pare e espere.",
+	"cobra_ve": "Uma cobra, enrolada no meio da trilha. Pare e espere.",
+	"cobra_some": "A cobra desliza para o mato.",
+	"cobra_pica": "Uma picada no tornozelo. Você sente o veneno subir.",
+	"cobra_resistiu": "Uma picada no tornozelo, mas seu corpo aguenta o veneno.",
 }
 
 # Provisório: substituído por conteudo/nomes.json quando a demanda 2 for aprovada.

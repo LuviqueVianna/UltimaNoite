@@ -39,7 +39,8 @@ var ultima_pegada_vista := -1       # id de personagem dono das últimas pegadas
 var saida := -1                     # nó de chegada (ponto oposto à partida)
 var acelerado := false              # computador acelerado depois que o jogador chegou
 var concluiu := -1.0                # instante em que registrou a chegada; -1 se ainda não
-var fatos_noite := {}               # premissas que aconteceram (ex.: "lobo_avancou"), preenchidas na etapa 3
+var fatos_noite := {}               # premissas e fatos dos animais (ex.: "lobo_avancou", "lobo_reacao")
+var lento_s := 0.0                  # anda pela metade da velocidade (lobo, armadilha)
 var na_base := ""
 var no_anterior := -1
 var hesitou_no := -1
@@ -77,9 +78,8 @@ func leitura_pegadas() -> int:
 
 
 func velocidade() -> float:
-	if eh_jogador:
-		return Regras.VEL_TRILHA
-	return Regras.VEL_COMPUTADOR * (Regras.ACELERA_COMPUTADOR if acelerado else 1.0)
+	var v := Regras.VEL_TRILHA if eh_jogador else Regras.VEL_COMPUTADOR * (Regras.ACELERA_COMPUTADOR if acelerado else 1.0)
+	return v * (0.5 if lento_s > 0.0 else 1.0)
 
 
 func tem_marca(marca: String) -> bool:
@@ -195,6 +195,8 @@ func passo(dt: float, mapa: Mapa) -> Array:
 	if espera > 0.0:
 		espera -= dt
 		return eventos
+	if lento_s > 0.0:
+		lento_s -= dt
 	if pausado and no_atual < 0:
 		return eventos
 	if no_atual >= 0:
