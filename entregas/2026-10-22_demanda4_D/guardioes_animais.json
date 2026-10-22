@@ -1,0 +1,420 @@
+{
+  "versao_formato": 3,
+  "guardioes": {
+    "bento": [
+      {
+        "id": "bento_16",
+        "tipo": "pergunta",
+        "texto": "A cobra deu aviso. Diga de frente como você atravessou essa parte da noite.",
+        "verificavel": true,
+        "verificacao": "Resumo cumulativo da noite, não do último encontro: resposta 0 exige cobra_reacao = 'parou' (houve espera concluída e nenhuma picada); resposta 1 exige cobra_reacao = 'passou' (houve picada ao seguir andando, mesmo que também tenha parado em outro encontro); resposta 2 exige cobra_reacao ausente, com cobra_avisou verdadeiro. Opção extra exige cobra_reacao = 'parou'. Verificar apenas esses fatos; justificativas, avaliações e motivos não são fatos adicionais. A ausência de desfecho vale tanto quanto a melhor resposta comum. Não atribuir perda de habilidade à picada: o jogador pode ter resistido ao veneno.",
+        "mentira": {
+          "afinidade": -4,
+          "intencao": "ma"
+        },
+        "requer": [
+          "animais"
+        ],
+        "premissa": [
+          "cobra_avisou"
+        ],
+        "respostas": [
+          {
+            "texto": "Parei e esperei ela sair. Nenhuma me picou; não quis arriscar.",
+            "afinidade": 1,
+            "intencao": null
+          },
+          {
+            "texto": "Passei e fui picado. Arrisquei o couro e assumo.",
+            "afinidade": 3,
+            "intencao": null
+          },
+          {
+            "texto": "Só ouvi o aviso. Não esperei cobra sair nem levei picada; não vou inventar coragem.",
+            "afinidade": 3,
+            "intencao": null
+          }
+        ],
+        "opcao_extra": {
+          "atributo": "carisma",
+          "minimo": 4,
+          "texto": "Parei até ela sair, sem picada. Enfrentar não exige pisar em cima.",
+          "afinidade": 2
+        },
+        "silencio": {
+          "afinidade": -2
+        }
+      },
+      {
+        "id": "bento_17",
+        "tipo": "pergunta",
+        "texto": "O lobo pôs você no chão. Como vai contar isso?",
+        "verificavel": false,
+        "requer": [
+          "animais"
+        ],
+        "premissa": [
+          "lobo_derrubou"
+        ],
+        "respostas": [
+          {
+            "texto": "De frente. Ele me alcançou e me derrubou.",
+            "afinidade": 3,
+            "intencao": null
+          },
+          {
+            "texto": "Só conto se perguntarem. A queda não conta minha noite inteira.",
+            "afinidade": 1,
+            "intencao": null
+          },
+          {
+            "texto": "Direi que apenas tropecei. Não quero virar presa fácil.",
+            "afinidade": -2,
+            "intencao": "ma"
+          }
+        ],
+        "opcao_extra": {
+          "atributo": "resistencia",
+          "minimo": 4,
+          "texto": "Conto a queda sem fazer dela medalha.",
+          "afinidade": 2
+        },
+        "silencio": {
+          "afinidade": -2
+        }
+      }
+    ],
+    "iara": [
+      {
+        "id": "iara_16",
+        "tipo": "pergunta",
+        "texto": "Meu bem, você deu espaço à cobra ou a pressa falou mais alto?",
+        "verificavel": true,
+        "verificacao": "Resumo cumulativo da noite, não do último encontro: resposta 0 exige cobra_reacao = 'parou' (houve espera concluída e nenhuma picada); resposta 1 exige cobra_reacao = 'passou' (houve picada ao seguir andando, mesmo que também tenha parado em outro encontro); resposta 2 exige cobra_reacao ausente, com cobra_avisou verdadeiro. Opção extra exige cobra_reacao = 'passou'. Verificar apenas esses fatos; justificativas, avaliações e motivos não são fatos adicionais. A ausência de desfecho vale tanto quanto a melhor resposta comum. Não atribuir perda de habilidade à picada: o jogador pode ter resistido ao veneno.",
+        "mentira": {
+          "afinidade": -4,
+          "intencao": "ma"
+        },
+        "requer": [
+          "animais"
+        ],
+        "premissa": [
+          "cobra_avisou"
+        ],
+        "respostas": [
+          {
+            "texto": "Deixei que saísse, ficando parado. Nenhuma me picou nesta noite.",
+            "afinidade": 3,
+            "intencao": null
+          },
+          {
+            "texto": "Passei andando e fui picado. Não quis perder tempo esperando o bicho.",
+            "afinidade": -1,
+            "intencao": null
+          },
+          {
+            "texto": "Ouvi as folhas, meu bem. Ainda não esperei uma cobra sair nem sofri picada.",
+            "afinidade": 3,
+            "intencao": null
+          }
+        ],
+        "opcao_extra": {
+          "atributo": "inteligencia",
+          "minimo": 4,
+          "texto": "Passei e fui picado. Agora entendo que o caminho também era dela.",
+          "afinidade": 1
+        },
+        "silencio": {
+          "afinidade": 0
+        }
+      },
+      {
+        "id": "iara_17",
+        "tipo": "pergunta",
+        "texto": "O lobo derrubou você, meu bem. Como quer seguir depois desse susto?",
+        "verificavel": false,
+        "requer": [
+          "animais"
+        ],
+        "premissa": [
+          "lobo_derrubou"
+        ],
+        "respostas": [
+          {
+            "texto": "Quero recuperar o fôlego sem descontar meu medo em quem encontrar.",
+            "afinidade": 3,
+            "intencao": "boa"
+          },
+          {
+            "texto": "Quero continuar logo. Cada instante parado me afasta da chegada.",
+            "afinidade": 0,
+            "intencao": null
+          },
+          {
+            "texto": "Quero um instante de sossego antes de voltar à trilha.",
+            "afinidade": 2,
+            "intencao": null
+          }
+        ],
+        "opcao_extra": {
+          "atributo": "resistencia",
+          "minimo": 4,
+          "texto": "Quero seguir no passo que aguento, sem tentar recuperar tudo de uma vez.",
+          "afinidade": 2
+        },
+        "silencio": {
+          "afinidade": 1
+        }
+      }
+    ],
+    "anselmo": [
+      {
+        "id": "anselmo_16",
+        "tipo": "pergunta",
+        "texto": "Conte seu encontro com a cobra como foi, mesmo que ainda não tenha um fim.",
+        "verificavel": true,
+        "verificacao": "Resumo cumulativo da noite, não do último encontro: resposta 0 exige cobra_reacao = 'parou' (houve espera concluída e nenhuma picada); resposta 1 exige cobra_reacao = 'passou' (houve picada ao seguir andando, mesmo que também tenha parado em outro encontro); resposta 2 exige cobra_reacao ausente, com cobra_avisou verdadeiro. Opção extra exige cobra_reacao = 'passou'. Verificar apenas esses fatos; justificativas, avaliações e motivos não são fatos adicionais. A ausência de desfecho vale tanto quanto a melhor resposta comum. Não atribuir perda de habilidade à picada: o jogador pode ter resistido ao veneno.",
+        "mentira": {
+          "afinidade": -4,
+          "intencao": "ma"
+        },
+        "requer": [
+          "animais"
+        ],
+        "premissa": [
+          "cobra_avisou"
+        ],
+        "respostas": [
+          {
+            "texto": "Parei até ela partir. Nenhuma cobra me picou nesta noite; é o que houve.",
+            "afinidade": 2,
+            "intencao": null
+          },
+          {
+            "texto": "Segui andando e fui picado. Essa parte não retiro da confissão.",
+            "afinidade": 2,
+            "intencao": null
+          },
+          {
+            "texto": "Tenho apenas o aviso para contar: nenhuma espera concluída, nenhuma picada.",
+            "afinidade": 2,
+            "intencao": null
+          }
+        ],
+        "opcao_extra": {
+          "atributo": "carisma",
+          "minimo": 4,
+          "texto": "Fui picado ao seguir andando. A pressa explica; não muda o que fiz.",
+          "afinidade": 2
+        },
+        "silencio": {
+          "afinidade": -1
+        }
+      },
+      {
+        "id": "anselmo_17",
+        "tipo": "pergunta",
+        "texto": "O lobo o derrubou. A vergonha lhe daria direito a outra versão?",
+        "verificavel": false,
+        "requer": [
+          "animais"
+        ],
+        "premissa": [
+          "lobo_derrubou"
+        ],
+        "respostas": [
+          {
+            "texto": "Não. Posso guardar silêncio, mas a queda continua sendo minha.",
+            "afinidade": 3,
+            "intencao": null
+          },
+          {
+            "texto": "Eu esconderia a queda para não oferecer vantagem aos outros.",
+            "afinidade": 2,
+            "intencao": null
+          },
+          {
+            "texto": "Chamaria de tropeço. Preciso seguir sem carregar essa vergonha.",
+            "afinidade": 0,
+            "intencao": "ma"
+          }
+        ],
+        "opcao_extra": {
+          "atributo": "inteligencia",
+          "minimo": 4,
+          "texto": "Prefiro reconhecer o que houve sem exigir absolvição.",
+          "afinidade": 2
+        },
+        "silencio": {
+          "afinidade": -1
+        }
+      }
+    ],
+    "marta": [
+      {
+        "id": "marta_16",
+        "tipo": "pergunta",
+        "texto": "Do aviso da cobra, que resultado você pode afirmar? Poupe suposições.",
+        "verificavel": true,
+        "verificacao": "Resumo cumulativo da noite, não do último encontro: resposta 0 exige cobra_reacao = 'parou' (houve espera concluída e nenhuma picada); resposta 1 exige cobra_reacao = 'passou' (houve picada ao seguir andando, mesmo que também tenha parado em outro encontro); resposta 2 exige cobra_reacao ausente, com cobra_avisou verdadeiro. Opção extra exige igualmente cobra_reacao ausente. Verificar apenas esses fatos; justificativas, avaliações e motivos não são fatos adicionais. A ausência de desfecho vale tanto quanto a melhor resposta comum. Não atribuir perda de habilidade à picada: o jogador pode ter resistido ao veneno.",
+        "mentira": {
+          "afinidade": -4,
+          "intencao": "ma"
+        },
+        "requer": [
+          "animais"
+        ],
+        "premissa": [
+          "cobra_avisou"
+        ],
+        "respostas": [
+          {
+            "texto": "Esperei parado até ela sair. Nenhuma cobra me picou nesta noite.",
+            "afinidade": 2,
+            "intencao": null
+          },
+          {
+            "texto": "Passei andando. Houve picada; não estou chamando um susto de ataque.",
+            "afinidade": 3,
+            "intencao": null
+          },
+          {
+            "texto": "Aviso ouvido. Sem picada e sem espera até a cobra sair. Não tenho outro resultado.",
+            "afinidade": 3,
+            "intencao": null
+          }
+        ],
+        "opcao_extra": {
+          "atributo": "inteligencia",
+          "minimo": 4,
+          "texto": "Só confirmei o aviso: não houve picada nem espera concluída. O resto seria suposição.",
+          "afinidade": 2
+        },
+        "silencio": {
+          "afinidade": 1
+        }
+      },
+      {
+        "id": "marta_17",
+        "tipo": "pergunta",
+        "texto": "O lobo derrubou você. Deixaria outro viajante saber disso?",
+        "verificavel": false,
+        "requer": [
+          "animais"
+        ],
+        "premissa": [
+          "lobo_derrubou"
+        ],
+        "respostas": [
+          {
+            "texto": "Sim, se ele me desse uma informação útil em troca.",
+            "afinidade": 3,
+            "intencao": null
+          },
+          {
+            "texto": "Não por enquanto. Prefiro que desconheça minha fraqueza.",
+            "afinidade": 2,
+            "intencao": null
+          },
+          {
+            "texto": "Contaria sem cobrar, para que não repetisse minha escolha.",
+            "afinidade": -1,
+            "intencao": "boa"
+          }
+        ],
+        "opcao_extra": {
+          "atributo": "furtividade",
+          "minimo": 4,
+          "texto": "Eu esperaria para saber o que ele já percebeu.",
+          "afinidade": 1
+        },
+        "silencio": {
+          "afinidade": 2
+        }
+      }
+    ],
+    "quincas": [
+      {
+        "id": "quincas_16",
+        "tipo": "pergunta",
+        "texto": "Feche a conta da cobra: o que sua escolha lhe custou?",
+        "verificavel": true,
+        "verificacao": "Resumo cumulativo da noite, não do último encontro: resposta 0 exige cobra_reacao = 'parou' (houve espera concluída e nenhuma picada); resposta 1 exige cobra_reacao = 'passou' (houve picada ao seguir andando, mesmo que também tenha parado em outro encontro); resposta 2 exige cobra_reacao ausente, com cobra_avisou verdadeiro. Opção extra exige cobra_reacao = 'passou'. Verificar apenas esses fatos; justificativas, avaliações e motivos não são fatos adicionais. A ausência de desfecho vale tanto quanto a melhor resposta comum. Não atribuir perda de habilidade à picada: o jogador pode ter resistido ao veneno.",
+        "mentira": {
+          "afinidade": -4,
+          "intencao": "ma"
+        },
+        "requer": [
+          "animais"
+        ],
+        "premissa": [
+          "cobra_avisou"
+        ],
+        "respostas": [
+          {
+            "texto": "Custou a espera até ela sair. Picada nenhuma; achei melhor gastar tempo.",
+            "afinidade": 2,
+            "intencao": null
+          },
+          {
+            "texto": "Passei e fui picado. Apostei que economizaria tempo; saiu caro.",
+            "afinidade": -1,
+            "intencao": null
+          },
+          {
+            "texto": "Por enquanto, só o aviso: nem picada nem espera concluída para pôr na conta.",
+            "afinidade": 2,
+            "intencao": null
+          }
+        ],
+        "opcao_extra": {
+          "atributo": "carisma",
+          "minimo": 4,
+          "texto": "Passei e fui picado. Perdi a aposta; não vou chamar prejuízo de lucro.",
+          "afinidade": 1
+        },
+        "silencio": {
+          "afinidade": 0
+        }
+      },
+      {
+        "id": "quincas_17",
+        "tipo": "pergunta",
+        "texto": "O lobo derrubou você. Quanto vale uma indicação depois desse atraso?",
+        "verificavel": false,
+        "requer": [
+          "animais"
+        ],
+        "premissa": [
+          "lobo_derrubou"
+        ],
+        "respostas": [
+          {
+            "texto": "Mais, mas ainda comparo o preço ao que posso perder.",
+            "afinidade": 3,
+            "intencao": null
+          },
+          {
+            "texto": "O que eu puder pagar. Prefiro garantir algum tempo.",
+            "afinidade": 2,
+            "intencao": null
+          },
+          {
+            "texto": "Nada. Depois da queda, espero que você me ajude sem cobrar.",
+            "afinidade": -1,
+            "intencao": null
+          }
+        ],
+        "opcao_extra": {
+          "atributo": "inteligencia",
+          "minimo": 4,
+          "texto": "Vale mais pelo tempo perdido, mas só pago até onde ainda compensa.",
+          "afinidade": 2
+        },
+        "silencio": {
+          "afinidade": -1
+        }
+      }
+    ]
+  }
+}
