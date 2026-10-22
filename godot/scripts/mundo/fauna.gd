@@ -343,6 +343,7 @@ func _cobra(a: Animal, dt: float, andou: Dictionary) -> void:
 				var r: String = p.envenenar(mundo.rng)
 				p.fatos_noite["cobra_picou"] = true
 				p.fatos_noite["cobra_reacao"] = "passou"
+				_ouvir("cobra_picou", a.pos, p.id, Regras.OUVE_M)
 				_falar(p, "cobra_resistiu" if r == "resistiu" else "cobra_pica")
 				if p.eh_jogador and r != "" and r != "resistiu":
 					mundo.aviso.emit("Você perdeu 1 ponto de %s." % Dialogo.NOMES_ATRIBUTO.get(r, r))
@@ -470,7 +471,7 @@ func _ponto_do_pouso(no: int) -> Vector2:
 ## Mensagem do animal para quem passou por ele (só o jogador lê).
 func _falar(p: Personagem, chave: String, valores := {}) -> void:
 	if p.eh_jogador:
-		mundo.aviso.emit(Textos.preencher(Regras.FALAS_ANIMAIS[chave], valores))
+		mundo.aviso.emit(Textos.preencher(Textos.animal(chave, mundo.rng), valores))
 
 
 func _sinal(a: Animal, texto: String, duracao: float) -> void:

@@ -37,6 +37,7 @@ var escondeu_rastro := false
 var refeicoes := {}                 # base -> "boa" | "ruim"
 var ultima_pegada_vista := -1       # id de personagem dono das últimas pegadas alheias vistas
 var saida := -1                     # nó de chegada (ponto oposto à partida)
+var voltando := false               # computador já decidiu ir para a saída (não volta atrás)
 var acelerado := false              # computador acelerado depois que o jogador chegou
 var concluiu := -1.0                # instante em que registrou a chegada; -1 se ainda não
 var fatos_noite := {}               # premissas e fatos dos animais (ex.: "lobo_avancou", "lobo_reacao")

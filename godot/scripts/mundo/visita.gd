@@ -116,7 +116,6 @@ func situacao() -> String:
 func indicar() -> Dictionary:
 	var acao: String = Regras.COMPORTAMENTO[base][situacao()]
 	indicacao = {"acao": acao, "lado": "", "mente": false, "pede_item": acao == "preco" and not p.inventario.is_empty()}
-	var textos: Dictionary = Regras.INDICACAO[base]
 	match acao:
 		"boa":
 			_apontar(false)
@@ -126,11 +125,11 @@ func indicar() -> Dictionary:
 			_apontar(mundo.rng.randf() < 0.5)
 		"preco":
 			if indicacao["pede_item"]:
-				indicacao["fala"] = textos["preco"]
+				indicacao["fala"] = Textos.indicacao(base, "preco", mundo.rng)
 				return indicacao
 			_apontar(true)
 		_:
-			indicacao["fala"] = textos["nada"]
+			indicacao["fala"] = Textos.indicacao(base, "nada", mundo.rng)
 	return indicacao
 
 
@@ -150,11 +149,10 @@ func pagar(item: String) -> Dictionary:
 func _apontar(mentindo: bool) -> void:
 	var boa: String = mundo.panela_boa[base]
 	var lado := boa if not mentindo else ("direita" if boa == "esquerda" else "esquerda")
-	var textos: Dictionary = Regras.INDICACAO[base]
 	indicacao["lado"] = lado
 	indicacao["mente"] = mentindo
-	indicacao["fala"] = Textos.preencher(textos["fala"], {"lado": lado})
-	indicacao["gesto"] = textos["mentira" if mentindo else "verdade"]
+	indicacao["fala"] = Textos.preencher(Textos.indicacao(base, "fala", mundo.rng), {"lado": lado})
+	indicacao["gesto"] = Textos.indicacao(base, "mentira" if mentindo else "verdade", mundo.rng)
 
 
 ## O personagem come da panela do lado escolhido.

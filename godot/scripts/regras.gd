@@ -53,7 +53,8 @@ const PERFIS := ["cauteloso", "ousado", "trapaceiro"]
 # Valores provisórios, aguardando aprovação (docs/sistemas/pontuacao_v1.md).
 const PONTOS := {"panela_boa": 3, "panela_ruim": -1}
 const FOLGA_VOLTA := 2.5     # sem caminho conhecido, o computador estima 2,5x a distância em linha reta
-const MARGEM_VOLTA_S := 60.0
+const MARGEM_VOLTA_S := 90.0       # folga extra desde os animais (lobo derruba, cobra faz parar)
+const FOLGA_BASE := 1.8      # o computador só desvia para uma base se der tempo de ir, visitar e chegar à saída
 
 # ---- Visita às bases (etapa 2) ----
 const PERGUNTAS_POR_VISITA := Vector2i(4, 6)
@@ -79,7 +80,7 @@ const COMPORTAMENTO := {
 	"quincas": {"alta": "preco", "neutra": "sorteio", "baixa": "ruim", "ma": "preco"},
 }
 
-## Falas e gestos da indicação. Provisório: o banco definitivo será pedido ao ChatGPT.
+## Falas e gestos da indicação: reserva, usada só se faltar conteudo/textos/indicacao.json.
 const INDICACAO := {
 	"bento": {"fala": "A da {lado}. E não volte pra reclamar.", "nada": "Escolha sozinho. Coragem não se empresta.",
 		"verdade": "Bento olha você nos olhos enquanto fala.", "mentira": "Bento limpa a faca num pano, sem olhar para você."},
@@ -136,7 +137,7 @@ const SONS := {
 	"cobra_folhas": {"arquivos": ["cobra_folhas"], "alcance": 15.0},
 }
 
-## Falas provisórias dos animais (o banco definitivo será pedido ao ChatGPT).
+## Falas dos animais: reserva, usada só se faltar conteudo/textos/animais.json.
 const FALAS_ANIMAIS := {
 	"lobo_rosna": "Um lobo rosna para você, orelhas para trás. Fique parado até ele se afastar.",
 	"lobo_desiste": "O lobo fareja o ar e se afasta.",

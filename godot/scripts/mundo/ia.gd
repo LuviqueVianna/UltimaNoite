@@ -20,7 +20,7 @@ static func decidir(p: Personagem, mundo: Mundo) -> void:
 		p.espera = mundo.rng.randf_range(Regras.HESITACAO.x, Regras.HESITACAO.y)
 		return
 
-	var alvo := _base_alvo(p, mapa)
+	var alvo := _base_alvo(p, mundo)
 	if alvo != "":
 		_rumo(p, mundo, p.luzes[alvo], mapa.bases()[alvo])
 		return
@@ -57,8 +57,8 @@ static func _tem_saida_nova(p: Personagem, mapa: Mapa, no: int) -> bool:
 
 ## Vai para a saída quando já visitou todos os guardiões ou quando o tempo aperta.
 static func hora_de_ir(p: Personagem, mundo: Mundo) -> bool:
-	if p.acelerado:
-		return true   # o jogador já chegou: vai direto para a saída, sem novas visitas
+	if p.acelerado or p.voltando:
+		return true   # já decidiu ir (ou o jogador já chegou): não volta atrás para visitar outra base
 	var guardioes := Regras.BASES.keys().filter(func(b): return b != "vazia")
 	if guardioes.all(func(b): return p.bases_visitadas.has(b)):
 		return true
@@ -68,17 +68,24 @@ static func hora_de_ir(p: Personagem, mundo: Mundo) -> bool:
 		if not conhecido.is_empty():
 			distancia = p._comprimento(mundo.mapa, p.no_atual, conhecido)
 	var estimativa: float = distancia / p.velocidade()
-	return mundo.tempo_restante() < estimativa + Regras.MARGEM_VOLTA_S
+	if mundo.tempo_restante() < estimativa + Regras.MARGEM_VOLTA_S:
+		p.voltando = true
+	return p.voltando
 
 
-## Base mais próxima, ainda não visitada, cuja luz já foi vista.
-static func _base_alvo(p: Personagem, mapa: Mapa) -> String:
+## Base mais próxima, ainda não visitada, cuja luz já foi vista, e que dá tempo de visitar
+## e ainda chegar à saída (ida, visita e dali até a saída, com folga).
+static func _base_alvo(p: Personagem, mundo: Mundo) -> String:
 	var melhor := ""
 	var melhor_d := INF
+	var saida: Vector2 = mundo.mapa.pos(p.saida)
 	for b in p.luzes:
 		if p.bases_visitadas.has(b):
 			continue
 		var d: float = p.pos.distance_to(p.luzes[b])
+		var volta: float = (d + p.luzes[b].distance_to(saida)) * Regras.FOLGA_BASE / p.velocidade()
+		if volta + Regras.VISITA_BASE_S + Regras.MARGEM_VOLTA_S > mundo.tempo_restante():
+			continue
 		if d < melhor_d:
 			melhor_d = d
 			melhor = b

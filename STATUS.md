@@ -33,6 +33,7 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
+| 22/10/2026 | Textos aprovados da demanda 4 integrados ao jogo (sinais dos animais, indicação, panelas, cobra ouvida de longe). Computador não desiste da saída depois de decidir ir: chegada voltou a 24 de 24 no teste |
 | 22/10/2026 | Demanda 4 entregue e revisada: sinais dos animais, indicação e panelas aprovados; perguntas da parte D voltam para ajuste |
 | 22/10/2026 | Demanda 4 criada para o ChatGPT (animais e diálogos dos guardiões). Demanda 3 continua em pausa e deve ser descontinuada |
 | 21/10/2026 | Animais no jogo: lobo, coruja, cão e cobra, com sons livres (CC0) e regras em `docs/sistemas/animais_v1.md`. Câmera presa ao mapa, placar do amanhecer centralizado, versão para navegador. **Modo de teste ligado** (`regras.gd`): mapa sem névoa, jogador a 10 m/s e alcance dos animais desenhado |

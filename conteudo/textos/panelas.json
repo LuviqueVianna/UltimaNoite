@@ -1,0 +1,25 @@
+{
+  "versao_formato": 1,
+  "resultados": {
+    "boa": [
+      "O caldo aquece por dentro. Você volta a se sentir inteiro.",
+      "O calor desce devagar. Seu corpo parece encontrar o próprio lugar.",
+      "A última colherada deixa um calor bom. Você respira com alívio."
+    ],
+    "ruim_efeito": [
+      "O amargo fica na boca. Algo em você perde firmeza.",
+      "Você engole. O calor passa, mas deixa uma fraqueza por dentro.",
+      "O caldo desce amargo. Uma parte do seu vigor se apaga."
+    ],
+    "ruim_resistiu": [
+      "O caldo amarga a boca, mas seu corpo resiste.",
+      "Uma tontura vem com o amargo. Seu corpo aguenta.",
+      "O veneno pesa por um instante. Seu corpo sustenta o que tem."
+    ],
+    "ruim_sem_efeito": [
+      "O caldo é amargo. Seu corpo, já no limite, não perde mais nada.",
+      "Você engole o amargo. Nada mais cede no que resta de você.",
+      "O gosto ruim fica. Seu pouco vigor permanece como estava."
+    ]
+  }
+}

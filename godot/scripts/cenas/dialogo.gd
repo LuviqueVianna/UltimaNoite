@@ -244,17 +244,23 @@ func _comer(lado: String) -> void:
 	estado = "resultado"
 	_limpar()
 	var r := visita.comer(lado)
+	var rng := mundo.rng
 	if r["boa"]:
-		texto.text = "O caldo esquenta o corpo. Você se sente inteiro."
+		texto.text = _ou(Textos.panela("boa", rng), "O caldo esquenta o corpo. Você se sente inteiro.")
 	else:
 		match r["veneno"]:
 			"resistiu":
-				texto.text = "O gosto é amargo e a cabeça gira, mas seu corpo aguenta."
+				texto.text = _ou(Textos.panela("ruim_resistiu", rng), "O gosto é amargo e a cabeça gira, mas seu corpo aguenta.")
 			"":
-				texto.text = "O gosto é amargo. Você já não tinha o que perder."
+				texto.text = _ou(Textos.panela("ruim_sem_efeito", rng), "O gosto é amargo. Você já não tinha o que perder.")
 			_:
-				texto.text = "O gosto é amargo e algo se apaga em você.\nVocê perdeu 1 ponto de %s." % NOMES_ATRIBUTO[r["veneno"]]
+				texto.text = _ou(Textos.panela("ruim_efeito", rng), "O gosto é amargo e algo se apaga em você.") \
+					+ "\nVocê perdeu 1 ponto de %s." % NOMES_ATRIBUTO[r["veneno"]]
 	_opcao("Voltar para a trilha", _fechar)
+
+
+func _ou(texto_conteudo: String, provisorio: String) -> String:
+	return texto_conteudo if texto_conteudo != "" else provisorio
 
 
 func _fechar() -> void:
