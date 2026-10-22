@@ -450,6 +450,87 @@
       "silencio": {
         "afinidade": -1
       }
+    },
+    {
+      "id": "quincas_16",
+      "tipo": "pergunta",
+      "texto": "Feche a conta da cobra: o que sua escolha lhe custou?",
+      "verificavel": true,
+      "verificacao": "Resumo cumulativo da noite, não do último encontro: resposta 0 exige cobra_reacao = 'parou' (houve espera concluída e nenhuma picada); resposta 1 exige cobra_reacao = 'passou' (houve picada ao seguir andando, mesmo que também tenha parado em outro encontro); resposta 2 exige cobra_reacao ausente, com cobra_avisou verdadeiro. Opção extra exige cobra_reacao = 'passou'. Verificar apenas esses fatos; justificativas, avaliações e motivos não são fatos adicionais. A ausência de desfecho vale tanto quanto a melhor resposta comum. Não atribuir perda de habilidade à picada: o jogador pode ter resistido ao veneno.",
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "cobra_avisou"
+      ],
+      "respostas": [
+        {
+          "texto": "Custou a espera até ela sair. Picada nenhuma; achei melhor gastar tempo.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Passei e fui picado. Apostei que economizaria tempo; saiu caro.",
+          "afinidade": -1,
+          "intencao": null
+        },
+        {
+          "texto": "Por enquanto, só o aviso: nem picada nem espera concluída para pôr na conta.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Passei e fui picado. Perdi a aposta; não vou chamar prejuízo de lucro.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 0
+      }
+    },
+    {
+      "id": "quincas_17",
+      "tipo": "pergunta",
+      "texto": "O lobo derrubou você. Quanto vale uma indicação depois desse atraso?",
+      "verificavel": false,
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "lobo_derrubou"
+      ],
+      "respostas": [
+        {
+          "texto": "Mais, mas ainda comparo o preço ao que posso perder.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "O que eu puder pagar. Prefiro garantir algum tempo.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Nada. Depois da queda, espero que você me ajude sem cobrar.",
+          "afinidade": -1,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Vale mais pelo tempo perdido, mas só pago até onde ainda compensa.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -1
+      }
     }
   ]
 }

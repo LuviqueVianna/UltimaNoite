@@ -6,7 +6,7 @@
 
 | Quem | Está com | Arquivo |
 |---|---|---|
-| **ChatGPT** | **Demanda 4b**: refazer as perguntas dos guardiões sobre cobra e lobo (parte D) | [revisoes/2026-10-22_demanda4.md](revisoes/2026-10-22_demanda4.md) |
+| **ChatGPT** | Sem demanda aberta. Aguardando a próxima | — |
 | **Claude** | Código do MVP em Godot: etapas 1 e 2 prontas, animais prontos (modo de teste ligado); segue a etapa 3 (armadilhas, itens, sumir na mata) | [godot/README.md](godot/README.md) |
 | **Usuário** | Aprovar os valores dos pontos; testar os animais; mandar a demanda 4 ao ChatGPT | [docs/sistemas/pontuacao_v1.md](docs/sistemas/pontuacao_v1.md) |
 
@@ -21,11 +21,11 @@ Leia antes: [docs/briefings/BRIEFING_GPT_v0.4.md](docs/briefings/BRIEFING_GPT_v0
 | 2 | Textos do mapa: janelas, eventos à distância, becos e clareiras, frases prontas, nomes | Briefing v0.4, seção 4 | Entregue em 20/10 e revisada |
 | 3 | Quadro de estilo do pergaminho | Briefing v0.4, seção 5 | **Em pausa, provavelmente será descontinuada** (visual definido pelo usuário em 20/10; ver `docs/MVP_v0.4.md`, seção 3). Não fazer |
 | 4 | Animais e diálogos dos guardiões | `docs/briefings/DEMANDA_4_animais_e_guardioes.md` | Entregue em 22/10 e revisada: A, B, E e F aprovadas; C aguarda o usuário ouvir os sons |
-| 4b | Refazer a parte D (perguntas sobre cobra e lobo), pontos D1 a D4 | `revisoes/2026-10-22_demanda4.md` | **Fazer agora** |
+| 4b | Refazer a parte D (perguntas sobre cobra e lobo), pontos D1 a D4 | `revisoes/2026-10-22_demanda4.md` | Entregue em 22/10, aprovada e integrada |
 
 Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
-**Demanda 4b:** refazer só a parte D conforme a seção 3 da revisão, mantendo IDs 16 e 17 e o formato v3. Entregar em `entregas/AAAA-MM-DD_demanda4_D/` com `LEIAME.md` e parar.
+**Ao entregar:** fazer commit e push só da pasta da entrega, para o Claude encontrar no repositório.
 
 **Marcadores de texto:** daqui em diante, vale a tabela de `revisoes/2026-10-20_textos_mapa.md`.
 
@@ -33,6 +33,7 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
+| 22/10/2026 | Parte D da demanda 4 aprovada e integrada: 10 perguntas sobre cobra e lobo, conferidas contra o que aconteceu na noite |
 | 22/10/2026 | Textos aprovados da demanda 4 integrados ao jogo (sinais dos animais, indicação, panelas, cobra ouvida de longe). Computador não desiste da saída depois de decidir ir: chegada voltou a 24 de 24 no teste |
 | 22/10/2026 | Demanda 4 entregue e revisada: sinais dos animais, indicação e panelas aprovados; perguntas da parte D voltam para ajuste |
 | 22/10/2026 | Demanda 4 criada para o ChatGPT (animais e diálogos dos guardiões). Demanda 3 continua em pausa e deve ser descontinuada |

@@ -1,6 +1,6 @@
 {
   "versao_formato": 1,
-  "descricao": "Condições que o jogo usa para checar se uma resposta verificável é verdadeira. Chave: id da pergunta; dentro, o índice da resposta (0, 1, 2) ou 'extra'. Resposta sem condição conta como verdadeira. Todas as condições da lista precisam valer.",
+  "descricao": "Condições que o jogo usa para checar se uma resposta verificável é verdadeira. Chave: id da pergunta; dentro, o índice da resposta (0, 1, 2) ou 'extra'. Resposta sem condição conta como verdadeira. Todas as condições da lista precisam valer. Operador 'ausente': a condição vale quando o fato ainda não aconteceu na noite.",
   "fatos": {
     "aproximacao": "'rondou' se olhou pela janela antes de entrar; senão 'frente' ou 'fundos'",
     "bases_antes": "bases visitadas antes desta",
@@ -16,7 +16,8 @@
     "avisou_armadilha": "enviou frase de perigo depois de acionar ou notar armadilha",
     "escondeu_rastro": "usou pano de saco ou sumir na mata na última trilha",
     "lobo_reacao": "'ficou' se ficou parado enquanto o lobo rosnava; 'correu' se se mexeu",
-    "seguiu_cao": "true se chegou perto do cão quando ele ofereceu guia; false se não"
+    "seguiu_cao": "true se chegou perto do cão quando ele ofereceu guia; false se não",
+    "cobra_reacao": "'parou' se ficou parado e a cobra foi embora; 'passou' se foi picado ao seguir andando (vale para a noite toda: uma picada prevalece). Ausente se ainda não houve desfecho"
   },
   "condicoes": {
     "bento_05": {
@@ -405,6 +406,156 @@
           "fato": "seguiu_cao",
           "op": "==",
           "valor": true
+        }
+      ]
+    },
+    "bento_16": {
+      "0": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "parou"
+        }
+      ],
+      "1": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "passou"
+        }
+      ],
+      "2": [
+        {
+          "fato": "cobra_reacao",
+          "op": "ausente",
+          "valor": null
+        }
+      ],
+      "extra": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "parou"
+        }
+      ]
+    },
+    "iara_16": {
+      "0": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "parou"
+        }
+      ],
+      "1": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "passou"
+        }
+      ],
+      "2": [
+        {
+          "fato": "cobra_reacao",
+          "op": "ausente",
+          "valor": null
+        }
+      ],
+      "extra": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "passou"
+        }
+      ]
+    },
+    "anselmo_16": {
+      "0": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "parou"
+        }
+      ],
+      "1": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "passou"
+        }
+      ],
+      "2": [
+        {
+          "fato": "cobra_reacao",
+          "op": "ausente",
+          "valor": null
+        }
+      ],
+      "extra": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "passou"
+        }
+      ]
+    },
+    "marta_16": {
+      "0": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "parou"
+        }
+      ],
+      "1": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "passou"
+        }
+      ],
+      "2": [
+        {
+          "fato": "cobra_reacao",
+          "op": "ausente",
+          "valor": null
+        }
+      ],
+      "extra": [
+        {
+          "fato": "cobra_reacao",
+          "op": "ausente",
+          "valor": null
+        }
+      ]
+    },
+    "quincas_16": {
+      "0": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "parou"
+        }
+      ],
+      "1": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "passou"
+        }
+      ],
+      "2": [
+        {
+          "fato": "cobra_reacao",
+          "op": "ausente",
+          "valor": null
+        }
+      ],
+      "extra": [
+        {
+          "fato": "cobra_reacao",
+          "op": "==",
+          "valor": "passou"
         }
       ]
     }

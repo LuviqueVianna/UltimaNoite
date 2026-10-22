@@ -491,6 +491,87 @@
       "silencio": {
         "afinidade": 2
       }
+    },
+    {
+      "id": "marta_16",
+      "tipo": "pergunta",
+      "texto": "Do aviso da cobra, que resultado você pode afirmar? Poupe suposições.",
+      "verificavel": true,
+      "verificacao": "Resumo cumulativo da noite, não do último encontro: resposta 0 exige cobra_reacao = 'parou' (houve espera concluída e nenhuma picada); resposta 1 exige cobra_reacao = 'passou' (houve picada ao seguir andando, mesmo que também tenha parado em outro encontro); resposta 2 exige cobra_reacao ausente, com cobra_avisou verdadeiro. Opção extra exige igualmente cobra_reacao ausente. Verificar apenas esses fatos; justificativas, avaliações e motivos não são fatos adicionais. A ausência de desfecho vale tanto quanto a melhor resposta comum. Não atribuir perda de habilidade à picada: o jogador pode ter resistido ao veneno.",
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "cobra_avisou"
+      ],
+      "respostas": [
+        {
+          "texto": "Esperei parado até ela sair. Nenhuma cobra me picou nesta noite.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Passei andando. Houve picada; não estou chamando um susto de ataque.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Aviso ouvido. Sem picada e sem espera até a cobra sair. Não tenho outro resultado.",
+          "afinidade": 3,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Só confirmei o aviso: não houve picada nem espera concluída. O resto seria suposição.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": 1
+      }
+    },
+    {
+      "id": "marta_17",
+      "tipo": "pergunta",
+      "texto": "O lobo derrubou você. Deixaria outro viajante saber disso?",
+      "verificavel": false,
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "lobo_derrubou"
+      ],
+      "respostas": [
+        {
+          "texto": "Sim, se ele me desse uma informação útil em troca.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Não por enquanto. Prefiro que desconheça minha fraqueza.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Contaria sem cobrar, para que não repetisse minha escolha.",
+          "afinidade": -1,
+          "intencao": "boa"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "furtividade",
+        "minimo": 4,
+        "texto": "Eu esperaria para saber o que ele já percebeu.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 2
+      }
     }
   ]
 }

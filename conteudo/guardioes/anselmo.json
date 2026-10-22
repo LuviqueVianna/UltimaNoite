@@ -544,6 +544,87 @@
       "silencio": {
         "afinidade": -3
       }
+    },
+    {
+      "id": "anselmo_16",
+      "tipo": "pergunta",
+      "texto": "Conte seu encontro com a cobra como foi, mesmo que ainda não tenha um fim.",
+      "verificavel": true,
+      "verificacao": "Resumo cumulativo da noite, não do último encontro: resposta 0 exige cobra_reacao = 'parou' (houve espera concluída e nenhuma picada); resposta 1 exige cobra_reacao = 'passou' (houve picada ao seguir andando, mesmo que também tenha parado em outro encontro); resposta 2 exige cobra_reacao ausente, com cobra_avisou verdadeiro. Opção extra exige cobra_reacao = 'passou'. Verificar apenas esses fatos; justificativas, avaliações e motivos não são fatos adicionais. A ausência de desfecho vale tanto quanto a melhor resposta comum. Não atribuir perda de habilidade à picada: o jogador pode ter resistido ao veneno.",
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "cobra_avisou"
+      ],
+      "respostas": [
+        {
+          "texto": "Parei até ela partir. Nenhuma cobra me picou nesta noite; é o que houve.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Segui andando e fui picado. Essa parte não retiro da confissão.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Tenho apenas o aviso para contar: nenhuma espera concluída, nenhuma picada.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Fui picado ao seguir andando. A pressa explica; não muda o que fiz.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -1
+      }
+    },
+    {
+      "id": "anselmo_17",
+      "tipo": "pergunta",
+      "texto": "O lobo o derrubou. A vergonha lhe daria direito a outra versão?",
+      "verificavel": false,
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "lobo_derrubou"
+      ],
+      "respostas": [
+        {
+          "texto": "Não. Posso guardar silêncio, mas a queda continua sendo minha.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Eu esconderia a queda para não oferecer vantagem aos outros.",
+          "afinidade": 2,
+          "intencao": null
+        },
+        {
+          "texto": "Chamaria de tropeço. Preciso seguir sem carregar essa vergonha.",
+          "afinidade": 0,
+          "intencao": "ma"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Prefiro reconhecer o que houve sem exigir absolvição.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -1
+      }
     }
   ]
 }

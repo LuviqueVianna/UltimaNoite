@@ -17,6 +17,9 @@ var tempo := 0.0
 var terminou := false
 var rng := RandomNumberGenerator.new()
 var panela_boa := {}         # base -> "esquerda" | "direita"
+## Fatos guardados em fatos_noite que o jogo já registra: ausência quer dizer "não aconteceu".
+const FATOS_DA_NOITE := ["lobo_reacao", "seguiu_cao", "cobra_reacao"]
+
 var fauna: Fauna
 var visitante := {}          # base -> {"id": personagem, "mente": bool} enquanto um personagem do computador está lá
 var _verificacao := {}
@@ -220,7 +223,13 @@ func resposta_verdadeira(p: Personagem, base: String, id_pergunta: String, chave
 	var conds: Array = _verificacao.get(id_pergunta, {}).get(chave, [])
 	for c in conds:
 		var valor = fato(p, base, c["fato"])
+		if c["op"] == "ausente":
+			if valor != null:
+				return false
+			continue
 		if valor == null:
+			if FATOS_DA_NOITE.has(c["fato"]):
+				return false   # o fato existe no jogo e ainda não aconteceu: a resposta não confere
 			continue
 		var alvo = c["valor"]
 		match c["op"]:

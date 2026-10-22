@@ -523,6 +523,87 @@
       "silencio": {
         "afinidade": -1
       }
+    },
+    {
+      "id": "iara_16",
+      "tipo": "pergunta",
+      "texto": "Meu bem, você deu espaço à cobra ou a pressa falou mais alto?",
+      "verificavel": true,
+      "verificacao": "Resumo cumulativo da noite, não do último encontro: resposta 0 exige cobra_reacao = 'parou' (houve espera concluída e nenhuma picada); resposta 1 exige cobra_reacao = 'passou' (houve picada ao seguir andando, mesmo que também tenha parado em outro encontro); resposta 2 exige cobra_reacao ausente, com cobra_avisou verdadeiro. Opção extra exige cobra_reacao = 'passou'. Verificar apenas esses fatos; justificativas, avaliações e motivos não são fatos adicionais. A ausência de desfecho vale tanto quanto a melhor resposta comum. Não atribuir perda de habilidade à picada: o jogador pode ter resistido ao veneno.",
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "cobra_avisou"
+      ],
+      "respostas": [
+        {
+          "texto": "Deixei que saísse, ficando parado. Nenhuma me picou nesta noite.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Passei andando e fui picado. Não quis perder tempo esperando o bicho.",
+          "afinidade": -1,
+          "intencao": null
+        },
+        {
+          "texto": "Ouvi as folhas, meu bem. Ainda não esperei uma cobra sair nem sofri picada.",
+          "afinidade": 3,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "inteligencia",
+        "minimo": 4,
+        "texto": "Passei e fui picado. Agora entendo que o caminho também era dela.",
+        "afinidade": 1
+      },
+      "silencio": {
+        "afinidade": 0
+      }
+    },
+    {
+      "id": "iara_17",
+      "tipo": "pergunta",
+      "texto": "O lobo derrubou você, meu bem. Como quer seguir depois desse susto?",
+      "verificavel": false,
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "lobo_derrubou"
+      ],
+      "respostas": [
+        {
+          "texto": "Quero recuperar o fôlego sem descontar meu medo em quem encontrar.",
+          "afinidade": 3,
+          "intencao": "boa"
+        },
+        {
+          "texto": "Quero continuar logo. Cada instante parado me afasta da chegada.",
+          "afinidade": 0,
+          "intencao": null
+        },
+        {
+          "texto": "Quero um instante de sossego antes de voltar à trilha.",
+          "afinidade": 2,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "resistencia",
+        "minimo": 4,
+        "texto": "Quero seguir no passo que aguento, sem tentar recuperar tudo de uma vez.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": 1
+      }
     }
   ]
 }

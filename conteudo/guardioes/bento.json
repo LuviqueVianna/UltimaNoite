@@ -506,6 +506,87 @@
       "silencio": {
         "afinidade": -2
       }
+    },
+    {
+      "id": "bento_16",
+      "tipo": "pergunta",
+      "texto": "A cobra deu aviso. Diga de frente como você atravessou essa parte da noite.",
+      "verificavel": true,
+      "verificacao": "Resumo cumulativo da noite, não do último encontro: resposta 0 exige cobra_reacao = 'parou' (houve espera concluída e nenhuma picada); resposta 1 exige cobra_reacao = 'passou' (houve picada ao seguir andando, mesmo que também tenha parado em outro encontro); resposta 2 exige cobra_reacao ausente, com cobra_avisou verdadeiro. Opção extra exige cobra_reacao = 'parou'. Verificar apenas esses fatos; justificativas, avaliações e motivos não são fatos adicionais. A ausência de desfecho vale tanto quanto a melhor resposta comum. Não atribuir perda de habilidade à picada: o jogador pode ter resistido ao veneno.",
+      "mentira": {
+        "afinidade": -4,
+        "intencao": "ma"
+      },
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "cobra_avisou"
+      ],
+      "respostas": [
+        {
+          "texto": "Parei e esperei ela sair. Nenhuma me picou; não quis arriscar.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Passei e fui picado. Arrisquei o couro e assumo.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Só ouvi o aviso. Não esperei cobra sair nem levei picada; não vou inventar coragem.",
+          "afinidade": 3,
+          "intencao": null
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "carisma",
+        "minimo": 4,
+        "texto": "Parei até ela sair, sem picada. Enfrentar não exige pisar em cima.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -2
+      }
+    },
+    {
+      "id": "bento_17",
+      "tipo": "pergunta",
+      "texto": "O lobo pôs você no chão. Como vai contar isso?",
+      "verificavel": false,
+      "requer": [
+        "animais"
+      ],
+      "premissa": [
+        "lobo_derrubou"
+      ],
+      "respostas": [
+        {
+          "texto": "De frente. Ele me alcançou e me derrubou.",
+          "afinidade": 3,
+          "intencao": null
+        },
+        {
+          "texto": "Só conto se perguntarem. A queda não conta minha noite inteira.",
+          "afinidade": 1,
+          "intencao": null
+        },
+        {
+          "texto": "Direi que apenas tropecei. Não quero virar presa fácil.",
+          "afinidade": -2,
+          "intencao": "ma"
+        }
+      ],
+      "opcao_extra": {
+        "atributo": "resistencia",
+        "minimo": 4,
+        "texto": "Conto a queda sem fazer dela medalha.",
+        "afinidade": 2
+      },
+      "silencio": {
+        "afinidade": -2
+      }
     }
   ]
 }
