@@ -1,0 +1,245 @@
+{
+  "versao_formato": 1,
+  "sinais": [
+    {
+      "id": "lobo_rosna_01",
+      "gatilho": "lobo_rosna",
+      "texto": "O lobo rosna, orelhas baixas. Fique parado até ele se afastar."
+    },
+    {
+      "id": "lobo_rosna_02",
+      "gatilho": "lobo_rosna",
+      "texto": "Um rosnado prende seu passo. Não se mexa; espere o lobo ir embora."
+    },
+    {
+      "id": "lobo_rosna_03",
+      "gatilho": "lobo_rosna",
+      "texto": "O lobo avança devagar. Fique parado enquanto ele fareja."
+    },
+    {
+      "id": "lobo_desiste_01",
+      "gatilho": "lobo_desiste",
+      "texto": "O lobo fareja uma última vez e se afasta."
+    },
+    {
+      "id": "lobo_desiste_02",
+      "gatilho": "lobo_desiste",
+      "texto": "O rosnado cessa. O lobo volta para a trilha."
+    },
+    {
+      "id": "lobo_desiste_03",
+      "gatilho": "lobo_desiste",
+      "texto": "O lobo desvia o focinho e vai embora."
+    },
+    {
+      "id": "lobo_derruba_01",
+      "gatilho": "lobo_derruba",
+      "texto": "O lobo derruba você. Levantar custa; depois, cada passo sai mais lento."
+    },
+    {
+      "id": "lobo_derruba_02",
+      "gatilho": "lobo_derruba",
+      "texto": "Você cai sob o lobo. Demora a levantar e segue mancando."
+    },
+    {
+      "id": "lobo_derruba_03",
+      "gatilho": "lobo_derruba",
+      "texto": "O lobo derruba você. Levantar demora; os passos seguintes saem arrastados."
+    },
+    {
+      "id": "lobo_escapou_01",
+      "gatilho": "lobo_escapou",
+      "texto": "O lobo para à entrada da base. Você passou do alcance dele."
+    },
+    {
+      "id": "lobo_escapou_02",
+      "gatilho": "lobo_escapou",
+      "texto": "Você entra na base. O lobo fica do lado de fora."
+    },
+    {
+      "id": "lobo_escapou_03",
+      "gatilho": "lobo_escapou",
+      "texto": "O lobo freia diante da base e não acompanha você."
+    },
+    {
+      "id": "lobo_ferido_01",
+      "gatilho": "lobo_ferido",
+      "texto": "O lobo manca pela trilha. Está ferido e não avança."
+    },
+    {
+      "id": "lobo_ferido_02",
+      "gatilho": "lobo_ferido",
+      "texto": "Uma pata mal toca o chão. O lobo ferido passa sem atacar."
+    },
+    {
+      "id": "lobo_ferido_03",
+      "gatilho": "lobo_ferido",
+      "texto": "O lobo passa devagar, ferido. Nenhum bote acompanha seu olhar."
+    },
+    {
+      "id": "coruja_olha_01",
+      "gatilho": "coruja_olha",
+      "texto": "A coruja encara você e pia. O som atravessa a clareira."
+    },
+    {
+      "id": "coruja_olha_02",
+      "gatilho": "coruja_olha",
+      "texto": "Você passa; a coruja ergue a cabeça. Seu pio rompe o silêncio."
+    },
+    {
+      "id": "coruja_olha_03",
+      "gatilho": "coruja_olha",
+      "texto": "A coruja nota você. Um pio entrega o lugar à mata."
+    },
+    {
+      "id": "coruja_avisa_01",
+      "gatilho": "coruja_avisa",
+      "texto": "A coruja encara você, depois vira a cabeça {direcao}."
+    },
+    {
+      "id": "coruja_avisa_02",
+      "gatilho": "coruja_avisa",
+      "texto": "A coruja nota você e volta o olhar {direcao}, sem piar."
+    },
+    {
+      "id": "coruja_avisa_03",
+      "gatilho": "coruja_avisa",
+      "texto": "Sem um pio, a coruja olha você e vira o rosto {direcao}."
+    },
+    {
+      "id": "cao_guia_01",
+      "gatilho": "cao_guia",
+      "texto": "O cão abana o rabo e espera. Chegue perto dele."
+    },
+    {
+      "id": "cao_guia_02",
+      "gatilho": "cao_guia",
+      "texto": "O cão espera na trilha, rabo abanando. Aproxime-se."
+    },
+    {
+      "id": "cao_guia_03",
+      "gatilho": "cao_guia",
+      "texto": "Um cão abana o rabo para você. Chegue perto; ele está esperando."
+    },
+    {
+      "id": "cao_seguindo_01",
+      "gatilho": "cao_seguindo",
+      "texto": "O cão começa a trotar pela trilha. Siga-o."
+    },
+    {
+      "id": "cao_seguindo_02",
+      "gatilho": "cao_seguindo",
+      "texto": "O cão olha para trás e continua. Vá atrás dele."
+    },
+    {
+      "id": "cao_seguindo_03",
+      "gatilho": "cao_seguindo",
+      "texto": "O cão toma a dianteira. Siga seus passos pela trilha."
+    },
+    {
+      "id": "cao_chegou_01",
+      "gatilho": "cao_chegou",
+      "texto": "O cão deixa você diante da base e retorna à mata."
+    },
+    {
+      "id": "cao_chegou_02",
+      "gatilho": "cao_chegou",
+      "texto": "Diante da base, o cão para. Depois desaparece entre as folhas."
+    },
+    {
+      "id": "cao_chegou_03",
+      "gatilho": "cao_chegou",
+      "texto": "O cão alcança a base, olha para você e volta à trilha."
+    },
+    {
+      "id": "cao_late_01",
+      "gatilho": "cao_late",
+      "texto": "O cão se agita e late. O som corre entre as árvores."
+    },
+    {
+      "id": "cao_late_02",
+      "gatilho": "cao_late",
+      "texto": "Um cão inquieto late para você. A mata devolve o barulho."
+    },
+    {
+      "id": "cao_late_03",
+      "gatilho": "cao_late",
+      "texto": "O cão não sossega. Seus latidos atravessam a trilha."
+    },
+    {
+      "id": "cobra_som_01",
+      "gatilho": "cobra_som",
+      "texto": "Folhas secas chacoalham junto da trilha. Pare e espere."
+    },
+    {
+      "id": "cobra_som_02",
+      "gatilho": "cobra_som",
+      "texto": "Algo mexe nas folhas secas, bem perto. Fique parado e espere."
+    },
+    {
+      "id": "cobra_som_03",
+      "gatilho": "cobra_som",
+      "texto": "Um chacoalhar rasteiro vem das folhas. Pare; espere o movimento cessar."
+    },
+    {
+      "id": "cobra_ve_01",
+      "gatilho": "cobra_ve",
+      "texto": "Uma cobra se enrola na trilha. Pare e espere que ela vá embora."
+    },
+    {
+      "id": "cobra_ve_02",
+      "gatilho": "cobra_ve",
+      "texto": "Entre as folhas, você distingue uma cobra. Fique parado e espere."
+    },
+    {
+      "id": "cobra_ve_03",
+      "gatilho": "cobra_ve",
+      "texto": "A cobra está no meio do caminho. Pare; deixe que ela se afaste."
+    },
+    {
+      "id": "cobra_some_01",
+      "gatilho": "cobra_some",
+      "texto": "A cobra desliza para o mato. As folhas sossegam."
+    },
+    {
+      "id": "cobra_some_02",
+      "gatilho": "cobra_some",
+      "texto": "A cobra abandona a trilha e some entre as folhas."
+    },
+    {
+      "id": "cobra_some_03",
+      "gatilho": "cobra_some",
+      "texto": "O corpo da cobra escorre para a mata. O caminho fica livre."
+    },
+    {
+      "id": "cobra_pica_01",
+      "gatilho": "cobra_pica",
+      "texto": "A cobra pica seu tornozelo. O veneno leva parte do seu vigor."
+    },
+    {
+      "id": "cobra_pica_02",
+      "gatilho": "cobra_pica",
+      "texto": "Uma picada corta seu passo. O veneno faz você se sentir menor."
+    },
+    {
+      "id": "cobra_pica_03",
+      "gatilho": "cobra_pica",
+      "texto": "A cobra some depois da picada. Algo enfraquece dentro de você."
+    },
+    {
+      "id": "cobra_resistiu_01",
+      "gatilho": "cobra_resistiu",
+      "texto": "A cobra pica, mas seu corpo resiste ao veneno."
+    },
+    {
+      "id": "cobra_resistiu_02",
+      "gatilho": "cobra_resistiu",
+      "texto": "A picada arde no tornozelo. Seu corpo aguenta o veneno."
+    },
+    {
+      "id": "cobra_resistiu_03",
+      "gatilho": "cobra_resistiu",
+      "texto": "Você sente a picada. O veneno encontra resistência; seu vigor permanece."
+    }
+  ]
+}

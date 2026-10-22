@@ -6,7 +6,7 @@
 
 | Quem | Está com | Arquivo |
 |---|---|---|
-| **ChatGPT** | **Demanda 4**: sinais dos animais, cobra nos textos do mapa, sons sugeridos, perguntas dos guardiões sobre cobra e lobo, falas de indicação e resultado das panelas | [docs/briefings/DEMANDA_4_animais_e_guardioes.md](docs/briefings/DEMANDA_4_animais_e_guardioes.md) |
+| **ChatGPT** | **Demanda 4b**: refazer as perguntas dos guardiões sobre cobra e lobo (parte D) | [revisoes/2026-10-22_demanda4.md](revisoes/2026-10-22_demanda4.md) |
 | **Claude** | Código do MVP em Godot: etapas 1 e 2 prontas, animais prontos (modo de teste ligado); segue a etapa 3 (armadilhas, itens, sumir na mata) | [godot/README.md](godot/README.md) |
 | **Usuário** | Aprovar os valores dos pontos; testar os animais; mandar a demanda 4 ao ChatGPT | [docs/sistemas/pontuacao_v1.md](docs/sistemas/pontuacao_v1.md) |
 
@@ -20,11 +20,12 @@ Leia antes: [docs/briefings/BRIEFING_GPT_v0.4.md](docs/briefings/BRIEFING_GPT_v0
 | 1b | Ajustes da revisão: itens 1, 2, 3 e 4 | `revisoes/2026-10-20_guardioes_v3.md` | Entregue em 20/10 e revisada, sem ajustes |
 | 2 | Textos do mapa: janelas, eventos à distância, becos e clareiras, frases prontas, nomes | Briefing v0.4, seção 4 | Entregue em 20/10 e revisada |
 | 3 | Quadro de estilo do pergaminho | Briefing v0.4, seção 5 | **Em pausa, provavelmente será descontinuada** (visual definido pelo usuário em 20/10; ver `docs/MVP_v0.4.md`, seção 3). Não fazer |
-| 4 | Animais e diálogos dos guardiões | `docs/briefings/DEMANDA_4_animais_e_guardioes.md` | **Fazer agora** |
+| 4 | Animais e diálogos dos guardiões | `docs/briefings/DEMANDA_4_animais_e_guardioes.md` | Entregue em 22/10 e revisada: A, B, E e F aprovadas; C aguarda o usuário ouvir os sons |
+| 4b | Refazer a parte D (perguntas sobre cobra e lobo), pontos D1 a D4 | `revisoes/2026-10-22_demanda4.md` | **Fazer agora** |
 
 Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
-**Demanda 4:** seis partes (A a F) descritas no arquivo da demanda, entregues juntas em `entregas/AAAA-MM-DD_demanda4/`, com um `LEIAME.md`. Pare depois da entrega e aguarde a revisão.
+**Demanda 4b:** refazer só a parte D conforme a seção 3 da revisão, mantendo IDs 16 e 17 e o formato v3. Entregar em `entregas/AAAA-MM-DD_demanda4_D/` com `LEIAME.md` e parar.
 
 **Marcadores de texto:** daqui em diante, vale a tabela de `revisoes/2026-10-20_textos_mapa.md`.
 
@@ -32,6 +33,7 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
+| 22/10/2026 | Demanda 4 entregue e revisada: sinais dos animais, indicação e panelas aprovados; perguntas da parte D voltam para ajuste |
 | 22/10/2026 | Demanda 4 criada para o ChatGPT (animais e diálogos dos guardiões). Demanda 3 continua em pausa e deve ser descontinuada |
 | 21/10/2026 | Animais no jogo: lobo, coruja, cão e cobra, com sons livres (CC0) e regras em `docs/sistemas/animais_v1.md`. Câmera presa ao mapa, placar do amanhecer centralizado, versão para navegador. **Modo de teste ligado** (`regras.gd`): mapa sem névoa, jogador a 10 m/s e alcance dos animais desenhado |
 | 21/10/2026 | Caminho para o 3D aprovado: lógica separada da apresentação no código, etapa intermediária em 3D com câmera isométrica ortográfica, 3D completo no futuro ([docs/caminho_3D_v1.md](docs/caminho_3D_v1.md)) |

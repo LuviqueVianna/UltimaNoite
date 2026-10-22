@@ -1,0 +1,41 @@
+{
+  "versao_formato": 1,
+  "descobertas": [
+    {
+      "id": "beco_animal_cobra_01",
+      "local": "beco",
+      "conteudo": "animal_cobra",
+      "texto": "No fim da trilha, uma cobra entre folhas secas. Pare e espere."
+    },
+    {
+      "id": "beco_animal_cobra_02",
+      "local": "beco",
+      "conteudo": "animal_cobra",
+      "texto": "Uma cobra ocupa o beco, junto às samambaias. Fique parado e espere."
+    },
+    {
+      "id": "beco_animal_cobra_03",
+      "local": "beco",
+      "conteudo": "animal_cobra",
+      "texto": "O beco termina em folhas remexidas. Uma cobra. Pare; espere que ela saia."
+    },
+    {
+      "id": "clareira_vazia_animal_cobra_01",
+      "local": "clareira_vazia",
+      "conteudo": "animal_cobra",
+      "texto": "Na entrada da clareira, uma cobra se enrola. Pare e espere."
+    },
+    {
+      "id": "clareira_vazia_animal_cobra_02",
+      "local": "clareira_vazia",
+      "conteudo": "animal_cobra",
+      "texto": "Uma cobra cruza as folhas da clareira. Fique parado até ela se afastar."
+    },
+    {
+      "id": "clareira_vazia_animal_cobra_03",
+      "local": "clareira_vazia",
+      "conteudo": "animal_cobra",
+      "texto": "Há uma cobra junto ao barro descoberto. Pare e espere que ela vá embora."
+    }
+  ]
+}

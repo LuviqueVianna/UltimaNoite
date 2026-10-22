@@ -1,0 +1,25 @@
+{
+  "versao_formato": 1,
+  "eventos": [
+    {
+      "id": "cobra_picou_01",
+      "gatilho": "cobra_picou",
+      "texto": "Um grito curto vem {direcao}. Folhas secas chacoalham."
+    },
+    {
+      "id": "cobra_picou_02",
+      "gatilho": "cobra_picou",
+      "texto": "Você ouve uma exclamação de dor {direcao}, entre folhas remexidas."
+    },
+    {
+      "id": "cobra_picou_03",
+      "gatilho": "cobra_picou",
+      "texto": "Folhas chacoalham {direcao}. Um grito interrompe os passos."
+    },
+    {
+      "id": "cobra_picou_04",
+      "gatilho": "cobra_picou",
+      "texto": "Um gemido vem {direcao}. O rumor das folhas logo cessa."
+    }
+  ]
+}

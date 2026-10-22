@@ -1,0 +1,120 @@
+{
+  "versao_formato": 1,
+  "indicacao": {
+    "bento": {
+      "fala": [
+        "A panela da {lado}. Já disse.",
+        "Pegue da {lado}. Não vou repetir.",
+        "Eu aponto a da {lado}. A escolha é sua."
+      ],
+      "nada": [
+        "Escolha. Não vou segurar sua mão.",
+        "Hoje você vai ter de decidir sozinho.",
+        "Minha boca fica fechada. As panelas estão aí."
+      ],
+      "verdade": [
+        "Ele olha nos seus olhos enquanto indica a panela.",
+        "O olhar dele encontra o seu e permanece.",
+        "Ele termina a indicação sem tirar os olhos dos seus."
+      ],
+      "mentira": [
+        "Ele limpa a faca num pano, sem olhar para você.",
+        "O pano percorre a lâmina. Ele mantém os olhos longe dos seus.",
+        "Enquanto indica, ele limpa a faca de olhos baixos."
+      ]
+    },
+    "iara": {
+      "fala": [
+        "Sirva-se da panela da {lado}, meu bem.",
+        "A da {lado}. Coma devagar.",
+        "Pode pegar da {lado}. Sente-se mais perto."
+      ],
+      "nada": [
+        "Meu bem, hoje essa escolha fica nas suas mãos.",
+        "Eu ponho a mesa. A escolha você terá de fazer.",
+        "Não vou apontar, meu bem. Olhe com calma."
+      ],
+      "verdade": [
+        "Ela oferece a tigela com as duas mãos.",
+        "As duas mãos sustentam a tigela que ela estende a você.",
+        "Ela aproxima a tigela, segurando as bordas com ambas as mãos."
+      ],
+      "mentira": [
+        "Ela oferece a tigela com uma mão; a outra fica escondida no avental.",
+        "Uma mão estende a tigela. A outra desaparece sob o avental.",
+        "Ela aproxima a tigela com uma mão só, mantendo a outra escondida."
+      ]
+    },
+    "anselmo": {
+      "fala": [
+        "Tome da panela da {lado}. Depois, siga seu caminho.",
+        "A da {lado}. Que sua escolha encontre sossego.",
+        "É a panela da {lado} que lhe indico."
+      ],
+      "nada": [
+        "Há escolhas que minha palavra não pode carregar por você.",
+        "Esta decisão ficará entre você e as duas panelas.",
+        "Hoje não haverá indicação. Recolha seu pensamento e escolha."
+      ],
+      "verdade": [
+        "Ao fim da fala, o sino toca.",
+        "A última palavra se encerra; então o sino soa.",
+        "Ele termina de falar, e uma badalada ocupa o silêncio."
+      ],
+      "mentira": [
+        "Ele termina a fala. O sino permanece calado.",
+        "A última palavra se perde sem que o sino toque.",
+        "Depois da indicação, nenhum som vem do sino."
+      ]
+    },
+    "marta": {
+      "fala": [
+        "A panela da {lado}. Guarde a informação.",
+        "Escolha a da {lado}. É o que tenho a dizer.",
+        "Da {lado}. Você ouviu."
+      ],
+      "nada": [
+        "Não tenho indicação para você.",
+        "Escolha com o que sabe.",
+        "Essa informação fica comigo."
+      ],
+      "verdade": [
+        "Ela faz uma pausa antes de responder.",
+        "Antes da indicação, ela guarda um instante de silêncio.",
+        "Ela espera um momento, então responde."
+      ],
+      "mentira": [
+        "Ela responde depressa demais, quase cortando sua pergunta.",
+        "A indicação vem rápida demais, sem tempo para uma pausa.",
+        "Ela mal espera você terminar; a resposta já saiu."
+      ]
+    },
+    "quincas": {
+      "fala": [
+        "A panela da {lado}. Guarde bem essa indicação.",
+        "Sirva-se da {lado}. Palavra de quem conhece a mercadoria.",
+        "Eu lhe indico a da {lado}. Aproveite."
+      ],
+      "nada": [
+        "Hoje não fechamos negócio. Escolha por sua conta.",
+        "Sem acerto, sem indicação.",
+        "Essa informação não sai do balcão agora."
+      ],
+      "verdade": [
+        "As mãos dele ficam paradas enquanto indica a panela.",
+        "Ele aponta com o olhar; as mãos permanecem imóveis.",
+        "Durante toda a indicação, ele conserva as mãos paradas."
+      ],
+      "mentira": [
+        "Ele esfrega as mãos e ri ao indicar a panela.",
+        "As palmas se esfregam. Ele acompanha a indicação com um riso.",
+        "Ele ri baixinho, esfregando uma mão na outra."
+      ],
+      "preco": [
+        "Ponha um item na mesa, e eu indico.",
+        "Um item pela indicação. Que tal?",
+        "Primeiro um item seu. Depois, minha indicação."
+      ]
+    }
+  }
+}
