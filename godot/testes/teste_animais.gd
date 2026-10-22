@@ -1,5 +1,5 @@
 extends SceneTree
-## Noites só com o computador para ver os encontros com os animais.
+## Noites só com o computador para ver os encontros com os animais e as armadilhas.
 ##   godot --headless --path godot -s res://testes/teste_animais.gd
 
 func _init() -> void:
@@ -19,6 +19,7 @@ func _init() -> void:
 			m.tick(0.1)
 		j.eh_jogador = true
 		for p in m.personagens:
+			totais["armadilhas_acionadas"] = totais.get("armadilhas_acionadas", 0) + p.armadilhas_acionadas
 			for f in p.fatos_noite:
 				var chave := "%s=%s" % [f, p.fatos_noite[f]]
 				totais[chave] = totais.get(chave, 0) + 1

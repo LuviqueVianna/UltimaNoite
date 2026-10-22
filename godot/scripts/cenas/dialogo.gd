@@ -227,7 +227,7 @@ func _mostrar_indicacao() -> void:
 func _apresentar(ind: Dictionary) -> void:
 	_limpar()
 	var linhas := ["Duas panelas fumegam diante de você.", "— " + ind["fala"]]
-	if ind.has("gesto") and ind["lado"] != "":
+	if ind.get("gesto", "") != "" and ind["lado"] != "":
 		linhas.append(ind["gesto"])
 	texto.text = "\n\n".join(linhas)
 	if ind["pede_item"]:
@@ -238,6 +238,9 @@ func _apresentar(ind: Dictionary) -> void:
 		return
 	_opcao("Comer da panela da esquerda", func(): _comer("esquerda"))
 	_opcao("Comer da panela da direita", func(): _comer("direita"))
+	_opcao("Não comer nada e voltar para a trilha", func():
+		visita.recusar()
+		_fechar())
 
 
 func _comer(lado: String) -> void:

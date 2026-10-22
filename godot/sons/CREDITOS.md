@@ -1,6 +1,6 @@
 # Créditos dos sons
 
-Todos os sons são de domínio público (CC0), vindos do Freesound. Foram convertidos para Ogg mono; os latidos foram cortados em 2,6 s.
+Todos os sons são de domínio público (CC0), vindos do Freesound. Foram convertidos para Ogg mono, comprimidos e normalizados para pico de 0 dB (22/10/2026, estavam baixos no navegador); os latidos foram cortados em 2,6 s.
 
 | Arquivo | Original | Autor | Licença |
 |---|---|---|---|
@@ -14,6 +14,7 @@ Todos os sons são de domínio público (CC0), vindos do Freesound. Foram conver
 | cao_late_1.ogg | [Dog barking at night](https://freesound.org/people/rickyjezz/sounds/122104/) | rickyjezz | CC0 |
 | cao_late_2.ogg | [A dog barking (close recording)](https://freesound.org/people/felix.blume/sounds/199261/) | felix.blume | CC0 |
 | cao_late_3.ogg | [Dog Barking](https://freesound.org/people/Jace/sounds/155312/) | Jace | CC0 |
+| armadilha.ogg | [branch breaking, twig snap](https://freesound.org/people/kyles/sounds/452570/) | kyles | CC0 |
 | cobra_folhas.ogg | Gerado por nós (ruído filtrado), provisório | — | — |
 
 Os arquivos de lobo e coruja vieram já tratados do repositório kocheck/Graphium (que conferiu a licença de cada um); os latidos, do conjunto ESC-10 (samerhanze/IEC10-new-sounds), escolhendo só os clipes CC0.

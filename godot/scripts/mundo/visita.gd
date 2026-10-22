@@ -23,7 +23,7 @@ func _init(m: Mundo, personagem: Personagem, id_base: String) -> void:
 	p = personagem
 	base = id_base
 	dados = Dados.guardiao(base)
-	afinidade = _reputacao()
+	afinidade = _reputacao() + int(Regras.AFINIDADE_INICIAL.get(base, 0))
 	var entradas: Array = dados.get("entradas", [])
 	var narracoes := entradas.filter(func(e): return e["tipo"] == "narracao")
 	var falas := entradas.filter(func(e): return e["tipo"] == "fala")
@@ -152,7 +152,14 @@ func _apontar(mentindo: bool) -> void:
 	indicacao["lado"] = lado
 	indicacao["mente"] = mentindo
 	indicacao["fala"] = Textos.preencher(Textos.indicacao(base, "fala", mundo.rng), {"lado": lado})
-	indicacao["gesto"] = Textos.indicacao(base, "mentira" if mentindo else "verdade", mundo.rng)
+	# O gesto só é percebido às vezes (mais com Inteligência)
+	var chance: float = Regras.GESTO_CHANCE.x + Regras.GESTO_CHANCE.y * p.nivel("inteligencia")
+	indicacao["gesto"] = Textos.indicacao(base, "mentira" if mentindo else "verdade", mundo.rng) if mundo.rng.randf() < chance else ""
+
+
+## O personagem vai embora sem comer: não ganha nem perde pontos.
+func recusar() -> void:
+	p.bases_visitadas[base] = mundo.tempo
 
 
 ## O personagem come da panela do lado escolhido.

@@ -71,6 +71,14 @@ O centro do jogo é informação incompleta: quem passou por onde, quem mente, q
 - Cada base aparece em **planta baixa**, com janela, porta da frente, porta dos fundos e esconderijo destacados. O jogador escolhe por onde se aproximar.
 - **(sugestão)** Olhar pela janela mostra o que o guardião faz, se há alguém dentro, ou se ele faz o sinal de mentira para alguém.
 - O diálogo com os guardiões segue o modelo híbrido da v0.3, com perguntas no formato v3 (ver `docs/correcoes/CORRECOES_guardioes_v3.md`).
+- **Dificuldade (ajustada em 22/10/2026, o jogo estava fácil):**
+  - 4 ou 5 perguntas por visita (eram 4 a 6).
+  - Afinidade alta só a partir de 10, o máximo (era 8).
+  - Marta começa a visita com −3 e Bento com −1.
+  - O gesto do guardião ao indicar a panela só é percebido às vezes: 35% + 10% por nível de Inteligência. Sem o gesto, só resta a fala, que serve tanto para a verdade quanto para a mentira.
+  - O jogador pode ir embora sem comer.
+  - Simulação (`godot/testes/teste_dificuldade.gd`): quem acerta a melhor resposta 7 em cada 10 vezes chega à afinidade alta em cerca de 60% das visitas. Quem responde ao acaso, quase nunca.
+- **Telas:** "Como jogar" aparece na primeira vez e fica na tela inicial. As configurações (névoa, tracejado das trilhas, alcance dos animais) ficam na tela inicial e na tecla Esc, e são guardadas entre partidas.
 
 ---
 

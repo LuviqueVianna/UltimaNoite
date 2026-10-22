@@ -12,6 +12,7 @@ func _init() -> void:
 	main.campo_nome.text = "Luvique"
 	main._validar_inicio()
 	main._comecar()
+	main.sobreposicao.visible = false   # fecha o tutorial da primeira vez
 	var j: Personagem = main.mundo.jogador()
 	j.eh_jogador = false
 	j.perfil = "ousado"
@@ -59,6 +60,12 @@ func _init() -> void:
 			a.caminho = []
 			a.ferido = false
 			k += 1
+		var arm = main.mundo.armadilhas.lista[0]
+		arm.pos = j.pos + Vector2(-6, 6)
+		arm.vista_por[j.id] = true
+		var arm2 = main.mundo.armadilhas.lista[1]
+		arm2.pos = j.pos + Vector2(8, 4)
+		arm2.disparada = true
 	if args.size() > 2 and args[2] == "sem_nevoa":
 		main.camera.zoom = Vector2(1.0, 1.0)
 		main.vista.alternar_nevoa()

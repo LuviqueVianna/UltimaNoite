@@ -167,6 +167,10 @@ static func visitar(p: Personagem, mundo: Mundo, base: String) -> Dictionary:
 		ind = v.pagar(dar)
 	var lado: String = ind["lado"]
 	if lado == "":
+		# Sem indicação: só o ousado arrisca no chute
+		if p.perfil != "ousado":
+			v.recusar()
+			return {"mente": ind["mente"], "afinidade": v.afinidade}
 		lado = "esquerda" if mundo.rng.randf() < 0.5 else "direita"
 	else:
 		var percebeu: bool = ind["mente"] and mundo.rng.randf() < 0.1 * p.nivel("inteligencia")

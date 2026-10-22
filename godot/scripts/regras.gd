@@ -19,6 +19,10 @@ const AVISO_S := 6.0                 # s que cada mensagem fica na tela
 ## durante a noite (pedido do usuário em 22/10/2026). Sem névoa, o mapa inteiro aparece, os animais
 ## ficam visíveis e dá para clicar em qualquer ponto. Ligar de novo volta ao que você explorou.
 static var sem_nevoa := false
+## Tracejado das trilhas no mapa (desligado por padrão: a trilha aparece pelo vão entre as árvores).
+static var mostrar_trilhas := false
+## Ajuda de teste: círculo de alcance de cada animal e o tempo que falta no encontro.
+static var mostrar_alcance := false
 
 const ATRIBUTOS := ["forca", "inteligencia", "carisma", "furtividade", "resistencia"]
 const PONTOS_TOTAIS := 12
@@ -52,16 +56,21 @@ const PERFIS := ["cauteloso", "ousado", "trapaceiro"]
 
 # ---- Pontuação e chegada (decidido em 20/10/2026: ganha quem fizer mais pontos e chegar à saída) ----
 # Valores provisórios, aguardando aprovação (docs/sistemas/pontuacao_v1.md).
-const PONTOS := {"panela_boa": 3, "panela_ruim": -1}
+const PONTOS := {"panela_boa": 3, "panela_ruim": -3}   # 22/10/2026: ruim era -1; comer no chute deixou de compensar
 const FOLGA_VOLTA := 2.5     # sem caminho conhecido, o computador estima 2,5x a distância em linha reta
 const MARGEM_VOLTA_S := 90.0       # folga extra desde os animais (lobo derruba, cobra faz parar)
 const FOLGA_BASE := 1.8      # o computador só desvia para uma base se der tempo de ir, visitar e chegar à saída
 
 # ---- Visita às bases (etapa 2) ----
-const PERGUNTAS_POR_VISITA := Vector2i(4, 6)
+const PERGUNTAS_POR_VISITA := Vector2i(4, 5)     # 22/10/2026: era 4 a 6; menos chances de compensar um erro
 const SILENCIO_S := 50.0                 # tempo para responder antes de contar como silêncio (ajustado em 20/10/2026)
 const AFINIDADE_LIMITE := 10
-const AFINIDADE_ALTA := 8               # calibrado com o banco v3.1 (ver godot/README.md)
+const AFINIDADE_ALTA := 10              # 22/10/2026: era 8; agora só quem acerta quase tudo chega lá
+## Afinidade com que cada guardião começa a visita (GDD: Marta desconfia de todos).
+const AFINIDADE_INICIAL := {"marta": -3, "bento": -1}
+## Chance de perceber o gesto do guardião ao indicar a panela: base + por nível de Inteligência.
+## Sem perceber, o jogador só ouve a fala (que serve tanto para a verdade quanto para a mentira).
+const GESTO_CHANCE := Vector2(0.35, 0.1)
 const AFINIDADE_BAIXA := 1
 const ESCOLHA_TEMPERATURA := 1.5         # quanto o computador hesita entre respostas (maior = mais ao acaso)
 const MA_INTENCAO_MIN := 2               # respostas "ma" na visita para o guardião perceber
@@ -126,9 +135,6 @@ const COBRA_DESISTE_S := 2.0
 const COBRA_LONGE_M := 25.0             # não aparece tão perto de partidas e bases
 const OUVE_M := 250.0                   # distância de que se ouve pio, latido e ataque
 const ANIMAL_PARA := Vector2(0.3, 0.12) # chance do computador ficar parado: base + por nível de Inteligência
-## TEMPORÁRIO, para testes: desenha em volta de cada animal visível a distância em que ele percebe
-## e o tempo que falta (rosnado, cobra). Pedido do usuário em 21/10/2026 para entender as distâncias.
-const MOSTRAR_ALCANCE_ANIMAIS := true
 ## Sons de cada evento: arquivos em godot/sons (créditos em sons/CREDITOS.md) e de quão longe se ouvem.
 const SONS := {
 	"lobo_uivou": {"arquivos": ["lobo_uivo_1", "lobo_uivo_2"], "alcance": 700.0},
@@ -137,7 +143,14 @@ const SONS := {
 	"coruja_piou": {"arquivos": ["coruja_1", "coruja_2", "coruja_3"], "alcance": 250.0},
 	"cao_latiu": {"arquivos": ["cao_late_1", "cao_late_2", "cao_late_3"], "alcance": 250.0},
 	"cobra_folhas": {"arquivos": ["cobra_folhas"], "alcance": 15.0},
+	"armadilha": {"arquivos": ["armadilha"], "alcance": 250.0},
 }
+
+# ---- Armadilhas (docs/MVP_v0.4.md, seção 6; implementadas em 22/10/2026). Números provisórios. ----
+const ARMADILHAS_QTD := 7
+const ARMADILHAS_BECO := 2           # quantas vão no fim de um beco
+const ARMADILHA_LONGE_M := 30.0      # longe das partidas, das bases e das saídas
+const ARMADILHA_PISA_M := 1.2
 
 ## Falas dos animais: reserva, usada só se faltar conteudo/textos/animais.json.
 const FALAS_ANIMAIS := {

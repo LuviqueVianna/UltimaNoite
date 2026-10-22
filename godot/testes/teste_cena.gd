@@ -10,6 +10,7 @@ func _init() -> void:
 	main._validar_inicio()
 	assert(not main.botao_comecar.disabled)
 	main._comecar()
+	main.sobreposicao.visible = false   # fecha o tutorial da primeira vez
 	for i in 240:
 		await process_frame
 	var j: Personagem = main.mundo.jogador()

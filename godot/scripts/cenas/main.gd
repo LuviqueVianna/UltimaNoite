@@ -25,9 +25,57 @@ var seletores := {}
 var rotulo_pontos: Label
 var botao_comecar: Button
 
+# Telas por cima de tudo: configurações e como jogar
+var sobreposicao: Control
+var configuracoes: Configuracoes
+var tutorial: Tutorial
+
 
 func _ready() -> void:
+	Configuracoes.carregar()
 	_montar_inicio()
+	_montar_sobreposicao()
+	if not Configuracoes.tutorial_visto:
+		_abrir(tutorial)
+
+
+func _montar_sobreposicao() -> void:
+	var camada := CanvasLayer.new()
+	camada.layer = 10
+	add_child(camada)
+	sobreposicao = Control.new()
+	sobreposicao.set_anchors_preset(Control.PRESET_FULL_RECT)
+	sobreposicao.visible = false
+	camada.add_child(sobreposicao)
+	var escuro := ColorRect.new()
+	escuro.color = Color(0, 0, 0, 0.6)
+	escuro.set_anchors_preset(Control.PRESET_FULL_RECT)
+	escuro.mouse_filter = Control.MOUSE_FILTER_STOP
+	sobreposicao.add_child(escuro)
+	var meio := CenterContainer.new()
+	meio.set_anchors_preset(Control.PRESET_FULL_RECT)
+	meio.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sobreposicao.add_child(meio)
+	configuracoes = Configuracoes.new()
+	meio.add_child(configuracoes)
+	configuracoes.fechado.connect(func(): sobreposicao.visible = false)
+	configuracoes.mudou.connect(func():
+		if vista != null:
+			vista.atualizar())
+	tutorial = Tutorial.new()
+	meio.add_child(tutorial)
+	tutorial.fechado.connect(func(): sobreposicao.visible = false)
+
+
+func _abrir(tela: Control) -> void:
+	configuracoes.visible = false
+	tutorial.visible = false
+	sobreposicao.visible = true
+	tela.call("abrir")
+
+
+func _sobreposicao_aberta() -> bool:
+	return sobreposicao != null and sobreposicao.visible
 
 
 # ---------- Tela inicial ----------
@@ -75,12 +123,19 @@ func _montar_inicio() -> void:
 	rotulo_pontos = Label.new()
 	caixa.add_child(rotulo_pontos)
 
-	# Chave de teste: começar sem névoa (também dá para trocar durante a noite com a tecla N)
-	var chave_nevoa := CheckButton.new()
-	chave_nevoa.text = "Névoa (tecla N liga e desliga durante a noite)"
-	chave_nevoa.button_pressed = not Regras.sem_nevoa
-	chave_nevoa.toggled.connect(func(ligada): Regras.sem_nevoa = not ligada)
-	caixa.add_child(chave_nevoa)
+	var botoes := HBoxContainer.new()
+	botoes.add_theme_constant_override("separation", 10)
+	caixa.add_child(botoes)
+	var como_jogar := Button.new()
+	como_jogar.text = "Como jogar"
+	como_jogar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	como_jogar.pressed.connect(func(): _abrir(tutorial))
+	botoes.add_child(como_jogar)
+	var abrir_config := Button.new()
+	abrir_config.text = "Configurações"
+	abrir_config.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	abrir_config.pressed.connect(func(): _abrir(configuracoes))
+	botoes.add_child(abrir_config)
 
 	botao_comecar = Button.new()
 	botao_comecar.text = "Começar a noite"
@@ -191,7 +246,7 @@ func _montar_noite() -> void:
 	mundo.som.connect(_tocar_som)
 	var j := mundo.jogador()
 	_ao_aviso("Noite começa. Você usa %s." % Regras.CALCADOS[j.calcado])
-	_ao_aviso("Ande com as setas, WASD ou clicando numa trilha visível. Espaço para parar.")
+	_ao_aviso("Ande com as setas, WASD ou clicando numa trilha. Espaço para parar. Esc: configurações.")
 	_ao_aviso("Chegue à saída, %s, antes do amanhecer para registrar seus pontos." % Textos.direcao(j.pos, mundo.mapa.pos(j.saida)))
 
 
@@ -200,9 +255,10 @@ func _process(dt: float) -> void:
 		return
 	var j := mundo.jogador()
 	_atualizar_avisos()
-	_ler_teclado()
-	for i in (40 if acelerar else 1):
-		mundo.tick(dt)
+	if not _sobreposicao_aberta():   # configurações ou tutorial abertos: a noite espera
+		_ler_teclado()
+		for i in (40 if acelerar else 1):
+			mundo.tick(dt)
 	camera.position = _enquadrar(j.pos * MapaView.ESCALA)
 	var r := int(mundo.tempo_restante())
 	var saida := "chegada registrada" if j.registrou() else "saída %s, %d m" % [Textos.direcao(j.pos, mundo.mapa.pos(j.saida)), int(j.pos.distance_to(mundo.mapa.pos(j.saida)))]
@@ -226,10 +282,17 @@ func _enquadrar(alvo: Vector2) -> Vector2:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if camera == null:
+	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_ESCAPE:
+		if _sobreposicao_aberta():
+			sobreposicao.visible = false
+		elif camera != null:
+			_abrir(configuracoes)
+		return
+	if camera == null or _sobreposicao_aberta():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_N:
 		vista.alternar_nevoa()
+		Configuracoes.salvar()
 		_ao_aviso("Névoa desligada: o mapa inteiro aparece." if Regras.sem_nevoa else "Névoa ligada.")
 		return
 	if event is InputEventMouseButton and event.pressed:
@@ -285,7 +348,8 @@ func _tocar_som(evento: String, origem: Vector2) -> void:
 	tocador.stream = stream
 	tocador.position = origem * MapaView.ESCALA
 	tocador.max_distance = float(cfg["alcance"]) * MapaView.ESCALA
-	tocador.attenuation = 1.2
+	tocador.attenuation = 0.6        # cai devagar com a distância: dá para ouvir de longe
+	tocador.volume_db = 4.0
 	tocador.panning_strength = 1.5
 	vista.add_child(tocador)
 	tocador.finished.connect(tocador.queue_free)

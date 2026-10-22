@@ -18,12 +18,15 @@
 
 ## PROPOSTA — valores dos pontos
 
-Implementado assim, aguardando aprovação:
+Implementado assim (22/10/2026, a pedido do usuário: o jogo estava fácil demais):
 
 | Evento | Pontos |
 |---|---|
 | Panela boa | +3 |
-| Panela ruim | −1 (além de perder 1 ponto de atributo) |
+| Panela ruim | −3 (além do veneno, que tira 1 ponto de atributo) |
+| Não comer | 0 (o jogador pode ir embora sem comer) |
+
+Com −1, comer no chute valia a pena (média de +1 por panela). Com −3, o chute vale 0 na média e ainda arrisca o veneno: só compensa comer quando se confia na indicação.
 
 Opções para considerar:
 

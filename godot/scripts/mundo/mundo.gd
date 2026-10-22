@@ -21,6 +21,7 @@ var panela_boa := {}         # base -> "esquerda" | "direita"
 const FATOS_DA_NOITE := ["lobo_reacao", "seguiu_cao", "cobra_reacao"]
 
 var fauna: Fauna
+var armadilhas: Armadilhas
 var visitante := {}          # base -> {"id": personagem, "mente": bool} enquanto um personagem do computador está lá
 var _verificacao := {}
 var _proxima_pegada := 0
@@ -63,6 +64,8 @@ func iniciar(semente: int, jogador: Dictionary) -> void:
 		personagens.append(p)
 	fauna = Fauna.new(self)
 	fauna.preparar()
+	armadilhas = Armadilhas.new(self)
+	armadilhas.preparar()
 	for p in personagens:
 		_perceber(p)
 
@@ -93,6 +96,7 @@ func tick(dt: float) -> void:
 				"chegou":
 					_chegou(p, ev["no"])
 	fauna.tick(dt)
+	armadilhas.tick()
 	_acumulado_percepcao += dt
 	if _acumulado_percepcao >= Regras.PERCEPCAO_INTERVALO:
 		_acumulado_percepcao = 0.0

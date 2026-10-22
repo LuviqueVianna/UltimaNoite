@@ -34,6 +34,7 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
+| 22/10/2026 | Tela de configurações (névoa, tracejado das trilhas, alcance dos animais) e tutorial "Como jogar". Jogo mais difícil: panela ruim −3, opção de não comer, afinidade alta só no máximo, Marta e Bento começam desconfiados, gesto de mentira nem sempre percebido. Armadilhas no mapa. Desempenho no navegador e sons mais altos |
 | 22/10/2026 | Demanda 5 criada para o ChatGPT: perguntas dos guardiões menos previsíveis, 6 novas por guardião e textos de armadilha |
 | 22/10/2026 | Névoa de volta, com chave para o usuário ligar e desligar (tela inicial e tecla N). Cobra corrigida: o chacoalhar vem com tempo de parar em qualquer velocidade e mostra no mapa de onde vem. Ainda em modo de teste: jogador a 10 m/s e alcance dos animais desenhado |
 | 22/10/2026 | Parte D da demanda 4 aprovada e integrada: 10 perguntas sobre cobra e lobo, conferidas contra o que aconteceu na noite |
