@@ -75,6 +75,13 @@ func _montar_inicio() -> void:
 	rotulo_pontos = Label.new()
 	caixa.add_child(rotulo_pontos)
 
+	# Chave de teste: começar sem névoa (também dá para trocar durante a noite com a tecla N)
+	var chave_nevoa := CheckButton.new()
+	chave_nevoa.text = "Névoa (tecla N liga e desliga durante a noite)"
+	chave_nevoa.button_pressed = not Regras.sem_nevoa
+	chave_nevoa.toggled.connect(func(ligada): Regras.sem_nevoa = not ligada)
+	caixa.add_child(chave_nevoa)
+
 	botao_comecar = Button.new()
 	botao_comecar.text = "Começar a noite"
 	botao_comecar.pressed.connect(_comecar)
@@ -220,6 +227,10 @@ func _enquadrar(alvo: Vector2) -> Vector2:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if camera == null:
+		return
+	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_N:
+		vista.alternar_nevoa()
+		_ao_aviso("Névoa desligada: o mapa inteiro aparece." if Regras.sem_nevoa else "Névoa ligada.")
 		return
 	if event is InputEventMouseButton and event.pressed:
 		# Afastar para no máximo o ponto em que o mapa ainda enche a tela (sem bordas escuras)

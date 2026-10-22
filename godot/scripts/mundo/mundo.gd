@@ -61,11 +61,6 @@ func iniciar(semente: int, jogador: Dictionary) -> void:
 		if not comuns.is_empty():
 			p.inventario.append(comuns[rng.randi() % comuns.size()])
 		personagens.append(p)
-	if Regras.MAPA_ABERTO:
-		var j: Personagem = personagens[0]
-		j.no_visto.fill(1)
-		j.aresta_conhecida.fill(1)
-		j.amostra_percorrida.fill(1)
 	fauna = Fauna.new(self)
 	fauna.preparar()
 	for p in personagens:
@@ -271,14 +266,15 @@ func premissa(p: Personagem, base: String, nome: String) -> bool:
 ## Toque ou clique: num ponto conhecido, anda até ele; numa trilha visível, segue por ela.
 func mover_jogador_para(ponto: Vector2) -> bool:
 	var j := jogador()
-	var alvo := mapa.no_mais_proximo(ponto, Regras.CLIQUE_RAIO * 0.6, func(n): return j.no_visto[n] == 1)
+	var aberto := Regras.sem_nevoa
+	var alvo := mapa.no_mais_proximo(ponto, Regras.CLIQUE_RAIO * 0.6, func(n): return aberto or j.no_visto[n] == 1)
 	if alvo >= 0 and alvo != j.no_atual:
-		return j.ir_para(mapa, alvo)
+		return j.ir_para(mapa, alvo, not aberto)
 	# Trilha visível (percorrida ou ainda lembrada) perto do clique
 	var melhor := -1
 	var melhor_d := Regras.CLIQUE_RAIO
 	for i in mapa.amostras.size():
-		if j.amostra_percorrida[i] == 0 and tempo - j.amostra_vista[i] > j.lembranca():
+		if not aberto and j.amostra_percorrida[i] == 0 and tempo - j.amostra_vista[i] > j.lembranca():
 			continue
 		var d := mapa.amostras[i].distance_to(ponto)
 		if d < melhor_d:
@@ -292,7 +288,7 @@ func mover_jogador_para(ponto: Vector2) -> bool:
 	var destino := a if mapa.pos(a).distance_to(ponto) < mapa.pos(b).distance_to(ponto) else b
 	if j.no_atual == a or j.no_atual == b:
 		destino = b if j.no_atual == a else a
-	return j.ir_para(mapa, destino)
+	return j.ir_para(mapa, destino, not aberto)
 
 
 ## Teclado: segue a trilha que mais aponta para a direção pedida. Direção zero = para onde está.

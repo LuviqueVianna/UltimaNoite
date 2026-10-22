@@ -38,9 +38,10 @@ Regra comum: **quem fica parado diante do perigo se sai melhor que quem corre.**
 - Depois de um encontro, ignora a pessoa por 60 a 90 s.
 
 ## Cobra
-- Quem passa a até **6 m** ouve as folhas secas chacoalharem.
+- Quem se aproxima ouve as folhas secas chacoalharem com tempo de parar: a distância do aviso é o alcance do bote (3 m) mais 1,2 s de caminhada, no mínimo 6 m. A 5 m/s isso dá 9 m; a 10 m/s, 15 m (ajustado em 22/10/2026: antes o aviso vinha a 6 m e, rápido, não dava tempo de parar).
+- Quem ouviu vê no mapa, mesmo na névoa, de onde vem o barulho ("folhas mexendo"), sem ver o bicho.
 - Quem tem Inteligência para notar armadilhas (2 a 5 m pela tabela) também **vê** a cobra a essa distância.
-- Quem **passar andando** a até 1,6 m dela é picado: veneno. Depois ela some e reaparece em outra trilha.
+- Quem **continuar andando** e entrar no alcance do bote (3 m) é picado: veneno. Depois ela some e reaparece em outra trilha.
 - Quem **ficar parado** 2 s perto dela faz a cobra ir embora (ela reaparece em outra trilha).
 
 ## Personagens do computador

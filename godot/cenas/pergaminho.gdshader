@@ -7,6 +7,7 @@ uniform sampler2D ruido : repeat_enable, filter_linear;
 uniform vec2 tamanho_m;
 uniform vec2 jogador_m;
 uniform float alcance = 14.0;
+uniform bool sem_nevoa = false;   // chave de teste: mostra o mapa inteiro
 uniform vec4 cor_papel : source_color = vec4(0.86, 0.77, 0.58, 1.0);
 uniform vec4 cor_mancha : source_color = vec4(0.58, 0.42, 0.24, 1.0);
 uniform vec4 cor_noite : source_color = vec4(0.055, 0.078, 0.11, 1.0);
@@ -14,7 +15,7 @@ uniform vec4 cor_noite : source_color = vec4(0.055, 0.078, 0.11, 1.0);
 void fragment() {
 	vec2 m = UV * tamanho_m;
 	float vendo = 1.0 - smoothstep(alcance * 0.55, alcance * 1.15, distance(m, jogador_m));
-	float revelado = max(texture(mascara, UV).r, vendo);
+	float revelado = sem_nevoa ? 1.0 : max(texture(mascara, UV).r, vendo);
 
 	float n1 = texture(ruido, m / 140.0).r;
 	float n2 = texture(ruido, m / 38.0 + vec2(0.37, 0.11)).r;

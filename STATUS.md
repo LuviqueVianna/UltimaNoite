@@ -33,6 +33,7 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
+| 22/10/2026 | Névoa de volta, com chave para o usuário ligar e desligar (tela inicial e tecla N). Cobra corrigida: o chacoalhar vem com tempo de parar em qualquer velocidade e mostra no mapa de onde vem. Ainda em modo de teste: jogador a 10 m/s e alcance dos animais desenhado |
 | 22/10/2026 | Parte D da demanda 4 aprovada e integrada: 10 perguntas sobre cobra e lobo, conferidas contra o que aconteceu na noite |
 | 22/10/2026 | Textos aprovados da demanda 4 integrados ao jogo (sinais dos animais, indicação, panelas, cobra ouvida de longe). Computador não desiste da saída depois de decidir ir: chegada voltou a 24 de 24 no teste |
 | 22/10/2026 | Demanda 4 entregue e revisada: sinais dos animais, indicação e panelas aprovados; perguntas da parte D voltam para ajuste |

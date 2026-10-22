@@ -15,9 +15,10 @@ const HESITACAO := Vector2(2.0, 5.0) # pausa dos personagens do computador em bi
 const VISITA_BASE_S := 25.0          # tempo de visita do computador (provisório, até a etapa 2)
 const CLIQUE_RAIO := 15.0            # m de tolerância ao tocar no mapa
 const AVISO_S := 6.0                 # s que cada mensagem fica na tela
-## TEMPORÁRIO, para testes (pedido do usuário em 20/10/2026): sem névoa, o jogador já conhece todas as trilhas.
-## Voltar para false quando os testes de caminho e de visita terminarem.
-const MAPA_ABERTO := true
+## Névoa: ligada no jogo normal. Para testes, o jogador desliga na tela inicial ou com a tecla N
+## durante a noite (pedido do usuário em 22/10/2026). Sem névoa, o mapa inteiro aparece, os animais
+## ficam visíveis e dá para clicar em qualquer ponto. Ligar de novo volta ao que você explorou.
+static var sem_nevoa := false
 
 const ATRIBUTOS := ["forca", "inteligencia", "carisma", "furtividade", "resistencia"]
 const PONTOS_TOTAIS := 12
@@ -118,8 +119,9 @@ const CAO_VEL_GUIA := 2.5
 const CAO_ESPERA_S := 8.0
 const CAO_CHANCE_GUIA := 0.55
 const CAO_LONGE_M := 18.0
-const COBRA_AVISO_M := 6.0
-const COBRA_PICA_M := 1.6
+const COBRA_AVISO_M := 6.0              # distância mínima do chacoalhar
+const COBRA_PICA_M := 3.0               # o bote alcança até aqui
+const COBRA_REACAO_S := 1.2             # o chacoalhar vem cedo o bastante para dar esse tempo de parar, em qualquer velocidade
 const COBRA_DESISTE_S := 2.0
 const COBRA_LONGE_M := 25.0             # não aparece tão perto de partidas e bases
 const OUVE_M := 250.0                   # distância de que se ouve pio, latido e ataque

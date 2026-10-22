@@ -37,7 +37,7 @@ class CamadaArvores extends Node2D:
 	var vista: MapaView
 	func _draw() -> void:
 		for a in vista.arvores:
-			if a["visivel"]:
+			if a["visivel"] or Regras.sem_nevoa:
 				vista._desenhar_arvore_em(self, a)
 
 
@@ -49,7 +49,7 @@ func preparar(m: Mundo) -> void:
 	mundo = m
 	var area := mundo.mapa.tamanho + Vector2.ONE * MARGEM * 2.0
 	mascara = Image.create(int(area.x), int(area.y), false, Image.FORMAT_L8)
-	mascara.fill(Color.WHITE if Regras.MAPA_ABERTO else Color.BLACK)
+	mascara.fill(Color.BLACK)
 	textura_mascara = ImageTexture.create_from_image(mascara)
 
 	var ruido := NoiseTexture2D.new()
@@ -95,13 +95,12 @@ func _process(dt: float) -> void:
 	var mat := fundo.material as ShaderMaterial
 	mat.set_shader_parameter("jogador_m", j.pos + Vector2.ONE * MARGEM)
 	mat.set_shader_parameter("alcance", j.alcance())
+	mat.set_shader_parameter("sem_nevoa", Regras.sem_nevoa)
 	queue_redraw()
 
 
 ## Abre a névoa em volta do jogador, de forma permanente (borda suave).
 func _revelar() -> void:
-	if Regras.MAPA_ABERTO:
-		return
 	var j := mundo.jogador()
 	var centro := j.pos + Vector2.ONE * MARGEM
 	var r := j.alcance() * 1.2
@@ -169,11 +168,21 @@ func _plantar_arvores() -> void:
 				ok = mais_perto >= 1.8 + raio and mais_perto <= 30.0
 			if ok:
 				arvores.append({"pos": p, "raio": raio, "tipo": "copa", "tom": rng.randf_range(-1.0, 1.0),
-					"giro": rng.randf() * TAU, "visivel": Regras.MAPA_ABERTO})
+					"giro": rng.randf() * TAU, "visivel": false})
 		y += passo * 0.87
 
 
+## Liga ou desliga a névoa durante a noite (tecla N).
+func alternar_nevoa() -> void:
+	Regras.sem_nevoa = not Regras.sem_nevoa
+	if camada_arvores != null:
+		camada_arvores.queue_redraw()
+	queue_redraw()
+
+
 func revelado(p_m: Vector2) -> float:
+	if Regras.sem_nevoa:
+		return 1.0
 	var q := p_m + Vector2.ONE * MARGEM
 	var x := clampi(int(q.x), 0, mascara.get_width() - 1)
 	var y := clampi(int(q.y), 0, mascara.get_height() - 1)
@@ -206,7 +215,7 @@ func _draw() -> void:
 		for k in n:
 			var i: int = e["amostra_ini"] + k
 			var alfa := 0.0
-			if j.amostra_percorrida[i] == 1:
+			if j.amostra_percorrida[i] == 1 or Regras.sem_nevoa:
 				alfa = 0.6
 			else:
 				var idade := agora - j.amostra_vista[i]
@@ -222,7 +231,7 @@ func _draw() -> void:
 
 	# Clareiras e bases conhecidas
 	for no in m.nos:
-		if j.no_visto[no["id"]] == 0:
+		if j.no_visto[no["id"]] == 0 and not Regras.sem_nevoa:
 			continue
 		var p: Vector2 = no["pos"] * ESCALA
 		match no["tipo"]:
@@ -239,7 +248,7 @@ func _draw() -> void:
 	# Luzes vistas de longe (sem a trilha até elas)
 	for b in j.luzes:
 		var no_base: int = m.bases()[b]
-		if j.no_visto[no_base] == 1:
+		if j.no_visto[no_base] == 1 or Regras.sem_nevoa:
 			continue
 		var p: Vector2 = j.luzes[b] * ESCALA
 		draw_circle(p, 12, Color(COR_AMBAR, 0.15))
@@ -329,6 +338,13 @@ func _desenhar_animal(a: Fauna.Animal) -> void:
 			draw_circle(c + Vector2(0.5, -0.3) * u, 0.38 * u, COR_TEXTO)
 			draw_circle(c + Vector2(-0.5, -0.3) * u, 0.15 * u, COR_CONTORNO)
 			draw_circle(c + Vector2(0.5, -0.3) * u, 0.15 * u, COR_CONTORNO)
+		"cobra" when not mundo.fauna.cobra_vista(a):
+			# Só se ouviu: folhas secas se mexendo (três arcos curtos), sem mostrar o bicho
+			for k in 3:
+				var centro := c + Vector2((k - 1) * 0.9 * u, (k % 2) * 0.5 * u)
+				draw_arc(centro, 0.6 * u, PI * 1.1, PI * 1.9, 6, COR_CONTORNO, 0.5 * u)
+				draw_arc(centro, 0.6 * u, PI * 1.1, PI * 1.9, 6, COR_TEXTO, 0.22 * u)
+			rotulo = "folhas mexendo"
 		"cobra":
 			# Linha em zigue-zague grossa, escura com contorno claro
 			var pts := PackedVector2Array()
@@ -347,7 +363,8 @@ func _desenhar_animal(a: Fauna.Animal) -> void:
 ## no encontro (arco cheio que vai se fechando).
 func _alcance_animal(a: Fauna.Animal) -> void:
 	var c: Vector2 = a.pos * ESCALA
-	var raio := {"lobo": Regras.LOBO_VE_M, "coruja": Regras.CORUJA_VE_M, "cao": Regras.CAO_VE_M, "cobra": Regras.COBRA_AVISO_M}[a.tipo] as float
+	var raio := {"lobo": Regras.LOBO_VE_M, "coruja": Regras.CORUJA_VE_M, "cao": Regras.CAO_VE_M,
+		"cobra": mundo.fauna.cobra_aviso_m(mundo.jogador())}[a.tipo] as float
 	# Tracejado claro com contorno escuro: aparece tanto no papel quanto sobre a mata
 	for k in 32:
 		if k % 2 == 0:
@@ -361,7 +378,9 @@ func _alcance_animal(a: Fauna.Animal) -> void:
 		var j := mundo.jogador()
 		var parado: float = a.ouviu.get(j.id, 0.0)
 		if a.ouviu.has(j.id) and parado > 0.0:
-			_contagem(c, Regras.COBRA_AVISO_M * 0.5 * ESCALA, parado / Regras.COBRA_DESISTE_S, "%.1f s parado" % parado)
+			_contagem(c, Regras.COBRA_PICA_M * 1.4 * ESCALA, parado / Regras.COBRA_DESISTE_S, "%.1f s parado" % parado)
+		elif a.avisado.has(j.id):
+			_texto(c + Vector2(-20, -Regras.COBRA_PICA_M * ESCALA - 8), "pare antes do círculo pequeno", 9)
 	elif a.tipo == "lobo" and a.estado == "rosnando":
 		_contagem(c, 5.0 * ESCALA, 1.0 - a.relogio / Regras.LOBO_ROSNA_S, "fique parado: %.1f s" % maxf(a.relogio, 0.0))
 	elif a.tipo == "lobo" and a.estado == "perseguindo":

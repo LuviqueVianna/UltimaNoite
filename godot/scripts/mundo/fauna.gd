@@ -22,7 +22,8 @@ class Animal extends RefCounted:
 	var troca_casa := 0.0
 	var base_guia := ""         # cão: base para onde está levando o alvo
 	var ignora := {}            # id do personagem -> até quando o animal o ignora
-	var ouviu := {}             # cobra: quem já ouviu o chacoalhar nesta passagem
+	var ouviu := {}             # cobra: há quanto tempo cada um está parado perto dela
+	var avisado := {}           # cobra: quando cada um ouviu o chacoalhar nesta passagem
 	var sinal := ""             # o que o animal está fazendo agora, para o desenho ("piou", "latiu"...)
 	var sinal_ate := 0.0
 
@@ -91,13 +92,28 @@ func tick(dt: float) -> void:
 
 ## O jogador enxerga este animal agora?
 func visivel_para_jogador(a: Animal) -> bool:
-	if Regras.MAPA_ABERTO:
+	if Regras.sem_nevoa:
 		return true
 	var j := mundo.jogador()
 	var d := j.pos.distance_to(a.pos)
 	if a.tipo == "cobra":
-		return d <= Regras.nivel(Regras.NOTAR_ARMADILHA, j.nivel("inteligencia"))
+		# Quem ouviu o chacoalhar sabe de onde veio, mesmo sem ver a cobra.
+		return a.avisado.has(j.id) or cobra_vista(a)
 	return d <= j.alcance()
+
+
+## De que distância cada um ouve o chacoalhar: longe o bastante para dar tempo de parar
+## antes do alcance do bote, mesmo andando rápido.
+func cobra_aviso_m(p: Personagem) -> float:
+	return maxf(Regras.COBRA_AVISO_M, Regras.COBRA_PICA_M + p.velocidade() * Regras.COBRA_REACAO_S)
+
+
+## O jogador enxerga a própria cobra (e não só as folhas mexendo)?
+func cobra_vista(a: Animal) -> bool:
+	if Regras.sem_nevoa:
+		return true
+	var j := mundo.jogador()
+	return j.pos.distance_to(a.pos) <= Regras.nivel(Regras.NOTAR_ARMADILHA, j.nivel("inteligencia"))
 
 
 # ---------------- Lobo ----------------
@@ -324,11 +340,13 @@ func _cobra(a: Animal, dt: float, andou: Dictionary) -> void:
 		if p.registrou():
 			continue
 		var d: float = p.pos.distance_to(a.pos)
-		if d > Regras.COBRA_AVISO_M:
+		if d > cobra_aviso_m(p):
 			a.ouviu.erase(p.id)
+			a.avisado.erase(p.id)
 			continue
 		if not a.ouviu.has(p.id):
 			a.ouviu[p.id] = 0.0
+			a.avisado[p.id] = mundo.tempo
 			p.fatos_noite["cobra_avisou"] = true
 			var ve: bool = d <= Regras.nivel(Regras.NOTAR_ARMADILHA, p.nivel("inteligencia"))
 			_falar(p, "cobra_ve" if ve else "cobra_som")
@@ -363,6 +381,7 @@ func _cobra(a: Animal, dt: float, andou: Dictionary) -> void:
 func _mudar_cobra(a: Animal) -> void:
 	a.pos = _lugar_da_cobra()
 	a.ouviu = {}
+	a.avisado = {}
 
 
 func _lugar_da_cobra() -> Vector2:

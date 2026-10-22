@@ -48,16 +48,20 @@ func _init() -> void:
 	if args.size() > 2 and args[2] == "animais":
 		# Traz um de cada animal para perto do jogador, só para ver o desenho
 		main.camera.zoom = Vector2(3.0, 3.0)
+		main.mundo.dirigir_jogador(Vector2.ZERO)
 		var k := 0
 		var feitos := {}
 		for a in main.mundo.fauna.animais:
 			if feitos.has(a.tipo):
 				continue
 			feitos[a.tipo] = true
-			a.pos = j.pos + Vector2.from_angle(k * TAU / 4.0 + 0.4) * 14.0
+			a.pos = j.pos + Vector2.from_angle(k * TAU / 4.0 + 0.4) * (9.0 if a.tipo == "cobra" else 14.0)
 			a.caminho = []
 			a.ferido = false
 			k += 1
+	if args.size() > 2 and args[2] == "sem_nevoa":
+		main.camera.zoom = Vector2(1.0, 1.0)
+		main.vista.alternar_nevoa()
 	if args.size() > 2 and args[2] == "amanhecer":
 		main.camera.zoom = Vector2(1.0, 1.0)
 		main.mundo.registrar_chegada(j)
