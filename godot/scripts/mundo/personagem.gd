@@ -42,6 +42,16 @@ var acelerado := false              # computador acelerado depois que o jogador 
 var concluiu := -1.0                # instante em que registrou a chegada; -1 se ainda não
 var fatos_noite := {}               # premissas e fatos dos animais (ex.: "lobo_avancou", "lobo_reacao")
 var lento_s := 0.0                  # anda pela metade da velocidade (lobo, armadilha)
+var doses_veneno := 0               # doses que o corpo não aguentou (a 3ª desmaia)
+var turvo_s := 0.0                  # visão turva pelo veneno (INF = até o amanhecer)
+var desmaiado := false              # caiu de veneno: não anda nem registra a chegada
+var ferido_s := 0.0                 # derrubado pelo lobo há pouco (os guardiões percebem)
+var oculto_s := 0.0                 # o que resta do "sumir na mata" em uso
+var sumir_usados := 0
+var escondido := ""                 # base em cuja moita está escondido
+var tentou_fundos := false          # computador: já tentou sair pelos fundos com o lobo à porta
+var _andando_s := 0.0               # segundos seguidos andando (gasto crescente do "sumir")
+var _parado_s := 0.0
 var na_base := ""
 var no_anterior := -1
 var hesitou_no := -1
@@ -63,7 +73,41 @@ func nivel(atributo: String) -> int:
 
 
 func alcance() -> float:
-	return Regras.nivel(Regras.ALCANCE_VISTA, nivel("inteligencia"))
+	var r: float = Regras.nivel(Regras.ALCANCE_VISTA, nivel("inteligencia"))
+	return r * Regras.VENENO_VISAO if turvo_s > 0.0 else r
+
+
+## Oculto: usando o "sumir na mata" ou escondido numa moita. Ninguém o vê.
+func oculto() -> bool:
+	return oculto_s > 0.0 or escondido != ""
+
+
+func usos_sumir() -> int:
+	return maxi(0, Regras.nivel(Regras.USOS_SUMIR, nivel("furtividade")) - sumir_usados)
+
+
+## Usa o "sumir na mata". Devolve false se já não tem usos, se já está oculto ou se não pode.
+func sumir() -> bool:
+	if usos_sumir() <= 0 or oculto() or desmaiado or registrou():
+		return false
+	sumir_usados += 1
+	oculto_s = Regras.SUMIR_S
+	_andando_s = 0.0
+	_parado_s = 0.0
+	return true
+
+
+func envenenado() -> bool:
+	return turvo_s > 0.0
+
+
+func ferido() -> bool:
+	return ferido_s > 0.0
+
+
+## Velocidade sem a lentidão (o lobo segue o faro numa fração dela).
+func velocidade_normal() -> float:
+	return Regras.VEL_TRILHA if eh_jogador else Regras.VEL_COMPUTADOR * (Regras.ACELERA_COMPUTADOR if acelerado else 1.0)
 
 
 func lembranca() -> float:
@@ -79,8 +123,7 @@ func leitura_pegadas() -> int:
 
 
 func velocidade() -> float:
-	var v := Regras.VEL_TRILHA if eh_jogador else Regras.VEL_COMPUTADOR * (Regras.ACELERA_COMPUTADOR if acelerado else 1.0)
-	return v * (0.5 if lento_s > 0.0 else 1.0)
+	return velocidade_normal() * (0.5 if lento_s > 0.0 else 1.0)
 
 
 func tem_marca(marca: String) -> bool:
@@ -103,11 +146,18 @@ func registrou() -> bool:
 	return concluiu >= 0.0
 
 
-## Veneno da panela ruim: tira 1 ponto da maior habilidade (empate: sorteio; mínimo 1).
-## Devolve o atributo perdido, "resistiu" ou "" se não havia o que tirar.
+## Veneno (panela ruim ou cobra): tira 1 ponto da maior habilidade (empate: sorteio; mínimo 1)
+## e acumula: 1ª dose turva a visão por um tempo, 2ª até o amanhecer, 3ª desmaia.
+## Devolve o atributo perdido, "resistiu" ou "" se não havia habilidade a tirar.
 func envenenar(rng: RandomNumberGenerator) -> String:
 	if rng.randf() < Regras.nivel(Regras.RESISTIR_VENENO, nivel("resistencia")):
 		return "resistiu"
+	doses_veneno += 1
+	turvo_s = Regras.VENENO_TURVO_S if doses_veneno == 1 else INF
+	if doses_veneno >= Regras.VENENO_DESMAIO:
+		desmaiado = true
+		rota = []
+		oculto_s = 0.0
 	var maior := 0
 	for k in Regras.ATRIBUTOS:
 		maior = maxi(maior, atributos[k])
@@ -190,18 +240,44 @@ func _comprimento(mapa: Mapa, origem: int, r: Array) -> float:
 	return total
 
 
+## Gasto do "sumir na mata" (MVP, seção 8): parado, 1 s por segundo; andando, o gasto começa em 1
+## e cresce 1,1x a cada segundo seguido de movimento. Volta a 1 só depois de 1 s parado.
+func _gastar_oculto(dt: float, andando: bool) -> void:
+	if oculto_s <= 0.0:
+		return
+	if andando:
+		_andando_s += dt
+		_parado_s = 0.0
+	else:
+		_parado_s += dt
+		if _parado_s >= 1.0:
+			_andando_s = 0.0
+	var taxa := pow(Regras.SUMIR_FATOR, _andando_s) if andando else 1.0
+	oculto_s = maxf(0.0, oculto_s - dt * taxa)
+
+
 ## Avança no tempo. Devolve eventos: {"tipo": "pegada"|"chegou", ...}
 func passo(dt: float, mapa: Mapa) -> Array:
 	var eventos := []
+	if turvo_s > 0.0 and turvo_s != INF:
+		turvo_s = maxf(0.0, turvo_s - dt)
+	if ferido_s > 0.0:
+		ferido_s = maxf(0.0, ferido_s - dt)
+	if desmaiado:
+		return eventos
+	var antes := pos
 	if espera > 0.0:
 		espera -= dt
+		_gastar_oculto(dt, false)
 		return eventos
 	if lento_s > 0.0:
 		lento_s -= dt
 	if pausado and no_atual < 0:
+		_gastar_oculto(dt, false)
 		return eventos
 	if no_atual >= 0:
 		if rota.is_empty():
+			_gastar_oculto(dt, false)
 			return eventos
 		de = no_atual
 		para = rota.pop_front()
@@ -225,7 +301,8 @@ func passo(dt: float, mapa: Mapa) -> Array:
 		passo_esquerdo = not passo_esquerdo
 		var dir := (mapa.pos(para) - mapa.pos(de)).normalized()
 		var lado := -1.0 if passo_esquerdo else 1.0
-		eventos.append({"tipo": "pegada", "pos": pos + dir.orthogonal() * 0.7 * lado, "dir": dir})
+		eventos.append({"tipo": "pegada", "pos": pos + dir.orthogonal() * 0.7 * lado, "dir": dir, "fraca": oculto_s > 0.0})
+	_gastar_oculto(dt, pos.distance_to(antes) > 0.001)
 	if chegou:
 		no_atual = para
 		de = -1

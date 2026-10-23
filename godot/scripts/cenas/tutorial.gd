@@ -24,6 +24,7 @@ const PAGINAS := [
 		"texto": """• [b]Setas ou WASD:[/b] você segue a trilha que mais aponta para aquele lado. Soltou, parou.
 • [b]Clique[/b] numa clareira ou num trecho de trilha que você conhece: o personagem vai até lá sozinho.
 • [b]Espaço:[/b] para onde está. Faz diferença diante do lobo e da cobra.
+• [b]F (ou o botão no alto):[/b] some na mata por uns segundos. Ninguém vê você, e o lobo que ronda não percebe. Parado dura 5 s; andando, acaba mais rápido. Poucos usos por noite.
 • [b]Roda do mouse:[/b] aproxima e afasta o mapa. [b]N:[/b] liga e desliga a névoa. [b]Esc:[/b] configurações.
 
 O mapa se desenha conforme você anda e enxerga. Suas pegadas são vazadas; as dos outros são cheias e mostram o calçado de quem passou. O nome de alguém só aparece quando você o vê."""
@@ -35,16 +36,19 @@ O mapa se desenha conforme você anda e enxerga. Suas pegadas são vazadas; as d
 • [b]Força:[/b] você fica menos tempo caído quando o lobo te derruba ou preso numa armadilha.
 • [b]Inteligência:[/b] enxerga mais longe e lembra por mais tempo do que viu; vê a cobra e as armadilhas antes de chegar perto; percebe mais vezes o gesto de um guardião.
 • [b]Carisma:[/b] libera respostas extras nas conversas.
-• [b]Furtividade:[/b] suas pegadas somem mais rápido, e você lê melhor as dos outros.
+• [b]Furtividade:[/b] mais usos do "sumir na mata"; suas pegadas somem mais rápido, e você lê melhor as dos outros; sai pelos fundos de uma base sem o lobo perceber.
 • [b]Resistência:[/b] chance de aguentar o veneno; você se recupera mais rápido de uma queda.
 
-O [b]veneno[/b] (panela ruim ou picada de cobra) tira 1 ponto da sua maior habilidade, pela noite toda. Nenhuma cai abaixo de 1. Pôr tudo num atributo só deixa você forte numa coisa e frágil no resto."""
+O [b]veneno[/b] (panela ruim ou picada de cobra) tira 1 ponto da sua maior habilidade, pela noite toda, e [b]acumula[/b]:
+• 1ª dose: a vista escurece e você enxerga menos por um minuto.
+• 2ª dose: a vista não clareia mais até o amanhecer.
+• [b]3ª dose: você desmaia na mata e não registra a chegada. A noite está perdida.[/b]"""
 	},
 	{
 		"titulo": "Animais e armadilhas",
 		"texto": """Diante do perigo, [b]quem para se sai melhor do que quem corre[/b].
 
-• [b]Lobo:[/b] ronda perto das bases. Se rosnar para você, fique parado até ele ir embora. Se você se mexer, ele ataca: te derruba, e depois você anda devagar por um tempo. Ele não entra nas bases. Às vezes aparece ferido e não ataca.
+• [b]Lobo:[/b] ronda perto das bases. Se rosnar para você, fique parado (ou suma na mata) até ele ir embora. Se você se mexer, ele ataca: te derruba, e depois você anda devagar por um tempo. [b]Depois de derrubar, ele segue o seu faro[/b]: esconder-se não adianta. O jeito é chegar a uma base: ele não entra, mas fica esperando à porta. Esperar gasta a noite; sair pelos fundos pode enganá-lo; sair pela frente, ele ataca de novo. Às vezes aparece ferido e não ataca.
 • [b]Cobra:[/b] fica escondida nas trilhas. Ouviu folhas secas chacoalhando? Pare e espere: ela vai embora. Se continuar andando até perto dela, leva uma picada com veneno.
 • [b]Cão sem dono:[/b] se abanar o rabo e esperar, chegue perto e ele leva você até uma base que você ainda não visitou. Se ficar inquieto, ele late, e todos por perto ouvem onde você está.
 • [b]Coruja:[/b] quando nota você, pia, e quem estiver por perto sabe de onde veio o pio. Às vezes, em vez de piar, ela vira a cabeça para onde há outra pessoa.
@@ -55,7 +59,8 @@ Uivos, pios, latidos e o estalo de uma armadilha soam do lado de onde acontecera
 	{
 		"titulo": "Os guardiões",
 		"texto": """• Antes de entrar, você pode [b]olhar pela janela[/b]. Às vezes há outro viajante lá dentro, e dá para ver como o guardião o trata.
-• Entre pela [b]frente ou pelos fundos[/b]. O guardião repara.
+• Entre pela [b]frente ou pelos fundos[/b]. O guardião repara. Ou fique [b]na moita[/b] ao lado da casa, vendo quem chega sem ser visto.
+• Chegar [b]ferido ou envenenado[/b] muda como você é recebido: uns se compadecem, outros desconfiam.
 • Ele faz perguntas. Escolha a resposta e o [b]tom[/b]: firme, gentil ou evasivo. Se você demorar, conta como silêncio.
 • Ele sabe parte do que aconteceu na sua noite. [b]Mentir sobre o que ele pode conferir custa caro[/b], e contradizer o que você disse em outra base também.
 • Cada guardião valoriza coisas diferentes: o que agrada um pode irritar outro. E o que você faz numa base chega às outras.

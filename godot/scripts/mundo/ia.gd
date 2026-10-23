@@ -7,8 +7,29 @@ extends RefCounted
 static func decidir(p: Personagem, mundo: Mundo) -> void:
 	var mapa := mundo.mapa
 	var no := p.no_atual
-	if p.registrou() or no < 0 or not p.rota.is_empty() or p.espera > 0.0:
+	if p.registrou() or p.desmaiado or no < 0 or not p.rota.is_empty() or p.espera > 0.0:
 		return
+
+	# Lobo à porta da base onde está: o cauteloso espera; os outros tentam sair pelos fundos uma vez.
+	if mundo.fauna.lobo_a_porta(p) != null:
+		if p.perfil != "cauteloso" and not p.tentou_fundos:
+			p.tentou_fundos = true
+			if mundo.fauna.sair_fundos(p):
+				p.tentou_fundos = false
+			else:
+				p.espera = 5.0
+				return
+		else:
+			p.espera = 5.0
+			return
+	p.tentou_fundos = false
+
+	# Derrubado, com o lobo no faro: corre para a base conhecida mais perto.
+	if mundo.fauna.lobo_no_faro(p) != null:
+		var abrigo := _abrigo(p, mundo)
+		if abrigo >= 0 and abrigo != no:
+			_rumo(p, mundo, mapa.pos(abrigo), abrigo)
+			return
 
 	if hora_de_ir(p, mundo):
 		_rumo(p, mundo, mapa.pos(p.saida), p.saida)
@@ -25,6 +46,22 @@ static func decidir(p: Personagem, mundo: Mundo) -> void:
 		_rumo(p, mundo, p.luzes[alvo], mapa.bases()[alvo])
 		return
 	_um_passo(p, mundo, Vector2.INF)
+
+
+## Base mais perto (em linha reta) que este personagem já conhece: visitada ou com a luz vista.
+static func _abrigo(p: Personagem, mundo: Mundo) -> int:
+	var melhor := -1
+	var melhor_d := INF
+	var bases: Dictionary = mundo.mapa.bases()
+	for b in bases:
+		var no: int = bases[b]
+		if not (p.luzes.has(b) or p.no_visto[no] == 1):
+			continue
+		var d := p.pos.distance_to(mundo.mapa.pos(no))
+		if d < melhor_d:
+			melhor_d = d
+			melhor = no
+	return melhor
 
 
 ## Vai até um destino usando o que já conhece: caminho conhecido até ele, ou até o ponto
@@ -166,6 +203,10 @@ static func visitar(p: Personagem, mundo: Mundo, base: String) -> Dictionary:
 			dar = "fumo" if p.inventario.has("fumo") else p.inventario[0]
 		ind = v.pagar(dar)
 	var lado: String = ind["lado"]
+	# Já envenenado duas vezes: só come com o guardião do seu lado (a próxima dose desmaia).
+	if p.doses_veneno >= Regras.VENENO_DESMAIO - 1 and v.situacao() != "alta":
+		v.recusar()
+		return {"mente": ind["mente"], "afinidade": v.afinidade}
 	if lado == "":
 		# Sem indicação: só o ousado arrisca no chute
 		if p.perfil != "ousado":

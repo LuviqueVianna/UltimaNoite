@@ -18,6 +18,8 @@ var visita: Visita
 var estado := ""
 var tom := "gentil"
 var relogio := 0.0
+var esperando_lobo := false   # o jogador escolheu esperar o lobo ir embora (a cena acelera o tempo)
+var sair_sem_refugio := false # saiu pela frente de propósito: não reabrir o refúgio
 
 var titulo: Label
 var texto: Label
@@ -168,7 +170,75 @@ func _mostrar_aproximacao(extra := "") -> void:
 		_opcao("Olhar pela janela", _olhar_janela)
 	_opcao("Entrar pela porta da frente", func(): _entrar("frente"))
 	_opcao("Entrar pela porta dos fundos", func(): _entrar("fundos"))
+	_opcao("Esconder-se na moita", _esconder)
 	_opcao("Voltar para a trilha", _fechar)
+
+
+# ---------- Esconderijo ----------
+
+## Agachado na moita ao lado da casa: ninguém o vê (nem o lobo que ronda), e você vê quem chega.
+## O lobo que segue o seu faro não se engana com a moita.
+func _esconder() -> void:
+	estado = "moita"
+	var j := mundo.jogador()
+	if j.escondido == "":
+		j.escondido = base
+		j.esconderijos += 1
+	_limpar()
+	texto.text = "Você se agacha na moita. Daqui se vê a porta da frente, e ninguém vê você.\n\nA noite continua correndo."
+	_opcao("Sair da moita", func():
+		j.escondido = ""
+		_mostrar_aproximacao())
+
+
+# ---------- Refúgio do lobo ----------
+
+## O lobo ficou esperando à porta. Base já visitada ou vazia abriga, mas não serve nada.
+func abrir_refugio(m: Mundo, id_base: String) -> void:
+	mundo = m
+	base = id_base
+	visible = true
+	estado = "refugio"
+	esperando_lobo = false
+	_limpar()
+	linha_tom.visible = false
+	titulo.text = Regras.BASES.get(base, "Refúgio")
+	var j := mundo.jogador()
+	var linhas := ["O lobo não entra. Fica rondando a porta da frente, e a noite continua correndo."]
+	if base == "vazia":
+		linhas.append("A tapera está vazia. Só a porta separa você do lobo.")
+	elif j.bases_visitadas.has(base):
+		linhas.append("%s deixa você esperar perto do fogo, mas não serve mais nada." % NOMES_GUARDIAO.get(base, "O guardião"))
+	texto.text = "\n\n".join(linhas)
+	_opcoes_refugio()
+
+
+func _opcoes_refugio() -> void:
+	_opcao("Esperar o lobo ir embora", func():
+		esperando_lobo = true
+		_limpar()
+		texto.text = "Você espera, escutando as patas do lado de fora."
+		_opcao("Parar de esperar", func():
+			esperando_lobo = false
+			_limpar()
+			_opcoes_refugio()))
+	_opcao("Sair pela porta dos fundos", func():
+		var escapou := mundo.fauna.sair_fundos(mundo.jogador())
+		if escapou:
+			_fechar()
+			return
+		_limpar()
+		texto.text = "O lobo ouviu. Se você puser o pé para fora agora, ele vem atrás."
+		_opcoes_refugio())
+	_opcao("Sair pela porta da frente", func():
+		sair_sem_refugio = true
+		_fechar())
+
+
+## A cena chama quando o lobo desiste de esperar.
+func lobo_foi_embora() -> void:
+	if estado == "refugio":
+		_fechar()
 
 
 func _olhar_janela() -> void:
@@ -259,6 +329,14 @@ func _comer(lado: String) -> void:
 			_:
 				texto.text = _ou(Textos.panela("ruim_efeito", rng), "O gosto é amargo e algo se apaga em você.") \
 					+ "\nVocê perdeu 1 ponto de %s." % NOMES_ATRIBUTO[r["veneno"]]
+		var j := mundo.jogador()
+		if r["veneno"] != "resistiu":
+			if j.desmaiado:
+				texto.text += "\n\n" + Regras.FALAS_VENENO["desmaio"]
+				_opcao("Fechar os olhos", _fechar)
+				return
+			texto.text += "\n" + Regras.FALAS_VENENO["turvo" if j.doses_veneno == 1 else "turvo_noite"] \
+				+ " (veneno %d de %d: a %dª dose derruba)" % [j.doses_veneno, Regras.VENENO_DESMAIO, Regras.VENENO_DESMAIO]
 	_opcao("Voltar para a trilha", _fechar)
 
 
@@ -269,4 +347,14 @@ func _ou(texto_conteudo: String, provisorio: String) -> String:
 func _fechar() -> void:
 	visible = false
 	estado = ""
+	esperando_lobo = false
+	if mundo != null:
+		mundo.jogador().escondido = ""
 	fechado.emit()
+
+
+## Desmaio ou amanhecer: fecha sem avisar ninguém.
+func fechar_em_silencio() -> void:
+	visible = false
+	estado = ""
+	esperando_lobo = false

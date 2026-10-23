@@ -148,6 +148,35 @@ const SONS := {
 	"armadilha": {"arquivos": ["armadilha"], "alcance": 250.0, "onda": true},
 }
 
+# ---- Consequências mais pesadas (docs/sistemas/consequencias_v1.md, aprovado em 23/10/2026). Provisórios. ----
+## Veneno acumula. Cada dose que o corpo não aguenta: −1 na maior habilidade (como antes) e a visão turva.
+## 1ª dose: visão turva por VENENO_TURVO_S. 2ª: turva até o amanhecer. 3ª: desmaio (não registra a chegada).
+const VENENO_TURVO_S := 60.0
+const VENENO_VISAO := 0.6               # fração do alcance de vista com a visão turva
+const VENENO_DESMAIO := 3               # dose que derruba de vez
+## Lobo que derruba alguém passa a seguir o faro dessa pessoa (esconderijo e "sumir" não adiantam).
+const LOBO_FARO_S := 40.0               # quanto tempo segue o rastro
+const LOBO_FARO_ATRASO_S := 3.0         # recua um pouco depois de derrubar, antes de farejar
+const LOBO_FARO_VEL := 0.8              # fração da velocidade normal de quem ele segue
+## Base como refúgio: o lobo não entra, espera do lado de fora.
+const LOBO_ESPERA_PORTA_S := 45.0
+const LOBO_ESPERA_DIST_M := 9.0         # onde ele fica rondando a porta
+## Sair pelos fundos com o lobo à porta: chance de ele perceber, por nível de Furtividade.
+const LOBO_PERCEBE_FUNDOS := [0.6, 0.5, 0.4, 0.3, 0.2]
+const FERIDO_S := 120.0                 # depois de derrubado, conta como ferido para os guardiões
+## Como o guardião recebe quem chega ferido ou envenenado (soma à afinidade inicial da visita).
+const REACAO_ESTADO := {"iara": 1, "marta": -1, "bento": 1}
+const REACAO_ESTADO_TEXTO := {
+	"iara": "Dona Iara repara no seu andar e puxa um banquinho para perto do fogo.",
+	"marta": "Marta mede você de cima a baixo. Gente machucada atrai bicho.",
+	"bento": "Bento vê o estado em que você chegou e solta um resmungo de aprovação: veio de pé.",
+}
+
+# ---- Sumir na mata (docs/MVP_v0.4.md, seção 8) ----
+const SUMIR_S := 5.0                    # duração de cada uso, parado
+const SUMIR_FATOR := 1.1                # andando, o gasto multiplica por isto a cada segundo seguido
+const LEITURA_OCULTO := 4               # nível de leitura de pegadas que enxerga as pegadas de quem anda oculto
+
 # ---- Armadilhas (docs/MVP_v0.4.md, seção 6; implementadas em 22/10/2026). Números provisórios. ----
 const ARMADILHAS_QTD := 7
 const ARMADILHAS_BECO := 2           # quantas vão no fim de um beco
@@ -172,6 +201,20 @@ const FALAS_ANIMAIS := {
 	"cobra_some": "A cobra desliza para o mato.",
 	"cobra_pica": "Uma picada no tornozelo. Você sente o veneno subir.",
 	"cobra_resistiu": "Uma picada no tornozelo, mas seu corpo aguenta o veneno.",
+	# Provisórios (23/10/2026), até o ChatGPT fazer o banco:
+	"lobo_fareja": "Atrás de você, o lobo baixa o focinho no seu rastro. Ele vai seguir seu cheiro.",
+	"lobo_desiste_faro": "O lobo perde seu cheiro e volta para a mata.",
+	"lobo_porta": "O lobo para na beira da clareira e fica rondando a porta.",
+	"lobo_cansou": "O lobo cansa de esperar e some na mata.",
+	"lobo_fundos_ok": "Você sai pelos fundos sem um ruído. O lobo continua olhando para a porta da frente.",
+	"lobo_fundos_falhou": "Você sai pelos fundos, mas o lobo ergue o focinho e contorna a casa.",
+}
+
+## Avisos de veneno e desmaio (provisórios).
+const FALAS_VENENO := {
+	"turvo": "A vista escurece nas bordas. Por um tempo, você enxerga menos.",
+	"turvo_noite": "O veneno pesa. A vista não vai clarear antes do amanhecer.",
+	"desmaio": "As pernas não obedecem mais. Você cai na trilha e a noite se apaga.",
 }
 
 # Provisório: substituído por conteudo/nomes.json quando a demanda 2 for aprovada.

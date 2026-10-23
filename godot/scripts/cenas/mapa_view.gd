@@ -355,9 +355,14 @@ func _desenhar_vivo() -> void:
 		_alvo.draw_polyline(losango, COR_TEXTO, 2.0)
 		_texto(c + Vector2(t + 6, -t), o.nome, 15)
 	# Você: círculo claro com anel escuro grosso e ponto escuro no centro
-	_alvo.draw_circle(j.pos * ESCALA, 1.7 * ESCALA, COR_CONTORNO)
-	_alvo.draw_circle(j.pos * ESCALA, 1.2 * ESCALA, COR_AMBAR)
-	_alvo.draw_circle(j.pos * ESCALA, 0.35 * ESCALA, COR_CONTORNO)
+	# Oculto (sumiu na mata ou na moita): só o contorno tracejado, para você saber que não é visto.
+	if j.oculto():
+		_arco_tracejado(j.pos * ESCALA, 1.7 * ESCALA, COR_CONTORNO)
+		_alvo.draw_circle(j.pos * ESCALA, 0.6 * ESCALA, Color(COR_AMBAR, 0.6))
+	else:
+		_alvo.draw_circle(j.pos * ESCALA, 1.7 * ESCALA, COR_CONTORNO)
+		_alvo.draw_circle(j.pos * ESCALA, 1.2 * ESCALA, COR_AMBAR)
+		_alvo.draw_circle(j.pos * ESCALA, 0.35 * ESCALA, COR_CONTORNO)
 	if not j.rota.is_empty():
 		var alvo := m.pos(j.rota[-1]) * ESCALA
 		_alvo.draw_arc(alvo, 10, 0, TAU, 24, Color(COR_MINHA, 0.8), 2)
@@ -403,6 +408,10 @@ func _desenhar_animal(a: Fauna.Animal) -> void:
 				rotulo = "lobo (mancando)"
 			elif a.tipo == "lobo" and a.estado in ["rosnando", "perseguindo"]:
 				rotulo = "lobo (rosnando)"
+			elif a.tipo == "lobo" and a.estado == "farejando":
+				rotulo = "lobo (focinho no chão)"
+			elif a.tipo == "lobo" and a.estado == "porta":
+				rotulo = "lobo (rondando a porta)"
 			elif a.tipo == "cao" and a.estado in ["esperando", "guiando"]:
 				rotulo = "cão (abanando o rabo)"
 		"coruja":
@@ -497,6 +506,11 @@ func _alcance_animal(a: Fauna.Animal) -> void:
 		_contagem(c, 5.0 * ESCALA, 1.0 - a.relogio / Regras.LOBO_ROSNA_S, "fique parado: %.1f s" % maxf(a.relogio, 0.0))
 	elif a.tipo == "lobo" and a.estado == "perseguindo":
 		_texto(c + Vector2(-20, -5.5 * ESCALA), "atacando! corra para uma base", 9)
+	elif a.tipo == "lobo" and a.estado == "farejando":
+		var resta: float = a.relogio if a.atraso <= 0.0 else Regras.LOBO_FARO_S
+		_contagem(c, 5.0 * ESCALA, 1.0 - resta / Regras.LOBO_FARO_S, "seguindo seu faro: %.0f s" % resta)
+	elif a.tipo == "lobo" and a.estado == "porta":
+		_contagem(c, 5.0 * ESCALA, 1.0 - a.relogio / Regras.LOBO_ESPERA_PORTA_S, "esperando à porta: %.0f s" % maxf(a.relogio, 0.0))
 	elif a.tipo == "cao" and a.estado == "esperando":
 		_contagem(c, 5.0 * ESCALA, 1.0 - a.relogio / Regras.CAO_ESPERA_S, "chegue a 5 m: %.0f s" % maxf(a.relogio, 0.0))
 

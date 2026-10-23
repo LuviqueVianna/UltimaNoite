@@ -90,13 +90,14 @@ O centro do jogo é informação incompleta: quem passou por onde, quem mente, q
 - **(sugestão)** Uma armadilha acionada deixa um rastro diferente, que outros leem depois.
 
 ### Veneno (panela ruim)
+- **Acumula (23/10/2026):** 1ª dose turva a visão por 60 s, 2ª até o amanhecer, 3ª desmaia (não registra a chegada). Ver `docs/sistemas/consequencias_v1.md`.
 - Retira **1 ponto da maior habilidade** do personagem, perdido pela noite toda.
 - Empate entre as maiores: sorteio.
 - Nenhuma habilidade cai abaixo de 1. Com todas em 1, o veneno não afeta as habilidades.
 
 ### Animais
 - Lobo, coruja e cão entram no MVP, como na v0.3, **e também a cobra** (decidido em 21/10/2026).
-- **O lobo fica perto das bases.** Quando alcança alguém, derruba e atrasa.
+- **O lobo fica perto das bases.** Quando alcança alguém, derruba e atrasa. **Depois segue o faro de quem derrubou**; a base é o refúgio, e ele espera à porta (23/10/2026, `docs/sistemas/consequencias_v1.md`).
 - A picada da cobra é veneno, como a panela ruim.
 - Regras completas e números: `docs/sistemas/animais_v1.md`.
 
@@ -130,6 +131,8 @@ Regras:
 ---
 
 ## 8. Sumir na mata
+
+Implementado em 23/10/2026 (tecla F), junto com a moita das bases: `docs/sistemas/consequencias_v1.md`, seção 5.
 
 - Habilidade ativa: o personagem fica oculto. Vê quem passa ao lado sem ser visto.
 - Cada uso dura **5 s**. Usos por noite pela Furtividade (seção 7).

@@ -16,6 +16,7 @@ var perguntas: Array = []
 var indice := 0
 var registro: Array = []     # {id, escolha, delta, mentiu, contradisse}
 var indicacao := {}          # preenchida por indicar()
+var reagiu_estado := 0      # quanto o estado do visitante (ferido, envenenado) mexeu na afinidade inicial
 
 
 func _init(m: Mundo, personagem: Personagem, id_base: String) -> void:
@@ -29,6 +30,11 @@ func _init(m: Mundo, personagem: Personagem, id_base: String) -> void:
 	var falas := entradas.filter(func(e): return e["tipo"] == "fala")
 	if not narracoes.is_empty():
 		abertura.append(narracoes[0])
+	# Quem chega ferido ou envenenado é recebido conforme o guardião (consequencias_v1, seção 4).
+	if (p.ferido() or p.envenenado()) and Regras.REACAO_ESTADO.has(base):
+		afinidade += int(Regras.REACAO_ESTADO[base])
+		reagiu_estado = int(Regras.REACAO_ESTADO[base])
+		abertura.append({"tipo": "narracao", "texto": Regras.REACAO_ESTADO_TEXTO[base]})
 	if not falas.is_empty():
 		abertura.append(falas[mundo.rng.randi() % falas.size()])
 	var possiveis := entradas.filter(func(e): return e["tipo"] == "pergunta" and _pode_perguntar(e))
@@ -169,7 +175,7 @@ func comer(lado: String) -> Dictionary:
 	p.bases_visitadas[base] = mundo.tempo
 	var r := {"boa": boa, "veneno": ""}
 	if not boa:
-		r["veneno"] = p.envenenar(mundo.rng)
+		r["veneno"] = mundo.envenenar(p)
 	return r
 
 

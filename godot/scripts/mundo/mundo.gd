@@ -9,6 +9,8 @@ signal amanheceu
 signal guardiao_mentiu_para(personagem: Personagem, base: String)
 signal chegou_saida(personagem: Personagem)
 signal som(evento: String, origem: Vector2)   # barulho no mapa (Regras.SONS); a cena decide se o jogador ouve
+signal desmaiou(personagem: Personagem)
+signal refugio(personagem: Personagem)          # o lobo ficou esperando à porta da base onde ele está
 
 var mapa: Mapa
 var personagens: Array = []
@@ -90,7 +92,7 @@ func tick(dt: float) -> void:
 				"pegada":
 					pegadas.append({
 						"id": _proxima_pegada, "pos": ev["pos"], "dir": ev["dir"], "dono": p.id,
-						"calcado": p.calcado, "t": tempo, "vida": p.vida_pegada(),
+						"calcado": p.calcado, "t": tempo, "vida": p.vida_pegada(), "fraca": ev.get("fraca", false),
 					})
 					_proxima_pegada += 1
 				"chegou":
@@ -109,6 +111,8 @@ func tick(dt: float) -> void:
 
 
 func _chegou(p: Personagem, no: int) -> void:
+	if p.desmaiado:
+		return
 	if no == p.saida and not p.registrou():
 		if p.eh_jogador:
 			chegou_saida.emit(p)
@@ -127,6 +131,8 @@ func _chegou(p: Personagem, no: int) -> void:
 		if base == "vazia":
 			p.bases_visitadas[base] = tempo
 			return
+		if jogador().escondido == base:
+			aviso.emit("Alguém de %s passa a dois passos da moita e entra na casa." % Regras.CALCADOS_PAR[p.calcado])
 		var res := IA.visitar(p, self, base)
 		var duracao := Regras.VISITA_BASE_S / (Regras.ACELERA_COMPUTADOR if p.acelerado else 1.0)
 		visitante[base] = {"id": p.id, "mente": res["mente"], "ate": tempo + duracao}
@@ -134,6 +140,8 @@ func _chegou(p: Personagem, no: int) -> void:
 
 
 func registrar_chegada(p: Personagem) -> void:
+	if p.desmaiado:
+		return
 	if not p.registrou():
 		p.concluiu = tempo
 		p.rota = []
@@ -144,6 +152,21 @@ func registrar_chegada(p: Personagem) -> void:
 				o.acelerado = true
 				o.espera = minf(o.espera, 3.0)
 				o.rota = o.rota.slice(0, 1)   # termina o trecho atual e recalcula rumo à saída
+
+
+## Veneno da panela ruim ou da cobra, com os avisos ao jogador. Devolve o mesmo que Personagem.envenenar.
+func envenenar(p: Personagem) -> String:
+	var r := p.envenenar(rng)
+	if r == "resistiu":
+		return r
+	if p.eh_jogador and not p.desmaiado:
+		aviso.emit(Regras.FALAS_VENENO["turvo" if p.doses_veneno == 1 else "turvo_noite"])
+	if p.desmaiado:
+		p.escondido = ""
+		if p.eh_jogador:
+			aviso.emit(Regras.FALAS_VENENO["desmaio"])
+		desmaiou.emit(p)
+	return r
 
 
 ## Classificação no amanhecer: só pontua quem registrou a chegada.
@@ -261,6 +284,8 @@ func premissa(p: Personagem, base: String, nome: String) -> bool:
 			return not p.inventario.is_empty()
 		"usou_esconderijo":
 			return p.esconderijos > 0
+		"sumiu_na_mata":
+			return p.sumir_usados > 0
 		"acionou_armadilha":
 			return p.armadilhas_acionadas > 0
 	return p.fatos_noite.has(nome)
@@ -270,6 +295,8 @@ func premissa(p: Personagem, base: String, nome: String) -> bool:
 ## Toque ou clique: num ponto conhecido, anda até ele; numa trilha visível, segue por ela.
 func mover_jogador_para(ponto: Vector2) -> bool:
 	var j := jogador()
+	if j.desmaiado:
+		return false
 	var aberto := Regras.sem_nevoa
 	var alvo := mapa.no_mais_proximo(ponto, Regras.CLIQUE_RAIO * 0.6, func(n): return aberto or j.no_visto[n] == 1)
 	if alvo >= 0 and alvo != j.no_atual:
@@ -298,7 +325,7 @@ func mover_jogador_para(ponto: Vector2) -> bool:
 ## Teclado: segue a trilha que mais aponta para a direção pedida. Direção zero = para onde está.
 func dirigir_jogador(dir: Vector2) -> void:
 	var j := jogador()
-	if j.registrou():
+	if j.registrou() or j.desmaiado:
 		return
 	if dir == Vector2.ZERO:
 		j.rota = []
@@ -348,13 +375,14 @@ func _perceber(p: Personagem) -> void:
 				aviso.emit("Uma luz âmbar aparece entre as árvores.")
 	var mais_nova := -1.0
 	for g in pegadas:
-		if g["dono"] != p.id and p.pos.distance_squared_to(g["pos"]) <= r2:
+		if g["dono"] != p.id and p.pos.distance_squared_to(g["pos"]) <= r2 \
+				and (not g.get("fraca", false) or p.leitura_pegadas() >= Regras.LEITURA_OCULTO):
 			p.pegadas_vistas[g["id"]] = tempo
 			if g["t"] > mais_nova:
 				mais_nova = g["t"]
 				p.ultima_pegada_vista = g["dono"]
 	for o in personagens:
-		if o.id == p.id or p.pos.distance_squared_to(o.pos) > r2:
+		if o.id == p.id or o.oculto() or p.pos.distance_squared_to(o.pos) > r2:
 			continue
 		var primeira: bool = not p.vistos.has(o.id)
 		p.vistos[o.id] = tempo

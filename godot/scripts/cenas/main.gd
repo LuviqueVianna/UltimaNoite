@@ -17,6 +17,8 @@ var centro: CenterContainer
 var avisos: Array = []
 var acelerar := false
 var usando_teclado := false
+var botao_sumir: Button
+var estava_oculto := false
 
 # Tela inicial
 var inicio: Control
@@ -237,6 +239,15 @@ func _montar_noite() -> void:
 	dialogo.fechado.connect(_ao_fechar_dialogo)
 	dialogo.registrou.connect(_ao_registrar)
 
+	# Sumir na mata: tecla F ou este botão (para tela de toque)
+	botao_sumir = Button.new()
+	botao_sumir.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	botao_sumir.position = Vector2(-230, 12)
+	botao_sumir.custom_minimum_size = Vector2(214, 0)
+	botao_sumir.focus_mode = Control.FOCUS_NONE
+	botao_sumir.pressed.connect(_sumir)
+	hud.add_child(botao_sumir)
+
 	mundo.aviso.connect(_ao_aviso)
 	mundo.chegou_base.connect(_ao_chegar_base)
 	mundo.chegou_saida.connect(func(p):
@@ -244,6 +255,7 @@ func _montar_noite() -> void:
 		dialogo.abrir_saida(mundo))
 	mundo.amanheceu.connect(_ao_amanhecer)
 	mundo.som.connect(_tocar_som)
+	mundo.refugio.connect(_ao_refugio)
 	var j := mundo.jogador()
 	_ao_aviso("Noite começa. Você usa %s." % Regras.CALCADOS[j.calcado])
 	_ao_aviso("Ande com as setas, WASD ou clicando numa trilha. Espaço para parar. Esc: configurações.")
@@ -257,12 +269,67 @@ func _process(dt: float) -> void:
 	_atualizar_avisos()
 	if not _sobreposicao_aberta():   # configurações ou tutorial abertos: a noite espera
 		_ler_teclado()
-		for i in (40 if acelerar else 1):
+		var vezes := 40 if acelerar or (j.desmaiado and not dialogo.visible) else (10 if dialogo.esperando_lobo else 1)
+		for i in vezes:
 			mundo.tick(dt)
+		if dialogo.estado == "refugio" and mundo.fauna.lobo_a_porta(j) == null:
+			dialogo.lobo_foi_embora()
+	if estava_oculto and not j.oculto():
+		_ao_aviso("Você volta a ser visto.")
+	estava_oculto = j.oculto()
+	botao_sumir.text = "Sumir na mata (F): %d" % j.usos_sumir()
+	botao_sumir.disabled = j.usos_sumir() == 0 or j.oculto() or j.desmaiado or j.registrou()
 	camera.position = _enquadrar(j.pos * MapaView.ESCALA)
 	var r := int(mundo.tempo_restante())
 	var saida := "chegada registrada" if j.registrou() else "saída %s, %d m" % [Textos.direcao(j.pos, mundo.mapa.pos(j.saida)), int(j.pos.distance_to(mundo.mapa.pos(j.saida)))]
-	rotulo_relogio.text = "%s   ·   %d pontos   ·   %s   ·   faltam %d:%02d para o amanhecer" % [j.nome, j.pontos(), saida, r / 60, r % 60]
+	if j.desmaiado:
+		saida = "desmaiado"
+	rotulo_relogio.text = "%s   ·   %d pontos   ·   %s   ·   faltam %d:%02d para o amanhecer%s" % [j.nome, j.pontos(), saida, r / 60, r % 60, _estado(j)]
+
+
+## Estado do corpo, no alto da tela: veneno, visão, ferimento e se está oculto.
+func _estado(j: Personagem) -> String:
+	var partes := []
+	if j.doses_veneno > 0 and not j.desmaiado:
+		partes.append("veneno %d/%d" % [j.doses_veneno, Regras.VENENO_DESMAIO])
+	if j.envenenado():
+		partes.append("vista turva" + ("" if j.turvo_s == INF else " %d s" % ceili(j.turvo_s)))
+	if j.ferido():
+		partes.append("ferido")
+	if j.lento_s > 0.0:
+		partes.append("lento")
+	if j.oculto_s > 0.0:
+		partes.append("oculto %.1f s" % j.oculto_s)
+	elif j.escondido != "":
+		partes.append("na moita")
+	return "" if partes.is_empty() else "\n" + "   ·   ".join(partes)
+
+
+func _sumir() -> void:
+	if mundo == null or dialogo.visible or mundo.terminou:
+		return
+	var j := mundo.jogador()
+	if j.sumir():
+		_ao_aviso("Você some na mata. Parado, dura mais.")
+	elif j.usos_sumir() == 0:
+		_ao_aviso("Você não tem mais como sumir na mata esta noite.")
+
+
+## O lobo ficou à porta da base onde você está. Se você está conversando, o aviso espera a conversa acabar.
+func _ao_refugio(p: Personagem) -> void:
+	if not p.eh_jogador or dialogo.visible:
+		return
+	_abrir_refugio()
+
+
+func _abrir_refugio() -> void:
+	var j := mundo.jogador()
+	var no := mundo.mapa.no_mais_proximo(j.pos, 6.0, func(n): return mundo.mapa.nos[n]["base"] != "")
+	if no < 0:
+		return
+	j.rota = []
+	j.pausado = true
+	dialogo.abrir_refugio(mundo, mundo.mapa.nos[no]["base"])
 
 
 ## Segue o jogador sem mostrar a escuridão fora do mapa: perto da borda a câmera para;
@@ -289,6 +356,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			_abrir(configuracoes)
 		return
 	if camera == null or _sobreposicao_aberta():
+		return
+	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_F:
+		_sumir()
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_N:
 		vista.alternar_nevoa()
@@ -391,6 +461,12 @@ func _ao_chegar_base(p: Personagem, base: String) -> void:
 
 func _ao_fechar_dialogo() -> void:
 	var j := mundo.jogador()
+	# Saiu da conversa (ou da moita) com o lobo ainda à porta: decide como sair.
+	if dialogo.sair_sem_refugio:
+		dialogo.sair_sem_refugio = false
+	elif not j.desmaiado and mundo.fauna.lobo_a_porta(j) != null:
+		_abrir_refugio()
+		return
 	var atrib := []
 	for k in Regras.ATRIBUTOS:
 		atrib.append("%s %d" % [k.substr(0, 3).capitalize(), j.atributos[k]])
@@ -398,7 +474,7 @@ func _ao_fechar_dialogo() -> void:
 
 
 func _ao_amanhecer() -> void:
-	dialogo.visible = false
+	dialogo.fechar_em_silencio()
 	acelerar = false
 	var linhas := ["Amanheceu.", ""]
 	var pos := 1
@@ -407,6 +483,8 @@ func _ao_amanhecer() -> void:
 		if p.registrou():
 			linhas.append("%dº  %s — %d pontos (%s)" % [pos, p.nome, p.pontos(), detalhe])
 			pos += 1
+		elif p.desmaiado:
+			linhas.append("—   %s — desmaiou de veneno na mata (%s)" % [p.nome, detalhe])
 		else:
 			linhas.append("—   %s — não chegou à saída (%s)" % [p.nome, detalhe])
 	linhas.append("")

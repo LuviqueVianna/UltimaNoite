@@ -1,6 +1,6 @@
 # Status do projeto
 
-**Atualizado em:** 22/10/2026, pelo Claude.
+**Atualizado em:** 23/10/2026, pelo Claude.
 
 ## Agora
 
@@ -34,6 +34,7 @@ Ao terminar uma demanda: entregar em `entregas/AAAA-MM-DD_<nome>/` e parar.
 
 | Data | O que aconteceu |
 |---|---|
+| 23/10/2026 | Consequências mais pesadas (pedido do usuário, testando o jogo): veneno acumula (vista turva, 3ª dose desmaia), lobo segue o faro de quem derrubou, base como refúgio com o lobo esperando à porta (esperar, fundos ou frente), guardiões reagem a quem chega ferido ou envenenado. Sumir na mata (F) e moita das bases implementados. Itens adiados. Ainda local, aguardando o usuário fechar ([regras](docs/sistemas/consequencias_v1.md)) |
 | 22/10/2026 | Demanda 5 aprovada e integrada: 20 perguntas por guardião, dilemas em vez de estereótipos, textos de armadilha na trilha. Marta começa com −2. Ondas no mapa mostram de onde vêm os sons |
 | 22/10/2026 | Tela de configurações (névoa, tracejado das trilhas, alcance dos animais) e tutorial "Como jogar". Jogo mais difícil: panela ruim −3, opção de não comer, afinidade alta só no máximo, Marta e Bento começam desconfiados, gesto de mentira nem sempre percebido. Armadilhas no mapa. Desempenho no navegador e sons mais altos |
 | 22/10/2026 | Demanda 5 criada para o ChatGPT: perguntas dos guardiões menos previsíveis, 6 novas por guardião e textos de armadilha |

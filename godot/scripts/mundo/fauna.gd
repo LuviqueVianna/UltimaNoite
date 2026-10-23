@@ -24,6 +24,9 @@ class Animal extends RefCounted:
 	var ignora := {}            # id do personagem -> até quando o animal o ignora
 	var ouviu := {}             # cobra: há quanto tempo cada um está parado perto dela
 	var avisado := {}           # cobra: quando cada um ouviu o chacoalhar nesta passagem
+	var faro_de := -1           # lobo: id de quem ele já seguiu pelo faro neste encontro
+	var porta := -1             # lobo: nó da base em cuja porta está esperando
+	var atraso := 0.0           # lobo: recuo depois de derrubar, antes de farejar
 	var sinal := ""             # o que o animal está fazendo agora, para o desenho ("piou", "latiu"...)
 	var sinal_ate := 0.0
 
@@ -137,7 +140,8 @@ func _lobo(a: Animal, dt: float, andou: Dictionary) -> void:
 			if a.caminho.is_empty():
 				a.caminho = _caminho_ate(a.pos, _no_perto_de(a.casa, Regras.LOBO_RONDA_M))
 			_andar(a, dt, vel)
-			var p := _quem_esta_perto(a, Regras.LOBO_VE_M)
+			# Quem está oculto (sumiu na mata ou na moita) passa despercebido pelo lobo que ronda.
+			var p := _quem_esta_perto(a, Regras.LOBO_VE_M, true)
 			if p == null:
 				return
 			if _protegido(p):
@@ -158,8 +162,12 @@ func _lobo(a: Animal, dt: float, andou: Dictionary) -> void:
 			p.fatos_noite["lobo_avancou"] = true
 			_falar(p, "lobo_rosna")
 			mundo.som.emit("lobo_rosna", a.pos)
-			if not p.eh_jogador and _computador_para(p, p.perfil == "cauteloso"):
-				p.espera = maxf(p.espera, Regras.LOBO_ROSNA_S + 0.4)
+			if not p.eh_jogador:
+				# Fica parado, ou some na mata se ainda puder
+				if _computador_para(p, p.perfil == "cauteloso"):
+					p.espera = maxf(p.espera, Regras.LOBO_ROSNA_S + 0.4)
+				elif p.perfil != "ousado":
+					p.sumir()
 		"rosnando":
 			var p: Personagem = mundo.personagens[a.alvo]
 			a.mexeu += andou.get(p.id, 0.0)
@@ -167,12 +175,15 @@ func _lobo(a: Animal, dt: float, andou: Dictionary) -> void:
 			if a.pos.distance_to(p.pos) > 5.0:
 				a.pos = a.pos.move_toward(p.pos, Regras.LOBO_VEL * dt)
 			a.relogio -= dt
-			if a.mexeu > 1.0 and not _protegido(p):
+			if p.oculto() or _fora_da_noite(p):
+				# Sumiu na mata diante dele: o lobo perde o interesse, como se tivesse ficado parado.
+				if not p.fatos_noite.has("lobo_reacao"):
+					p.fatos_noite["lobo_reacao"] = "ficou"
+				_falar(p, "lobo_desiste")
+				_voltar_a_rondar(a, 45.0)
+			elif a.mexeu > 1.0 and not _protegido(p):
 				p.fatos_noite["lobo_reacao"] = "correu"
-				a.estado = "perseguindo"
-				a.relogio = Regras.LOBO_PERSEGUE_S
-				a.caminho = []
-				_ouvir("lobo_atacou", a.pos, p.id, Regras.OUVE_M)
+				_perseguir(a, p)
 			elif a.relogio <= 0.0 or _protegido(p):
 				if not p.fatos_noite.has("lobo_reacao"):
 					p.fatos_noite["lobo_reacao"] = "ficou"
@@ -181,18 +192,135 @@ func _lobo(a: Animal, dt: float, andou: Dictionary) -> void:
 		"perseguindo":
 			var p: Personagem = mundo.personagens[a.alvo]
 			a.relogio -= dt
-			if _protegido(p) or a.relogio <= 0.0:
-				if _protegido(p) and not p.registrou():
-					_falar(p, "lobo_escapou")
+			if _fora_da_noite(p):
+				_esquecer(a, 45.0)
+				return
+			if _protegido(p):
+				_esperar_porta(a, p)
+				return
+			if a.relogio <= 0.0:
 				_voltar_a_rondar(a, 45.0)
 				return
 			a.pos = a.pos.move_toward(p.pos, Regras.LOBO_VEL_ATAQUE * dt)
 			if a.pos.distance_to(p.pos) <= 1.5:
-				p.espera = maxf(p.espera, Regras.nivel(Regras.PRESO_S, p.nivel("forca")))
-				p.lento_s = Regras.LENTO_S * (1.0 - Regras.nivel(Regras.REDUZ_LENTIDAO, p.nivel("resistencia")))
-				p.fatos_noite["lobo_derrubou"] = true
-				_falar(p, "lobo_derruba")
-				_voltar_a_rondar(a, 60.0)
+				_derrubar(a, p)
+		"farejando":
+			# Segue o rastro de quem derrubou: esconder-se ou sumir na mata não adianta.
+			var p: Personagem = mundo.personagens[a.alvo]
+			if _fora_da_noite(p):
+				_esquecer(a, 45.0)
+				return
+			if a.atraso > 0.0:
+				a.atraso -= dt
+				return
+			a.relogio -= dt
+			if _protegido(p):
+				_esperar_porta(a, p)
+				return
+			if a.relogio <= 0.0:
+				_falar(p, "lobo_desiste_faro")
+				_esquecer(a, 45.0)
+				return
+			a.pos = a.pos.move_toward(p.pos, Regras.LOBO_FARO_VEL * p.velocidade_normal() * dt)
+			if a.pos.distance_to(p.pos) <= 1.5:
+				_derrubar(a, p)
+		"porta":
+			# Não entra na base: fica rondando a porta até cansar. Quem sai pela frente é perseguido.
+			var p: Personagem = mundo.personagens[a.alvo]
+			if _fora_da_noite(p):
+				_esquecer(a, 45.0)
+				return
+			a.relogio -= dt
+			if not _protegido(p):
+				_perseguir(a, p)
+				return
+			if a.relogio <= 0.0:
+				_falar(p, "lobo_cansou")
+				_esquecer(a, 60.0)
+				return
+			if a.caminho.is_empty():
+				# Anda de um lado para o outro diante da porta
+				var c := mundo.mapa.pos(a.porta)
+				a.caminho = [c + Vector2.from_angle(mundo.rng.randf() * TAU) * Regras.LOBO_ESPERA_DIST_M]
+			_andar(a, dt, Regras.LOBO_VEL * 0.6)
+
+
+func _perseguir(a: Animal, p: Personagem) -> void:
+	a.estado = "perseguindo"
+	a.relogio = Regras.LOBO_PERSEGUE_S
+	a.caminho = []
+	_ouvir("lobo_atacou", a.pos, p.id, Regras.OUVE_M)
+
+
+## Derruba. Da primeira vez, depois recua e segue o faro de quem derrubou; da segunda, vai embora.
+func _derrubar(a: Animal, p: Personagem) -> void:
+	p.espera = maxf(p.espera, Regras.nivel(Regras.PRESO_S, p.nivel("forca")))
+	p.lento_s = Regras.LENTO_S * (1.0 - Regras.nivel(Regras.REDUZ_LENTIDAO, p.nivel("resistencia")))
+	p.ferido_s = Regras.FERIDO_S
+	p.oculto_s = 0.0
+	p.fatos_noite["lobo_derrubou"] = true
+	_falar(p, "lobo_derruba")
+	if a.faro_de == p.id:
+		_esquecer(a, 60.0)
+		return
+	a.faro_de = p.id
+	a.estado = "farejando"
+	a.relogio = Regras.LOBO_FARO_S
+	a.atraso = Regras.nivel(Regras.PRESO_S, p.nivel("forca")) + Regras.LOBO_FARO_ATRASO_S
+	a.caminho = []
+	a.pos = a.pos + (a.pos - p.pos).normalized() * 6.0 if a.pos != p.pos else a.pos + Vector2(6, 0)
+	_falar(p, "lobo_fareja")
+
+
+func _esperar_porta(a: Animal, p: Personagem) -> void:
+	var no := mundo.mapa.no_mais_proximo(p.pos, 6.0, func(n): return mundo.mapa.nos[n]["base"] != "")
+	a.estado = "porta"
+	a.porta = no
+	a.relogio = Regras.LOBO_ESPERA_PORTA_S
+	a.caminho = []
+	if a.pos.distance_to(mundo.mapa.pos(no)) < Regras.LOBO_ESPERA_DIST_M:
+		a.pos = mundo.mapa.pos(no) + (a.pos - mundo.mapa.pos(no)).normalized() * Regras.LOBO_ESPERA_DIST_M
+	p.fatos_noite["lobo_esperou_porta"] = true
+	_falar(p, "lobo_porta")
+	mundo.refugio.emit(p)
+
+
+## O lobo que segue o faro de p (ou null).
+func lobo_no_faro(p: Personagem) -> Animal:
+	for a in animais:
+		if a.tipo == "lobo" and a.estado == "farejando" and a.alvo == p.id:
+			return a
+	return null
+
+
+## O lobo que está à porta esperando por p (ou null).
+func lobo_a_porta(p: Personagem) -> Animal:
+	for a in animais:
+		if a.tipo == "lobo" and a.estado == "porta" and a.alvo == p.id:
+			return a
+	return null
+
+
+## Sair pelos fundos com o lobo à porta. Furtividade dá chance de ele não perceber.
+## Devolve true se escapou; senão o lobo segue esperando e persegue quem puser o pé para fora.
+func sair_fundos(p: Personagem) -> bool:
+	var a := lobo_a_porta(p)
+	if a == null:
+		return true
+	if mundo.rng.randf() < Regras.nivel(Regras.LOBO_PERCEBE_FUNDOS, p.nivel("furtividade")):
+		p.fatos_noite["saiu_fundos"] = "percebido"
+		_falar(p, "lobo_fundos_falhou")
+		return false
+	p.fatos_noite["saiu_fundos"] = "escapou"
+	_falar(p, "lobo_fundos_ok")
+	_esquecer(a, 60.0)
+	return true
+
+
+func _esquecer(a: Animal, ignora_s: float) -> void:
+	a.faro_de = -1
+	a.porta = -1
+	_voltar_a_rondar(a, ignora_s)
 
 
 func _voltar_a_rondar(a: Animal, ignora_s: float) -> void:
@@ -205,10 +333,14 @@ func _voltar_a_rondar(a: Animal, ignora_s: float) -> void:
 
 ## Dentro de uma base (ou já fora da noite) ninguém é atacado.
 func _protegido(p: Personagem) -> bool:
-	if p.registrou():
+	if _fora_da_noite(p):
 		return true
 	var no := mundo.mapa.no_mais_proximo(p.pos, 6.0, func(n): return mundo.mapa.nos[n]["base"] != "")
 	return no >= 0
+
+
+func _fora_da_noite(p: Personagem) -> bool:
+	return p.registrou() or p.desmaiado
 
 
 # ---------------- Coruja ----------------
@@ -337,7 +469,7 @@ func _soltar_cao(a: Animal, ignora_s: float) -> void:
 
 func _cobra(a: Animal, dt: float, andou: Dictionary) -> void:
 	for p in mundo.personagens:
-		if p.registrou():
+		if _fora_da_noite(p):
 			continue
 		var d: float = p.pos.distance_to(a.pos)
 		if d > cobra_aviso_m(p):
@@ -358,7 +490,7 @@ func _cobra(a: Animal, dt: float, andou: Dictionary) -> void:
 		if mexeu:
 			a.ouviu[p.id] = 0.0
 			if d <= Regras.COBRA_PICA_M:
-				var r: String = p.envenenar(mundo.rng)
+				var r: String = mundo.envenenar(p)
 				p.fatos_noite["cobra_picou"] = true
 				p.fatos_noite["cobra_reacao"] = "passou"
 				_ouvir("cobra_picou", a.pos, p.id, Regras.OUVE_M)
@@ -413,11 +545,15 @@ func _lugar_da_cobra() -> Vector2:
 # ---------------- Comum ----------------
 
 ## Personagem mais próximo dentro do alcance que o animal ainda não está ignorando.
-func _quem_esta_perto(a: Animal, alcance: float) -> Personagem:
+## sem_ocultos: ignora quem está oculto (o lobo). Coruja e cão percebem quem sumiu na mata,
+## mas ninguém percebe quem está agachado na moita.
+func _quem_esta_perto(a: Animal, alcance: float, sem_ocultos := false) -> Personagem:
 	var melhor: Personagem = null
 	var melhor_d := alcance
 	for p in mundo.personagens:
-		if p.registrou() or mundo.tempo < a.ignora.get(p.id, -1.0):
+		if _fora_da_noite(p) or mundo.tempo < a.ignora.get(p.id, -1.0):
+			continue
+		if p.escondido != "" or (sem_ocultos and p.oculto()):
 			continue
 		var d: float = p.pos.distance_to(a.pos)
 		if d <= melhor_d:

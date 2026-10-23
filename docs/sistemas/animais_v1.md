@@ -19,7 +19,8 @@ Regra comum: **quem fica parado diante do perigo se sai melhor que quem corre.**
 ## Lobo
 - Percebe quem está a até **16 m**. Nunca ataca dentro de uma base nem quem já registrou a chegada.
 - **Rosna por 2,5 s** e avança devagar até uns 5 m. Se a pessoa **ficar parada** o tempo todo, o lobo perde o interesse e se afasta.
-- Se a pessoa **se mexer**, ele **persegue a 7 m/s** por até 15 s. Desiste se ela chegar a uma base.
+- Se a pessoa **se mexer**, ele **persegue a 7 m/s** por até 15 s. Se ela chegar a uma base, ele não entra e **espera à porta** (23/10/2026).
+- Depois de derrubar, **segue o faro** da pessoa por 40 s; esconder-se não adianta. Regras em `docs/sistemas/consequencias_v1.md`.
 - Ao alcançar: **derruba** (preso pelo tempo da tabela de Força) e depois a pessoa anda **pela metade da velocidade por 10 s** (reduzido pela Resistência, como na armadilha).
 - Uiva de tempos em tempos (evento à distância). Um ataque também é ouvido por quem estiver perto.
 - Depois de rosnar para alguém, ignora essa pessoa por 45 s; depois de derrubar, por 60 s.
