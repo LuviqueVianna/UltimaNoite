@@ -259,6 +259,7 @@ func _derrubar(a: Animal, p: Personagem) -> void:
 	p.ferido_s = Regras.FERIDO_S
 	p.oculto_s = 0.0
 	p.fatos_noite["lobo_derrubou"] = true
+	mundo.som.emit("lobo_derrubou", p.pos)
 	_falar(p, "lobo_derruba")
 	if a.faro_de == p.id:
 		_esquecer(a, 60.0)

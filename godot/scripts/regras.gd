@@ -145,7 +145,9 @@ const SONS := {
 	"coruja_piou": {"arquivos": ["coruja_1", "coruja_2", "coruja_3"], "alcance": 250.0, "onda": true},
 	"cao_latiu": {"arquivos": ["cao_late_1", "cao_late_2", "cao_late_3"], "alcance": 250.0, "onda": true},
 	"cobra_folhas": {"arquivos": ["cobra_folhas"], "alcance": 15.0},
-	"armadilha": {"arquivos": ["armadilha"], "alcance": 250.0, "onda": true},
+	"armadilha": {"arquivos": ["armadilha_mola"], "alcance": 250.0, "onda": true},   # 23/10: mola de ferro + galho
+	"cobra_picou": {"arquivos": ["cobra_pica"], "alcance": 250.0, "onda": true},     # 23/10: antes era só texto
+	"lobo_derrubou": {"arquivos": ["lobo_morde"], "alcance": 250.0, "onda": true},   # 23/10: antes era só texto
 }
 
 # ---- Consequências mais pesadas (docs/sistemas/consequencias_v1.md, aprovado em 23/10/2026). Provisórios. ----
