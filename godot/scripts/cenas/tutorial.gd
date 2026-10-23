@@ -52,7 +52,7 @@ O [b]veneno[/b] (panela ruim ou picada de cobra) tira 1 ponto da sua maior habil
 • [b]Cobra:[/b] fica escondida nas trilhas. Ouviu folhas secas chacoalhando? Pare e espere: ela vai embora. Se continuar andando até perto dela, leva uma picada com veneno.
 • [b]Cão sem dono:[/b] se abanar o rabo e esperar, chegue perto e ele leva você até uma base que você ainda não visitou. Se ficar inquieto, ele late, e todos por perto ouvem onde você está.
 • [b]Coruja:[/b] quando nota você, pia, e quem estiver por perto sabe de onde veio o pio. Às vezes, em vez de piar, ela vira a cabeça para onde há outra pessoa.
-• [b]Armadilhas:[/b] laços e molas escondidos nas trilhas, mais ainda no fim dos caminhos sem saída. Quem tem Inteligência nota antes e passa por elas; quem pisa fica preso (menos tempo com Força) e depois anda devagar. Uma armadilha disparada fica à vista de todos.
+• [b]Armadilhas:[/b] laços e molas escondidos nas trilhas, mais ainda no fim dos caminhos sem saída. Com Inteligência há chance de notar antes e passar por elas (10% a 70%; com Inteligência 1, nunca); quem pisa fica preso (menos tempo com Força) e depois anda devagar. Uma armadilha disparada fica à vista de todos.
 
 Uivos, pios, latidos e o estalo de uma armadilha soam do lado de onde aconteceram."""
 	},

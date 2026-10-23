@@ -116,6 +116,7 @@ Referência de escala: velocidade na trilha de 1,5 m/s; trechos de trilha de 20 
 | Inteligência | Alcance de vista | 8 m | 11 m | 14 m | 17 m | 20 m |
 | Inteligência | Tempo que pegadas vistas e trechos vistos de longe ficam no mapa | 30 s | 45 s | 60 s | 90 s | 120 s |
 | Inteligência | Distância para notar uma armadilha | só ao pisar | 2 m | 3 m | 4 m | 5 m |
+| Inteligência | Chance de notar a armadilha ao chegar a essa distância (decidido em 23/10/2026; antes, notava sempre) | 0% | 10% | 30% | 50% | 70% |
 | Furtividade | Usos do "sumir na mata" por noite | 1 | 1 | 2 | 2 | 3 |
 | Furtividade | Tempo que suas pegadas ficam visíveis para os outros (ajustado em 20/10/2026) | 20 s | 19 s | 18 s | 16,5 s | 15 s |
 | Furtividade | Leitura de pegadas alheias (cumulativa) | alguém passou + calçado | + direção | + recente ou antiga | + pegadas fracas de quem andou oculto | + quantas pessoas passaram |

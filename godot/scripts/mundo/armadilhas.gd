@@ -1,7 +1,8 @@
 class_name Armadilhas
 extends RefCounted
 ## Armadilhas escondidas nas trilhas (docs/MVP_v0.4.md, seção 6).
-## Ficam ocultas até alguém pisar nelas ou percebê-las (distância pela Inteligência).
+## Ficam ocultas até alguém pisar nelas ou percebê-las. Ao chegar à distância de notar, cada um tem
+## uma chance só, pela Inteligência (0% a 70%); quem não notou pisa (decidido em 23/10/2026).
 ## Quem pisa fica preso (tempo pela Força) e depois lento (duração reduzida pela Resistência).
 ## Quem já viu uma armadilha passa por ela sem disparar. Disparada, ela fica à vista de todos.
 
@@ -12,6 +13,7 @@ class Armadilha extends RefCounted:
 	var local := "trilha"        # trilha | beco (escolhe o texto de descoberta)
 	var disparada := false
 	var vista_por := {}          # id do personagem -> true
+	var falhou := {}             # id do personagem -> true: chegou perto e não notou nesta passagem
 
 
 var mundo: Mundo
@@ -63,11 +65,16 @@ func tick() -> void:
 		if p.registrou():
 			continue
 		var notar: float = Regras.nivel(Regras.NOTAR_ARMADILHA, p.nivel("inteligencia"))
+		var chance: float = Regras.nivel(Regras.CHANCE_NOTAR, p.nivel("inteligencia"))
 		for a in lista:
 			if a.disparada or a.vista_por.has(p.id):
 				continue
 			var d: float = p.pos.distance_to(a.pos)
-			if d <= notar:
+			if d > notar + 4.0:
+				a.falhou.erase(p.id)   # afastou-se: na próxima passagem tem nova chance
+			if d <= notar and not a.falhou.has(p.id) and mundo.rng.randf() >= chance:
+				a.falhou[p.id] = true
+			if d <= notar and not a.falhou.has(p.id):
 				a.vista_por[p.id] = true
 				p.fatos_noite["notou_armadilha"] = true
 				_falar(p, a, "armadilha_notada", "Você nota uma armadilha escondida na trilha e passa por ela com cuidado.")

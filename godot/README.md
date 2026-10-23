@@ -28,6 +28,7 @@ godot --headless --path godot -s res://testes/teste_etapa1.gd
 godot --headless --path godot -s res://testes/teste_etapa2.gd
 godot --headless --path godot -s res://testes/teste_cena.gd
 godot --headless --path godot -s res://testes/teste_consequencias.gd
+godot --headless --path godot -s res://testes/teste_armadilhas.gd
 ```
 
 ## Organização
