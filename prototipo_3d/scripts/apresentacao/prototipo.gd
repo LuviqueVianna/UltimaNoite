@@ -7,10 +7,17 @@ const Vegetacao := preload("res://scripts/apresentacao/vegetacao.gd")
 const Cabana := preload("res://scripts/apresentacao/cabana_bento.gd")
 const PegadasView := preload("res://scripts/apresentacao/pegadas_view.gd")
 const PersonagemView := preload("res://scripts/apresentacao/personagem_view.gd")
+const Grilos := preload("res://scripts/apresentacao/grilos.gd")
 const CHAO_SHADER := preload("res://shaders/chao.gdshader")
 
 const ELEVACAO := deg_to_rad(35.0)
 const DISTANCIA := 70.0
+# terceira pessoa: câmera atrás do ombro, à altura de quem anda pela trilha
+const ALTURA_OLHO := 1.65
+const OMBRO := 0.45
+const SENSIBILIDADE := 0.0025
+const SEGUE := 3.0          # quão rápido a câmera volta para trás do personagem quando ele anda
+const PAUSA_MOUSE := 1.2    # segundos sem mexer o mouse antes de a câmera voltar a seguir
 
 var mundo
 var jogador
@@ -18,6 +25,7 @@ var outro
 var pausado := false
 var ver_tudo := false
 var fade_ativo := true
+var terceira := false             # false = isométrica (padrão), true = terceira pessoa (tecla C)
 
 var _camera: Camera3D
 var _azimute := PI / 4.0
@@ -37,6 +45,12 @@ var _ajuda: Label
 var _visiveis := 0
 var _escalas := [1.0, 1.5, 2.0]
 var _escala_i := 1
+var _inclinacao := deg_to_rad(-12.0)   # olhar para baixo (negativo) ou para cima, na terceira pessoa
+var _distancia_3p := 3.2
+var _fade_antes := true
+var _desde_mouse := 10.0
+var _vagalumes: GPUParticles3D
+var _grilos: Node3D
 
 
 func _ready() -> void:
@@ -62,6 +76,13 @@ func _ready() -> void:
 	_pegadas_do_dono()
 	_montar_personagens()
 	_montar_camera()
+	_montar_vagalumes()
+	_grilos = Grilos.new()
+	_grilos.name = "Grilos"
+	_grilos.mundo = mundo
+	_grilos.jogador = jogador
+	add_child(_grilos)
+	_grilos.montar()
 	_montar_hud()
 	var args := OS.get_cmdline_user_args()
 	var i := args.find("--captura")
@@ -228,7 +249,7 @@ func _montar_personagens() -> void:
 	jogador = mundo.criar_personagem("jogador", "bota", mundo.ponto_da_trilha(0, 0.12))
 	var jv := PersonagemView.new()
 	jv.personagem = jogador
-	jv.cor_roupa = Color(0.38, 0.34, 0.28)
+	jv.estilo = "jovem"
 	add_child(jv)
 	_luz_visao = OmniLight3D.new()
 	_luz_visao.position = Vector3(0, 3.0, 0)
@@ -245,8 +266,58 @@ func _montar_personagens() -> void:
 	outro.rota = rota
 	_outro_view = PersonagemView.new()
 	_outro_view.personagem = outro
-	_outro_view.cor_roupa = Color(0.3, 0.32, 0.36)
+	_outro_view.estilo = "roceiro"
 	add_child(_outro_view)
+
+
+## Vagalumes: pontos amarelo-esverdeados que piscam em volta do jogador, rente ao mato.
+func _montar_vagalumes() -> void:
+	_vagalumes = GPUParticles3D.new()
+	_vagalumes.name = "Vagalumes"
+	_vagalumes.amount = 140
+	_vagalumes.lifetime = 7.0
+	_vagalumes.preprocess = 7.0
+	_vagalumes.local_coords = false
+	_vagalumes.visibility_aabb = AABB(Vector3(-30, -2, -30), Vector3(60, 8, 60))
+	var pm := ParticleProcessMaterial.new()
+	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
+	pm.emission_box_extents = Vector3(22, 1.2, 22)
+	pm.direction = Vector3(0, 1, 0)
+	pm.spread = 180.0
+	pm.initial_velocity_min = 0.05
+	pm.initial_velocity_max = 0.3
+	pm.gravity = Vector3(0, 0.02, 0)
+	pm.turbulence_enabled = true
+	pm.turbulence_noise_strength = 0.6
+	pm.turbulence_noise_scale = 4.0
+	# cada vagalume pisca duas ou três vezes na vida
+	var grad := Gradient.new()
+	grad.offsets = PackedFloat32Array([0.0, 0.12, 0.2, 0.3, 0.45, 0.52, 0.62, 0.8, 0.86, 0.95, 1.0])
+	var on := Color(4.0, 4.8, 1.2, 1.0)
+	var off := Color(0.0, 0.0, 0.0, 0.0)
+	grad.colors = PackedColorArray([off, off, on, off, off, on, off, off, on, off, off])
+	var gt := GradientTexture1D.new()
+	gt.gradient = grad
+	pm.color_ramp = gt
+	_vagalumes.process_material = pm
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.12, 0.12)
+	var m := StandardMaterial3D.new()
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	m.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	m.vertex_color_use_as_albedo = true
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	var img := Image.create(16, 16, false, Image.FORMAT_RGBA8)
+	for y in 16:
+		for x in 16:
+			var d := Vector2(x - 7.5, y - 7.5).length() / 7.5
+			img.set_pixel(x, y, Color(1, 1, 1, clampf(1.0 - d, 0.0, 1.0) ** 1.5))
+	m.albedo_texture = ImageTexture.create_from_image(img)
+	quad.material = m
+	_vagalumes.draw_pass_1 = quad
+	_vagalumes.position = Vector3(jogador.pos.x, 1.0, jogador.pos.y)
+	add_child(_vagalumes)
 
 
 func _montar_camera() -> void:
@@ -261,6 +332,9 @@ func _montar_camera() -> void:
 
 
 func _posicionar_camera(t: float) -> void:
+	if terceira:
+		_posicionar_terceira(t)
+		return
 	var alvo := Vector3(jogador.pos.x, 0.8, jogador.pos.y)
 	_foco = _foco.lerp(alvo, t)
 	_azimute = lerp_angle(_azimute, _azimute_alvo, t)
@@ -272,6 +346,75 @@ func _posicionar_camera(t: float) -> void:
 	# a abertura na mata acompanha o zoom: perto, só as árvores coladas; longe, um pouco mais
 	RenderingServer.global_shader_parameter_set("raio_corte", clampf(_camera.size * 0.16, 2.8, 9.0))
 	_orientar_lua()
+
+
+## Câmera atrás do ombro direito. O mouse gira (_azimute) e inclina (_inclinacao).
+## A lua fica parada no céu: só a câmera isométrica gira a lua junto, para ela ficar sempre no canto da tela.
+func _posicionar_terceira(t: float) -> void:
+	_azimute = _azimute_alvo
+	var cabeca := Vector3(jogador.pos.x, ALTURA_OLHO, jogador.pos.y)
+	var atras := Vector3(sin(_azimute), 0, cos(_azimute))
+	var direita := Vector3(cos(_azimute), 0, -sin(_azimute))
+	var dir_olhar := (-atras * cos(_inclinacao) + Vector3.UP * sin(_inclinacao)).normalized()
+	var alvo := cabeca + direita * OMBRO
+	var pos := alvo - dir_olhar * _distancia_3p
+	pos.y = maxf(pos.y, 0.4)
+	_foco = _foco.lerp(pos, t) if t < 1.0 else pos
+	_camera.look_at_from_position(_foco, _foco + dir_olhar, Vector3.UP)
+	RenderingServer.global_shader_parameter_set("camera_dir", -_camera.global_basis.z)
+	RenderingServer.global_shader_parameter_set("jogador_pos", Vector3(jogador.pos.x, 1.0, jogador.pos.y))
+
+
+## Enquanto o personagem anda, a câmera gira aos poucos até ficar atrás dele.
+## Andando de costas (só S) ela não gira, para não ficar dando voltas; mexer o mouse suspende por um instante.
+func _seguir_por_tras(dt: float) -> void:
+	_desde_mouse += dt
+	if not jogador.andando or _desde_mouse < PAUSA_MOUSE:
+		return
+	var so_re := (Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN)) \
+		and not (Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP))
+	if so_re:
+		return
+	var atras: float = atan2(-jogador.direcao.x, -jogador.direcao.y)
+	_azimute_alvo = lerp_angle(_azimute_alvo, atras, 1.0 - exp(-SEGUE * dt))
+
+
+func _trocar_camera() -> void:
+	terceira = not terceira
+	if terceira:
+		_fade_antes = fade_ativo
+		_definir_fade(false)   # por baixo das copas não é preciso sumir com árvores
+		_camera.projection = Camera3D.PROJECTION_PERSPECTIVE
+		_camera.fov = 68.0
+		_camera.near = 0.1
+		_camera.far = 110.0
+		_azimute_alvo = _azimute
+		_foco = _camera.global_position
+		# neblina de distância: esconde o fim da mata e poupa o desenho do que está longe
+		_ambiente.fog_enabled = true
+		_ambiente.fog_mode = Environment.FOG_MODE_EXPONENTIAL
+		# névoa azul-esverdeada: os troncos de longe viram silhuetas contra ela, dando fundo e cor à mata
+		_ambiente.fog_light_color = Color(0.07, 0.12, 0.13)
+		_ambiente.fog_density = 0.03
+		_ambiente.fog_sky_affect = 1.0
+		_luz_visao.position = Vector3(0, 2.6, 0.6)
+		_luz_visao.omni_range = 9.0
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	else:
+		_definir_fade(_fade_antes)
+		_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+		_camera.near = 1.0
+		_camera.far = 400.0
+		_azimute_alvo = round((_azimute - PI / 4.0) / (PI / 2.0)) * (PI / 2.0) + PI / 4.0
+		_foco = Vector3(jogador.pos.x, 0.8, jogador.pos.y)
+		_ambiente.fog_density = 0.0
+		_ambiente.fog_enabled = _web
+		if _web:
+			_ambiente.fog_light_color = Color(0.09, 0.13, 0.16)
+		_luz_visao.position = Vector3(0, 3.0, 0)
+		_luz_visao.omni_range = 10.0
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_posicionar_camera(1.0)
 
 
 func _montar_hud() -> void:
@@ -290,8 +433,14 @@ func _montar_hud() -> void:
 	_ajuda.add_theme_color_override("font_color", Color(0.7, 0.68, 0.62))
 	_ajuda.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.8))
 	_ajuda.add_theme_font_size_override("font_size", 14)
-	_ajuda.text = "WASD/setas: andar · roda: zoom · Q/E: girar câmera · F: mata transparente · N: névoa · L: luz de visão · P: tamanho das pegadas · V: ver tudo · H: esconder textos"
+	_ajuda.text = _texto_ajuda()
 	cl.add_child(_ajuda)
+
+
+func _texto_ajuda() -> String:
+	if terceira:
+		return "WASD/setas: andar · mouse: olhar · roda: aproximar · C: câmera isométrica · Esc: soltar o mouse · N: névoa · L: luz de visão · P: tamanho das pegadas · H: esconder textos"
+	return "WASD/setas: andar · roda: zoom · Q/E: girar câmera · C: terceira pessoa · F: mata transparente · N: névoa · L: luz de visão · P: tamanho das pegadas · V: ver tudo · H: esconder textos"
 
 
 # ---------------- laço ----------------
@@ -301,6 +450,9 @@ func _process(dt: float) -> void:
 		mundo.atualizar(dt)
 		mundo.mover(jogador, _entrada(), dt)
 		mundo.seguir_rota(outro, dt)
+	if terceira:
+		_seguir_por_tras(dt)
+	_vagalumes.position = Vector3(jogador.pos.x, 1.0, jogador.pos.y)
 	_posicionar_camera(min(1.0, dt * 6.0))
 	_atualizar_visao(dt)
 	_atualizar_hud()
@@ -329,21 +481,40 @@ func _entrada() -> Vector2:
 
 
 func _unhandled_input(ev: InputEvent) -> void:
+	if terceira and ev is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		_azimute_alvo -= ev.relative.x * SENSIBILIDADE
+		_desde_mouse = 0.0
+		_inclinacao = clampf(_inclinacao - ev.relative.y * SENSIBILIDADE, deg_to_rad(-50.0), deg_to_rad(25.0))
 	if ev is InputEventMouseButton and ev.pressed:
+		if terceira and ev.button_index == MOUSE_BUTTON_LEFT:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		if ev.button_index == MOUSE_BUTTON_WHEEL_UP:
-			_zoom = max(6.0, _zoom * 0.88)
+			if terceira:
+				_distancia_3p = maxf(1.6, _distancia_3p * 0.9)
+			else:
+				_zoom = max(6.0, _zoom * 0.88)
 		elif ev.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			_zoom = min(110.0, _zoom * 1.14)
+			if terceira:
+				_distancia_3p = minf(7.0, _distancia_3p * 1.1)
+			else:
+				_zoom = min(110.0, _zoom * 1.14)
 	if ev is InputEventKey and ev.pressed and not ev.echo:
 		match ev.physical_keycode:
+			KEY_C:
+				_trocar_camera()
+				_ajuda.text = _texto_ajuda()
+			KEY_ESCAPE:
+				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			KEY_Q:
-				_azimute_alvo -= PI / 2.0
+				if not terceira:
+					_azimute_alvo -= PI / 2.0
 			KEY_E:
-				_azimute_alvo += PI / 2.0
+				if not terceira:
+					_azimute_alvo += PI / 2.0
 			KEY_F:
 				_definir_fade(not fade_ativo)
 			KEY_N:
-				if _web:
+				if _web or terceira:
 					_ambiente.fog_enabled = not _ambiente.fog_enabled
 				else:
 					_ambiente.volumetric_fog_enabled = not _ambiente.volumetric_fog_enabled
@@ -366,7 +537,8 @@ func _definir_fade(ativo: bool) -> void:
 
 
 func _atualizar_hud() -> void:
-	_hud.text = "A Última Noite — protótipo técnico 3D\n%d FPS · %d chamadas de desenho · %d mil triângulos\nMata: %d árvores e plantas · pegadas à vista: %d (tamanho %.1fx)\nOutro personagem: %s\nMata transparente: %s · névoa: %s · luz de visão: %s" % [
+	_hud.text = "A Última Noite — protótipo técnico 3D · câmera %s\n%d FPS · %d chamadas de desenho · %d mil triângulos\nMata: %d árvores e plantas · pegadas à vista: %d (tamanho %.1fx)\nOutro personagem: %s\nMata transparente: %s · névoa: %s · luz de visão: %s" % [
+		"em terceira pessoa" if terceira else "isométrica",
 		Engine.get_frames_per_second(),
 		Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
 		int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME) / 1000.0),
@@ -375,7 +547,7 @@ func _atualizar_hud() -> void:
 		_pegadas.escala,
 		"à vista" if _outro_view.visible else "fora de vista",
 		"sim" if fade_ativo else "não",
-		"sim" if (_ambiente.fog_enabled if _web else _ambiente.volumetric_fog_enabled) else "não",
+		"sim" if (_ambiente.fog_enabled if (_web or terceira) else _ambiente.volumetric_fog_enabled) else "não",
 		"sim" if _luz_visao.visible else "não",
 	]
 
@@ -451,5 +623,28 @@ func _captura(pasta: String) -> void:
 	jogador.pos = mundo.base_pos + Vector2(6, 6)
 	_zoom = 75.0
 	await _foto(pasta, "06_visao_geral")
+	# terceira pessoa: andando pela trilha sob a mata, olhando para a frente
+	_trocar_camera()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	jogador.pos = mundo.ponto_da_trilha(2, 0.45)
+	var adiante: Vector2 = (mundo.ponto_da_trilha(2, 0.52) - jogador.pos).normalized()
+	jogador.direcao = adiante
+	_azimute_alvo = atan2(-adiante.x, -adiante.y)
+	_inclinacao = deg_to_rad(-6.0)
+	_visiveis = _pegadas.atualizar(0.3, jogador.pos, false)
+	await _foto(pasta, "07_terceira_trilha")
+	# chegando na clareira, a cabana à frente
+	jogador.pos = mundo.base_pos + Vector2(-13.0, 7.0)
+	var para_cabana: Vector2 = (mundo.base_pos - jogador.pos).normalized()
+	jogador.direcao = para_cabana
+	_azimute_alvo = atan2(-para_cabana.x, -para_cabana.y)
+	_inclinacao = deg_to_rad(-4.0)
+	_visiveis = _pegadas.atualizar(0.3, jogador.pos, false)
+	await _foto(pasta, "08_terceira_cabana")
+	# olhando para cima: as copas fechando o céu
+	_inclinacao = deg_to_rad(22.0)
+	jogador.pos = mundo.ponto_da_trilha(2, 0.45)
+	_azimute_alvo = atan2(-adiante.x, -adiante.y)
+	await _foto(pasta, "09_terceira_copas")
 	print("FIM")
 	get_tree().quit()

@@ -19,8 +19,10 @@ Para testar em computador sem Godot. Exporte com o preset **Web** (`export_prese
 | Tecla | O que faz |
 |---|---|
 | W A S D / setas | Andar (só pelas trilhas e clareiras; a mata é parede) |
-| Roda do mouse | Aproximar e afastar |
-| Q / E | Girar a câmera 90° |
+| Roda do mouse | Aproximar e afastar (nas duas câmeras) |
+| Q / E | Girar a câmera 90° (isométrica) |
+| C | Alterna entre a câmera isométrica e a **terceira pessoa** |
+| Mouse | Olhar em volta (terceira pessoa); clique para prender o mouse, Esc para soltar |
 | F | Liga e desliga a mata transparente perto do jogador |
 | N | Liga e desliga a neblina rasteira |
 | L | Liga e desliga a luz de visão do jogador |
@@ -36,7 +38,7 @@ O canto superior esquerdo mostra FPS, chamadas de desenho e triângulos: **é o 
 - Trilhas com bifurcação e beco, uma clareira vazia e a clareira da **Cabana do Bento**, montada pela Direção de Arte v1, seção 3.1.
 - Lua cheia vinda do canto superior esquerdo da tela, luz âmbar da janela e da porta, fumaça na chaminé, neblina rasteira.
 - Jogador de **bota de couro**; outro personagem **descalço** andando sozinho pela trilha do sudeste; pegadas de **botina** do dono da casa levando à porta.
-- Câmera isométrica **ortográfica**, como aprovado para a etapa intermediária.
+- Câmera isométrica **ortográfica**, como aprovado para a etapa intermediária, e câmera em **terceira pessoa** (tecla C) para sentir a etapa futura: atrás do ombro, à altura dos olhos, com neblina de distância.
 
 Formas, cores e figuras são **provisórias** (primitivas do Godot). O protótipo testa técnica, não arte.
 

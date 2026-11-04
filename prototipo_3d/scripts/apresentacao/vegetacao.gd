@@ -42,8 +42,18 @@ func montar(arvores: Array, plantas: Array) -> void:
 			var b := Basis(Vector3.UP, it["giro"]).scaled(Vector3.ONE * float(it["escala"]))
 			var p: Vector2 = it["pos"]
 			mm.set_instance_transform(k, Transform3D(b, Vector3(p.x, 0.0, p.y)))
-			var tom := rng.randf_range(0.75, 1.2)
-			mm.set_instance_color(k, Color(tom * rng.randf_range(0.92, 1.05), tom, tom * rng.randf_range(0.9, 1.08)))
+			var tom := rng.randf_range(0.75, 1.25)
+			var c := Color(tom * rng.randf_range(0.92, 1.05), tom, tom * rng.randf_range(0.9, 1.08))
+			if tipo in ["samambaia", "moita", "bromelia"]:
+				# sub-bosque: verdes variados, algumas folhas secas e algumas avermelhadas (bromélias)
+				var r := rng.randf()
+				if r < 0.15:
+					c = Color(tom * 1.6, tom * 1.25, tom * 0.55)
+				elif r < 0.3 and tipo == "bromelia":
+					c = Color(tom * 1.9, tom * 0.8, tom * 0.7)
+				elif r < 0.5:
+					c = Color(tom * 0.8, tom * 1.15, tom * 0.85)
+			mm.set_instance_color(k, c)
 		var mmi := MultiMeshInstance3D.new()
 		mmi.name = "Mata_" + chave.replace("|", "_")
 		mmi.multimesh = mm
@@ -58,6 +68,7 @@ func montar(arvores: Array, plantas: Array) -> void:
 var _altura := 10.0
 var _corta := 1.0
 var _copa := 2.5
+var _casca := 0.0
 
 
 func _mat(cor: Color, vento: float = 1.0, translucidez: float = 0.25, rugosidade: float = 0.0) -> ShaderMaterial:
@@ -66,11 +77,18 @@ func _mat(cor: Color, vento: float = 1.0, translucidez: float = 0.25, rugosidade
 	m.set_shader_parameter("altura_copa", _altura)
 	m.set_shader_parameter("corta", _corta)
 	m.set_shader_parameter("raio_copa", _copa)
+	m.set_shader_parameter("casca", _casca)
+	_casca = 0.0
 	m.set_shader_parameter("rugosidade", rugosidade)
 	m.set_shader_parameter("cor", cor)
 	m.set_shader_parameter("vento", vento)
 	m.set_shader_parameter("translucidez", translucidez)
 	return m
+
+
+func _tronco(cor: Color, vento: float, tipo: float) -> ShaderMaterial:
+	_casca = tipo
+	return _mat(cor, vento)
 
 
 func _juntar(grupos: Array) -> ArrayMesh:
@@ -136,7 +154,7 @@ func _comum() -> ArrayMesh:
 	_copa = 4.0
 	_altura = 10.0
 	_corta = 1.0
-	var tronco := [[_cilindro(0.22, 0.12, 9.0), _em(Vector3(0, 4.5, 0))]]
+	var tronco := [[_cilindro(0.22, 0.12, 9.0, 8), _em(Vector3(0, 4.5, 0))]]
 	var copa := []
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 8
@@ -144,7 +162,7 @@ func _comum() -> ArrayMesh:
 		var g := rng.randf() * TAU
 		var r := 0.0 if k == 0 else rng.randf_range(1.0, 2.2)
 		copa.append([_esfera(rng.randf_range(1.5, 2.2), 0.75), _em(Vector3(cos(g) * r, rng.randf_range(8.0, 10.2), sin(g) * r))])
-	return _juntar([[_mat(Color(0.3, 0.26, 0.22), 0.2), tronco], [_mat(Color(0.11, 0.19, 0.13), 1.0, 0.25, 1.1), copa]])
+	return _juntar([[_tronco(Color(0.36, 0.3, 0.24), 0.2, 1.0), tronco], [_mat(Color(0.11, 0.19, 0.13), 1.0, 0.25, 1.1), copa]])
 
 
 func _jequitiba() -> ArrayMesh:
@@ -165,7 +183,7 @@ func _jequitiba() -> ArrayMesh:
 	for k in 6:
 		var g := rng.randf() * TAU
 		copa.append([_esfera(rng.randf_range(1.8, 2.6), 0.7), _em(Vector3(cos(g) * 4.8, 20.0 + rng.randf_range(-1.0, 1.5), sin(g) * 4.8))])
-	return _juntar([[_mat(Color(0.33, 0.29, 0.25), 0.1), tronco], [_mat(Color(0.09, 0.16, 0.1), 1.0, 0.25, 1.6), copa]])
+	return _juntar([[_tronco(Color(0.4, 0.35, 0.29), 0.1, 1.0), tronco], [_mat(Color(0.09, 0.16, 0.1), 1.0, 0.25, 1.6), copa]])
 
 
 func _embauba() -> ArrayMesh:
@@ -179,7 +197,7 @@ func _embauba() -> ArrayMesh:
 		var b := Basis(Vector3.UP, g) * Basis(Vector3.RIGHT, 0.35)
 		folhas.append([_esfera(1.0, 0.18), Transform3D(b.scaled(Vector3(0.7, 1, 1.5)), Vector3(0, 11.0, 0) + Basis(Vector3.UP, g) * Vector3(0, -0.3, 1.2))])
 	# folhas prateadas por baixo: refletem a lua
-	return _juntar([[_mat(Color(0.58, 0.58, 0.54), 0.3), tronco], [_mat(Color(0.36, 0.44, 0.4), 1.2, 0.4), folhas]])
+	return _juntar([[_tronco(Color(0.62, 0.62, 0.57), 0.3, 2.0), tronco], [_mat(Color(0.36, 0.44, 0.4), 1.2, 0.4), folhas]])
 
 
 func _palmeira() -> ArrayMesh:
@@ -187,7 +205,7 @@ func _palmeira() -> ArrayMesh:
 	_altura = 9.0
 	_corta = 1.0
 	var tronco := [[_cilindro(0.09, 0.07, 9.0, 5), _em(Vector3(0, 4.5, 0))]]
-	return _juntar([[_mat(Color(0.4, 0.38, 0.32), 0.4), tronco], [_mat(Color(0.12, 0.22, 0.12), 1.4), _roseta(9, 0.35, 2.8, -0.35, 9.0, 5)]])
+	return _juntar([[_tronco(Color(0.45, 0.42, 0.35), 0.4, 2.0), tronco], [_mat(Color(0.12, 0.22, 0.12), 1.4), _roseta(9, 0.35, 2.8, -0.35, 9.0, 5)]])
 
 
 func _bambu() -> ArrayMesh:
@@ -206,7 +224,7 @@ func _bambu() -> ArrayMesh:
 		var base := Vector3(rng.randf_range(-0.5, 0.5), 0, rng.randf_range(-0.5, 0.5))
 		hastes.append([_cilindro(0.06, 0.04, h, 5), Transform3D(b, base + b * Vector3(0, h / 2.0, 0))])
 		folhas.append([_esfera(1.1, 0.5), Transform3D(b, base + b * Vector3(0, h * 0.9, 0))])
-	return _juntar([[_mat(Color(0.42, 0.45, 0.28), 0.6), hastes], [_mat(Color(0.2, 0.27, 0.13), 1.5, 0.25, 0.6), folhas]])
+	return _juntar([[_tronco(Color(0.45, 0.5, 0.28), 0.6, 2.0), hastes], [_mat(Color(0.2, 0.27, 0.13), 1.5, 0.25, 0.6), folhas]])
 
 
 func _samambaia() -> ArrayMesh:

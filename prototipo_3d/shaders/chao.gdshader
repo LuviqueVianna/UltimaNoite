@@ -24,7 +24,23 @@ void fragment() {
 	float aberto = smoothstep(0.35, 0.65, m + (n2 - 0.5) * 0.35);
 	vec3 c_barro = barro * (0.75 + 0.45 * n2) * (0.9 + 0.2 * n3);
 	vec3 c_mata = mix(folhas, musgo, n1) * (0.6 + 0.6 * n2) * (0.85 + 0.3 * n3);
-	ALBEDO = mix(c_mata, c_barro, aberto);
+
+	// serapilheira: folhas secas de vários tons, mais densas na mata e espalhadas na beira das trilhas
+	float f1 = texture(ruido, fract(wxz * 0.9 + 0.37)).r;
+	float f2 = texture(ruido, fract(wxz * 2.1 + 0.71)).r;
+	float tom = texture(ruido, fract(wxz * 0.7 + 0.13)).r;
+	vec3 folha_seca = mix(vec3(0.3, 0.16, 0.08), vec3(0.32, 0.25, 0.11), tom);   // ferrugem a ocre
+	folha_seca = mix(folha_seca, vec3(0.3, 0.27, 0.2), smoothstep(0.6, 0.8, f2) * 0.6);   // folhas acinzentadas, velhas
+	float tem_folha = smoothstep(0.35, 0.8, f1) * (1.0 - aberto);
+	c_mata = mix(c_mata, folha_seca * (0.75 + 0.3 * n3), tem_folha * 0.6);
+	// manchas de musgo vivo na mata, longe da trilha
+	float mancha = smoothstep(0.58, 0.7, n1 + (n2 - 0.5) * 0.3) * (1.0 - aberto);
+	c_mata = mix(c_mata, vec3(0.16, 0.28, 0.11) * (0.8 + 0.4 * n3), mancha * 0.75);
+	// na trilha: algumas folhas soltas e marcas de raízes
+	// trilha quase limpa, para as pegadas continuarem legíveis
+	vec3 trilha = mix(c_barro, folha_seca, smoothstep(0.55, 0.85, f1) * 0.18);
+	trilha *= 1.0 - smoothstep(0.6, 0.9, f2) * 0.1;
+	ALBEDO = mix(c_mata, trilha, aberto);
 	// barro úmido brilha um pouco com a lua
 	ROUGHNESS = mix(0.95, 0.55 + 0.3 * n3, aberto);
 	SPECULAR = mix(0.2, 0.45, aberto);

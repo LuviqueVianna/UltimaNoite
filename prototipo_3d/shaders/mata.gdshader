@@ -12,7 +12,8 @@ uniform float aspereza = 0.9;
 uniform float translucidez = 0.25;   // folhas deixam passar um pouco da lua
 uniform float altura_copa = 10.0;   // altura típica da espécie, para saber se a copa tapa o jogador
 uniform float raio_copa = 2.5;     // quanto a copa se abre para os lados (m)
-uniform float corta = 1.0;          // 0 = nunca some (sub-bosque baixo)
+uniform float corta = 1.0;
+uniform float casca = 0.0;          // 0 = folhagem; 1 = casca com sulcos; 2 = anéis (embaúba, palmeira, bambu)          // 0 = nunca some (sub-bosque baixo)
 uniform float rugosidade = 0.0;     // deforma a copa em tufos irregulares (0 nos troncos)
 
 global uniform vec3 jogador_pos;
@@ -86,9 +87,37 @@ void vertex() {
 }
 
 void fragment() {
-	// tufos claros e escuros quebram a forma das copas; o alto pega mais lua
-	float claro = mix(1.0, 0.55 + 0.9 * tufo, step(0.01, rugosidade));
-	ALBEDO = cor.rgb * vcor * claro;
+	vec3 base = cor.rgb * vcor;
+	vec3 n_mundo = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+	if (casca > 0.5) {
+		// sulcos verticais (ou anéis), musgo na base e no lado sombreado, manchas de líquen
+		float sulco;
+		if (casca < 1.5) {
+			sulco = ruido3(vec3(wpos.x * 7.0, wpos.y * 0.8, wpos.z * 7.0)) * 0.7 + ruido3(wpos * 3.0) * 0.3;
+			base *= 0.6 + 0.65 * sulco;
+		} else {
+			float anel = fract(wpos.y * 1.4 + ruido3(wpos * 1.5) * 0.35);
+			base *= 1.0 - 0.45 * smoothstep(0.82, 0.95, anel);
+			base *= 0.85 + 0.3 * ruido3(wpos * 4.0);
+		}
+		float lado_umido = smoothstep(-0.2, 0.9, dot(n_mundo, normalize(vec3(-0.4, 0.0, -1.0))));
+		float altura = 1.0 - smoothstep(0.3, 3.5, wpos.y);
+		float musgo = clamp(lado_umido * 0.6 + altura * 0.7, 0.0, 1.0) * smoothstep(0.35, 0.65, ruido3(wpos * 2.2));
+		base = mix(base, vec3(0.17, 0.27, 0.11), musgo * 0.7);
+		float liquen = smoothstep(0.7, 0.85, ruido3(wpos * 9.0 + 13.0)) * (1.0 - altura * 0.5);
+		base = mix(base, vec3(0.42, 0.46, 0.38), liquen * 0.35);
+	} else if (rugosidade > 0.01) {
+		// copas: tufos claros e escuros e variação de tom entre árvores e dentro da copa
+		float claro = 0.55 + 0.9 * tufo;
+		float tom = ruido3(wpos * 0.18 + 7.0);
+		float frio = ruido3(wpos * 0.6 + 31.0);
+		base *= claro;
+		base = mix(base, base * vec3(1.3, 1.2, 0.65), smoothstep(0.45, 0.85, tom) * 0.7);   // folhas novas, amareladas
+		base = mix(base, base * vec3(0.75, 1.0, 1.15), smoothstep(0.5, 0.9, frio) * 0.5);   // tons azulados
+		// a parte de cima pega a lua
+		base *= 1.0 + 0.35 * clamp(n_mundo.y, 0.0, 1.0);
+	}
+	ALBEDO = base;
 	ROUGHNESS = aspereza;
 	SPECULAR = 0.25;
 	BACKLIGHT = vec3(translucidez) * cor.rgb;

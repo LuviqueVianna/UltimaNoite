@@ -139,6 +139,12 @@ Pasta `prototipo_3d/` do repositório, projeto Godot **4.7.1** separado do MVP. 
 - A mata transparente deixou de ser um círculo pontilhado: cada árvore entre a câmera e o personagem some inteira, e a abertura acompanha o zoom (o usuário achou o círculo estranho).
 - Versão para navegador publicada como página do claude.ai. No navegador o Godot usa o renderizador Compatibility: névoa rasteira simples no lugar da volumétrica e pegadas como planos no chão, porque não há decalques.
 
+**Terceira pessoa no protótipo (03/11/2026, pedido do usuário):**
+- Tecla C alterna entre a isométrica e a terceira pessoa: câmera atrás do ombro, mouse para olhar, câmera que volta para trás do personagem quando ele anda, neblina de distância.
+- **60 FPS no PC do usuário em terceira pessoa**, contra 39 na isométrica: a neblina esconde a mata distante.
+- Mata com mais vida (casca, musgo e líquen nos troncos, copas com variação de tom, folhas secas e musgo no chão, vagalumes), grilos com som posicional que se calam quando o jogador chega perto e personagem com traços humanos, a partir de uma foto de referência do usuário. As trilhas ficaram quase limpas para não atrapalhar a leitura das pegadas.
+- Ponto em aberto: o visual de referência (boné, camiseta estampada, tênis) é de hoje; o jogo se passa nos anos 1950.
+
 **Próximo passo sugerido:** decidir tamanho das pegadas, alcance da visão e luz sob a mata.
 
 ---
