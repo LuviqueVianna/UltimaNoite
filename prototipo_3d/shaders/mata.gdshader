@@ -1,23 +1,26 @@
 // Troncos e folhagem da mata.
 // - Cor por instância (MultiMesh) para variar o tom de cada árvore.
 // - Balanço leve de vento, maior no alto.
-// - "Mata transparente": o que fica entre a câmera e o jogador some em pontilhado,
-//   para a mata densa não esconder o personagem. Não vale para a sombra da lua.
+// - "Mata transparente": cada árvore que fica entre a câmera e o jogador some inteira
+//   (tronco e copa juntos), com uma borda suave nas árvores do limite. A sombra continua.
 shader_type spatial;
-render_mode cull_disabled, diffuse_lambert_wrap;
+render_mode cull_back, diffuse_lambert_wrap;
 
 uniform vec4 cor : source_color = vec4(0.12, 0.2, 0.15, 1.0);
 uniform float vento = 1.0;
 uniform float aspereza = 0.9;
 uniform float translucidez = 0.25;   // folhas deixam passar um pouco da lua
-uniform float raio_fade = 8.0;
+uniform float altura_copa = 10.0;   // altura típica da espécie, para saber se a copa tapa o jogador
+uniform float raio_copa = 2.5;     // quanto a copa se abre para os lados (m)
+uniform float corta = 1.0;          // 0 = nunca some (sub-bosque baixo)
 uniform float rugosidade = 0.0;     // deforma a copa em tufos irregulares (0 nos troncos)
 
 global uniform vec3 jogador_pos;
 global uniform vec3 camera_dir;
 global uniform float fade_ativo;
+global uniform float raio_corte;
 
-varying vec3 wpos;
+varying highp vec3 wpos;
 varying vec3 vcor;
 
 float bayer4(vec2 p) {
@@ -43,6 +46,18 @@ float ruido3(vec3 x) {
 }
 
 varying float tufo;
+varying float some;
+
+// Distância lateral (perpendicular à visão) entre um ponto e a linha câmera → jogador.
+// Negativa quando o ponto está atrás do jogador (não tapa).
+float lateral(vec3 p) {
+	vec3 rel = p - jogador_pos;
+	float frente = dot(rel, -camera_dir);
+	if (frente < 0.6) {
+		return 1e5;
+	}
+	return length(rel + frente * camera_dir);
+}
 
 void vertex() {
 	vcor = COLOR.rgb;
@@ -54,6 +69,20 @@ void vertex() {
 	VERTEX.x += s * vento * h * h * 0.0008;
 	VERTEX.z += s * vento * h * h * 0.0005;
 	wpos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+
+	// decisão por árvore inteira: usa a origem da instância, não o pixel
+	some = 0.0;
+	bool camera_principal = abs(dot(CAMERA_DIRECTION_WORLD, camera_dir)) > 0.995;
+	if (fade_ativo > 0.5 && corta > 0.5 && camera_principal) {
+		vec3 base = MODEL_MATRIX[3].xyz;
+		float esc = length(MODEL_MATRIX[1].xyz);
+		float d = 1e5;
+		for (int k = 1; k <= 4; k++) {
+			d = min(d, lateral(base + vec3(0.0, altura_copa * esc * float(k) / 4.0, 0.0)));
+		}
+		d -= raio_copa * esc;   // a borda da copa, não o tronco, é que tapa o jogador
+		some = smoothstep(raio_corte * 0.6, raio_corte * 0.25, d);
+	}
 }
 
 void fragment() {
@@ -64,17 +93,7 @@ void fragment() {
 	SPECULAR = 0.25;
 	BACKLIGHT = vec3(translucidez) * cor.rgb;
 
-	bool camera_principal = abs(dot(CAMERA_DIRECTION_WORLD, camera_dir)) > 0.995;
-	if (fade_ativo > 0.5 && camera_principal) {
-		vec3 rel = wpos - jogador_pos;
-		float frente = dot(rel, -camera_dir);            // > 0: entre o jogador e a câmera
-		vec3 lateral = rel + frente * camera_dir;
-		float d = length(lateral);
-		if (frente > 0.8) {
-			float some = smoothstep(raio_fade, raio_fade * 0.8, d);
-			if (some > bayer4(FRAGCOORD.xy)) {
-				discard;
-			}
-		}
+	if (some > 0.001 && some > bayer4(FRAGCOORD.xy)) {
+		discard;
 	}
 }

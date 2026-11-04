@@ -25,6 +25,8 @@ var _azimute_alvo := PI / 4.0
 var _zoom := 22.0
 var _foco := Vector3.ZERO
 var _ambiente: Environment
+var _web := RenderingServer.get_current_rendering_method() == "gl_compatibility"
+var _neblina: FogVolume
 var _lua: DirectionalLight3D
 var _luz_visao: OmniLight3D
 var _veg: Node3D
@@ -102,7 +104,43 @@ func _montar_ambiente() -> void:
 	_ambiente.volumetric_fog_ambient_inject = 0.3
 	_ambiente.adjustment_enabled = true
 	_ambiente.adjustment_saturation = 0.85
+	if _web:
+		# no navegador não há névoa volumétrica: névoa de altura, rente ao chão
+		_ambiente.volumetric_fog_enabled = false
+		_ambiente.fog_enabled = true
+		_ambiente.fog_mode = Environment.FOG_MODE_EXPONENTIAL
+		_ambiente.fog_light_color = Color(0.09, 0.13, 0.16)
+		_ambiente.fog_density = 0.0
+		_ambiente.fog_height = 1.2
+		_ambiente.fog_height_density = 0.12
+		# o renderizador do navegador clareia mais a cena: compensa
+		_ambiente.tonemap_exposure = 0.85
+		_ambiente.ambient_light_energy = 0.35
+		_ambiente.fog_sky_affect = 0.0
+		_ambiente.ssao_enabled = false
+	if not _web:
+		_neblina_volumetrica()
+	var we := WorldEnvironment.new()
+	we.environment = _ambiente
+	add_child(we)
+	# lua cheia: canto superior esquerdo da tela, fria, azul-esverdeada, sombras longas
+	_lua = DirectionalLight3D.new()
+	_lua.light_color = Color(0.6, 0.76, 0.8)
+	_lua.light_energy = 1.6
+	_lua.shadow_enabled = true
+	_lua.directional_shadow_max_distance = 110.0   # a câmera fica a 70 m: abaixo disso a sombra some
+	if _web:
+		_lua.shadow_bias = 0.25
+		_lua.shadow_normal_bias = 2.5
+	_lua.light_angular_distance = 0.6
+	_lua.light_volumetric_fog_energy = 0.6
+	add_child(_lua)
+	_orientar_lua()
+
+
+func _neblina_volumetrica() -> void:
 	var neblina := FogVolume.new()
+	_neblina = neblina
 	neblina.name = "NeblinaRasteira"
 	neblina.shape = RenderingServer.FOG_VOLUME_SHAPE_BOX
 	neblina.size = Vector3(200, 7, 200)
@@ -123,19 +161,6 @@ func _montar_ambiente() -> void:
 	fm.density_texture = dens
 	neblina.material = fm
 	add_child(neblina)
-	var we := WorldEnvironment.new()
-	we.environment = _ambiente
-	add_child(we)
-	# lua cheia: canto superior esquerdo da tela, fria, azul-esverdeada, sombras longas
-	_lua = DirectionalLight3D.new()
-	_lua.light_color = Color(0.6, 0.76, 0.8)
-	_lua.light_energy = 1.6
-	_lua.shadow_enabled = true
-	_lua.directional_shadow_max_distance = 110.0
-	_lua.light_angular_distance = 0.6
-	_lua.light_volumetric_fog_energy = 0.6
-	add_child(_lua)
-	_orientar_lua()
 
 
 func _orientar_lua() -> void:
@@ -244,6 +269,8 @@ func _posicionar_camera(t: float) -> void:
 	_camera.size = lerp(_camera.size, _zoom, t)
 	RenderingServer.global_shader_parameter_set("camera_dir", -_camera.global_basis.z)
 	RenderingServer.global_shader_parameter_set("jogador_pos", Vector3(jogador.pos.x, 1.0, jogador.pos.y))
+	# a abertura na mata acompanha o zoom: perto, só as árvores coladas; longe, um pouco mais
+	RenderingServer.global_shader_parameter_set("raio_corte", clampf(_camera.size * 0.16, 2.8, 9.0))
 	_orientar_lua()
 
 
@@ -316,7 +343,10 @@ func _unhandled_input(ev: InputEvent) -> void:
 			KEY_F:
 				_definir_fade(not fade_ativo)
 			KEY_N:
-				_ambiente.volumetric_fog_enabled = not _ambiente.volumetric_fog_enabled
+				if _web:
+					_ambiente.fog_enabled = not _ambiente.fog_enabled
+				else:
+					_ambiente.volumetric_fog_enabled = not _ambiente.volumetric_fog_enabled
 			KEY_L:
 				_luz_visao.visible = not _luz_visao.visible
 			KEY_P:
@@ -345,7 +375,7 @@ func _atualizar_hud() -> void:
 		_pegadas.escala,
 		"à vista" if _outro_view.visible else "fora de vista",
 		"sim" if fade_ativo else "não",
-		"sim" if _ambiente.volumetric_fog_enabled else "não",
+		"sim" if (_ambiente.fog_enabled if _web else _ambiente.volumetric_fog_enabled) else "não",
 		"sim" if _luz_visao.visible else "não",
 	]
 

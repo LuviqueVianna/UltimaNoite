@@ -55,9 +55,17 @@ func montar(arvores: Array, plantas: Array) -> void:
 
 # ---------------- materiais ----------------
 
+var _altura := 10.0
+var _corta := 1.0
+var _copa := 2.5
+
+
 func _mat(cor: Color, vento: float = 1.0, translucidez: float = 0.25, rugosidade: float = 0.0) -> ShaderMaterial:
 	var m := ShaderMaterial.new()
 	m.shader = SHADER
+	m.set_shader_parameter("altura_copa", _altura)
+	m.set_shader_parameter("corta", _corta)
+	m.set_shader_parameter("raio_copa", _copa)
 	m.set_shader_parameter("rugosidade", rugosidade)
 	m.set_shader_parameter("cor", cor)
 	m.set_shader_parameter("vento", vento)
@@ -125,6 +133,9 @@ func _roseta(n: int, largura: float, comp: float, inclinacao: float, altura: flo
 # ---------------- espécies ----------------
 
 func _comum() -> ArrayMesh:
+	_copa = 4.0
+	_altura = 10.0
+	_corta = 1.0
 	var tronco := [[_cilindro(0.22, 0.12, 9.0), _em(Vector3(0, 4.5, 0))]]
 	var copa := []
 	var rng := RandomNumberGenerator.new()
@@ -137,6 +148,9 @@ func _comum() -> ArrayMesh:
 
 
 func _jequitiba() -> ArrayMesh:
+	_copa = 8.0
+	_altura = 22.0
+	_corta = 1.0
 	var tronco := [[_cilindro(0.75, 0.4, 19.0, 8), _em(Vector3(0, 9.5, 0))]]
 	for k in 3:
 		var g := TAU * k / 3.0
@@ -155,6 +169,9 @@ func _jequitiba() -> ArrayMesh:
 
 
 func _embauba() -> ArrayMesh:
+	_copa = 2.2
+	_altura = 11.0
+	_corta = 1.0
 	var tronco := [[_cilindro(0.13, 0.09, 11.0), _em(Vector3(0, 5.5, 0))]]
 	var folhas := []
 	for k in 7:
@@ -166,11 +183,17 @@ func _embauba() -> ArrayMesh:
 
 
 func _palmeira() -> ArrayMesh:
+	_copa = 3.0
+	_altura = 9.0
+	_corta = 1.0
 	var tronco := [[_cilindro(0.09, 0.07, 9.0, 5), _em(Vector3(0, 4.5, 0))]]
 	return _juntar([[_mat(Color(0.4, 0.38, 0.32), 0.4), tronco], [_mat(Color(0.12, 0.22, 0.12), 1.4), _roseta(9, 0.35, 2.8, -0.35, 9.0, 5)]])
 
 
 func _bambu() -> ArrayMesh:
+	_copa = 1.8
+	_altura = 12.0
+	_corta = 1.0
 	var hastes := []
 	var folhas := []
 	var rng := RandomNumberGenerator.new()
@@ -187,15 +210,24 @@ func _bambu() -> ArrayMesh:
 
 
 func _samambaia() -> ArrayMesh:
+	_copa = 1.0
+	_altura = 1.0
+	_corta = 0.0
 	return _juntar([[_mat(Color(0.12, 0.23, 0.13), 0.5, 0.35), _roseta(8, 0.32, 1.2, 0.55, 0.05, 1)]])
 
 
 func _bromelia() -> ArrayMesh:
+	_copa = 0.6
+	_altura = 0.7
+	_corta = 0.0
 	var folhas := _roseta(11, 0.12, 0.7, 0.85, 0.05, 2)
 	return _juntar([[_mat(Color(0.2, 0.26, 0.12), 0.3, 0.3), folhas]])
 
 
 func _moita() -> ArrayMesh:
+	_copa = 1.2
+	_altura = 1.3
+	_corta = 1.0
 	var partes := []
 	for c in [Vector3(0, 0.5, 0), Vector3(0.5, 0.4, 0.3), Vector3(-0.4, 0.45, 0.2)]:
 		partes.append([_esfera(0.75, 0.8), _em(c)])

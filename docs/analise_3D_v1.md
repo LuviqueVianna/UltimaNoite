@@ -128,14 +128,18 @@ Pasta `prototipo_3d/` do repositório, projeto Godot **4.7.1** separado do MVP. 
 |---|---|---|
 | A atmosfera está certa? | **Sim, na clareira.** A cabana iluminada no meio da mata escura funciona | As copas ainda parecem "bolotas"; é arte provisória |
 | As pegadas são legíveis? | **De perto e na clareira, sim. Sob a mata, não** | No tamanho real ficam pequenas; 1,5x é o padrão do protótipo. Sob as copas o chão fica escuro demais |
-| O desempenho é aceitável? | **A medir no PC do usuário** | 700 a 1.450 chamadas de desenho e 5 a 14 milhões de triângulos por quadro (com sombras). Deve rodar bem em placa de vídeo dedicada; computador só com vídeo integrado pode sofrer |
+| O desempenho é aceitável? | **No PC, sim, com margem a ganhar: 39 FPS** sem nenhuma otimização (medido pelo usuário em 03/11/2026). **No navegador, 7 a 9 FPS** | O navegador é só para teste em computador sem Godot; o jogo será jogado no PC (decisão do usuário em 03/11/2026) |
 
 **Descobertas que afetam o design:**
 - **A mata transparente perto do jogador é obrigatória.** Sem ela, numa mata densa vista do alto, o jogador some sob as copas.
 - **Com linha de visada, numa trilha sinuosa se vê só de 5 a 8 m à frente.** É a "mata como parede" funcionando, mas encurta muito o alcance de visão em relação ao MVP. Quanto de mata tapa a vista (hoje 2,5 m) é um número de equilíbrio a decidir.
 - **Luz sob a mata:** o jogo vai precisar de uma regra de visão no escuro (a "luz de visão" do protótipo é provisória) ou de fendas de luar sobre as trilhas.
 
-**Próximo passo sugerido:** o usuário roda o protótipo no PC e informa FPS e impressões; depois decidir tamanho das pegadas, alcance da visão e luz sob a mata.
+**Ajustes de 03/11/2026, depois do teste do usuário:**
+- A mata transparente deixou de ser um círculo pontilhado: cada árvore entre a câmera e o personagem some inteira, e a abertura acompanha o zoom (o usuário achou o círculo estranho).
+- Versão para navegador publicada como página do claude.ai. No navegador o Godot usa o renderizador Compatibility: névoa rasteira simples no lugar da volumétrica e pegadas como planos no chão, porque não há decalques.
+
+**Próximo passo sugerido:** decidir tamanho das pegadas, alcance da visão e luz sob a mata.
 
 ---
 

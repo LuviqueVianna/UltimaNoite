@@ -263,6 +263,8 @@ func _moita() -> void:
 	folha.shader = preload("res://shaders/mata.gdshader")
 	folha.set_shader_parameter("cor", Color(0.1, 0.19, 0.12))
 	folha.set_shader_parameter("vento", 0.4)
+	folha.set_shader_parameter("altura_copa", 1.3)
+	folha.set_shader_parameter("raio_copa", 1.0)
 	var centro := Vector3(-8.0, 0, -4.5)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 4

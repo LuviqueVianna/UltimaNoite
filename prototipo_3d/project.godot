@@ -19,6 +19,9 @@ renderer/rendering_method="forward_plus"
 anti_aliasing/quality/msaa_3d=2
 lights_and_shadows/directional_shadow/size=8192
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=3
+lights_and_shadows/directional_shadow/size.web=4096
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality.web=1
+renderer/rendering_method.web="gl_compatibility"
 
 [shader_globals]
 
@@ -29,6 +32,10 @@ jogador_pos={
 camera_dir={
 "type": "vec3",
 "value": Vector3(0, -1, 0)
+}
+raio_corte={
+"type": "float",
+"value": 3.5
 }
 fade_ativo={
 "type": "float",

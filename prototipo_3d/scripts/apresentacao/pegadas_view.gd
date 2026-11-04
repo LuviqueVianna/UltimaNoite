@@ -1,5 +1,6 @@
 extends Node3D
 ## Pegadas como decalques projetados no chão. Uma textura por calçado e por pé.
+## No navegador (renderizador Compatibility) não existe Decal: lá cada pegada é um plano rente ao chão.
 ## Cada pegada só aparece se o jogador a enxerga (alcance + linha de visada) e some com a idade.
 
 const COMPRIMENTO := {"bota": 0.31, "botina": 0.29, "descalco": 0.26}
@@ -10,7 +11,8 @@ var escala := 1.5              # 1 = tamanho real; o jogo pode exagerar para ler
 var brilho_borda := 0.35       # emissão da borda úmida (ajuda a ler no escuro)
 var _texturas := {}
 var _vivas: Array = []         # [{peg, decal}]
-var _fixas: Array[Decal] = []
+var _fixas: Array[Node3D] = []
+var _plano := RenderingServer.get_current_rendering_method() == "gl_compatibility"
 var _relogio := 0.0
 
 
@@ -33,18 +35,37 @@ func fixar(pos: Vector2, angulo: float, calcado: String, lado: int) -> void:
 	_fixas.append(d)
 
 
-func _decal(peg: Dictionary) -> Decal:
+func _decal(peg: Dictionary) -> Node3D:
 	var calcado: String = peg["calcado"]
-	var d := Decal.new()
 	var t: Array = _texturas[calcado + str(peg["lado"])]
+	var p: Vector2 = peg["pos"]
+	if _plano:
+		var mi := MeshInstance3D.new()
+		var pm := PlaneMesh.new()
+		mi.mesh = pm
+		var m := StandardMaterial3D.new()
+		m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		m.albedo_texture = t[0]
+		m.emission_enabled = true
+		m.emission_texture = t[1]
+		m.emission_energy_multiplier = brilho_borda
+		m.roughness = 1.0
+		mi.material_override = m
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mi.position = Vector3(p.x, 0.02, p.y)
+		mi.rotation.y = -float(peg["angulo"]) - PI / 2.0
+		mi.set_meta("calcado", calcado)
+		_tamanho(mi, calcado)
+		return mi
+	var d := Decal.new()
 	d.texture_albedo = t[0]
 	d.texture_emission = t[1]
 	d.emission_energy = brilho_borda
-	d.size = Vector3(LARGURA[calcado] * escala, 0.8, COMPRIMENTO[calcado] * escala)
+	d.set_meta("calcado", calcado)
+	_tamanho(d, calcado)
 	d.albedo_mix = 1.0
 	d.upper_fade = 0.2
 	d.lower_fade = 0.2
-	var p: Vector2 = peg["pos"]
 	d.position = Vector3(p.x, 0.0, p.y)
 	d.rotation.y = -float(peg["angulo"]) - PI / 2.0
 	d.cull_mask = 1   # só o chão (camada 1); mata e personagens ficam na camada 2
@@ -60,7 +81,7 @@ func atualizar(dt: float, olho: Vector2, ver_tudo: bool) -> int:
 	var restantes: Array = []
 	for item in _vivas:
 		var peg: Dictionary = item["peg"]
-		var d: Decal = item["decal"]
+		var d: Node3D = item["decal"]
 		var idade: float = mundo.idade(peg)
 		if idade > mundo.VIDA_PEGADA:
 			d.queue_free()
@@ -69,8 +90,7 @@ func atualizar(dt: float, olho: Vector2, ver_tudo: bool) -> int:
 		if checar:
 			d.visible = ver_tudo or mundo.ve(olho, peg["pos"])
 		var vida := 1.0 - smoothstep(mundo.VIDA_PEGADA * 0.5, mundo.VIDA_PEGADA, idade)
-		d.modulate.a = vida
-		d.emission_energy = brilho_borda * vida
+		_vida(d, vida)
 		if d.visible:
 			visiveis += 1
 	_vivas = restantes
@@ -82,10 +102,28 @@ func atualizar(dt: float, olho: Vector2, ver_tudo: bool) -> int:
 
 func reaplicar_escala() -> void:
 	for item in _vivas:
-		var c: String = item["peg"]["calcado"]
-		item["decal"].size = Vector3(LARGURA[c] * escala, 0.8, COMPRIMENTO[c] * escala)
+		_tamanho(item["decal"], item["decal"].get_meta("calcado"))
 	for d in _fixas:
-		d.size = Vector3(LARGURA["botina"] * escala, 0.8, COMPRIMENTO["botina"] * escala)
+		_tamanho(d, d.get_meta("calcado"))
+
+
+func _tamanho(n: Node3D, calcado: String) -> void:
+	var w: float = LARGURA[calcado] * escala
+	var l: float = COMPRIMENTO[calcado] * escala
+	if n is Decal:
+		n.size = Vector3(w, 0.8, l)
+	else:
+		(n as MeshInstance3D).mesh.size = Vector2(w, l)
+
+
+func _vida(n: Node3D, vida: float) -> void:
+	if n is Decal:
+		n.modulate.a = vida
+		n.emission_energy = brilho_borda * vida
+	else:
+		var m: StandardMaterial3D = (n as MeshInstance3D).material_override
+		m.albedo_color.a = vida
+		m.emission_energy_multiplier = brilho_borda * vida
 
 
 # ---------------- texturas (geradas, provisórias) ----------------

@@ -10,6 +10,10 @@ Projeto **separado** do MVP (`../godot`): não muda nada no jogo atual.
 2. No Godot, **Importar** e escolha `prototipo_3d/project.godot`.
 3. Aperte **F5**. A primeira abertura demora alguns segundos (compila os shaders).
 
+## Versão para navegador
+
+Para testar em computador sem Godot. Exporte com o preset **Web** (`export_presets.cfg`); o Godot troca sozinho para o renderizador Compatibility. Diferenças: névoa rasteira simples em vez da volumétrica e pegadas como planos no chão (no navegador não há decalques). Fica bem mais lento (7 a 9 FPS no teste de 03/11/2026, contra 39 no PC).
+
 ## Controles
 
 | Tecla | O que faz |
