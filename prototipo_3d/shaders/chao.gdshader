@@ -15,7 +15,7 @@ void vertex() {
 }
 
 void fragment() {
-	highp vec2 uv = wxz / tamanho + 0.5;
+	highp vec2 uv = wxz / tamanho;   // o mapa vai de 0 a tamanho em x e z
 	float m = texture(mascara, uv).r;
 	float n1 = texture(ruido, fract(wxz * 0.02)).r;
 	float n2 = texture(ruido, fract(wxz * 0.23)).r;

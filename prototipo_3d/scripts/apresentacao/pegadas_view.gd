@@ -1,44 +1,32 @@
 extends Node3D
-## Pegadas como decalques projetados no chão. Uma textura por calçado e por pé.
+## Pegadas do MVP desenhadas como decalques no chão. Uma textura por calçado e por pé.
 ## No navegador (renderizador Compatibility) não existe Decal: lá cada pegada é um plano rente ao chão.
-## Cada pegada só aparece se o jogador a enxerga (alcance + linha de visada) e some com a idade.
+## Visibilidade e duração seguem a regra do MVP (mundo.pegada_visivel_para, vida de cada pegada).
+## O MVP marca uma pegada a cada 2,6 m; aqui cada marca vira três passos alternados, para ler como um rastro.
 
-const COMPRIMENTO := {"bota": 0.31, "botina": 0.29, "descalco": 0.26}
-const LARGURA := {"bota": 0.12, "botina": 0.11, "descalco": 0.11}
+const COMPRIMENTO := {"bota": 0.31, "botina": 0.29, "descalco": 0.26, "alpercata": 0.27, "tamanco": 0.28}
+const LARGURA := {"bota": 0.12, "botina": 0.11, "descalco": 0.11, "alpercata": 0.11, "tamanco": 0.12}
+const PASSOS_POR_MARCA := 3
+const PASSO_M := 0.87
 
-var mundo
+var mundo                      # Mundo do MVP
 var escala := 1.5              # 1 = tamanho real; o jogo pode exagerar para ler melhor
 var brilho_borda := 0.35       # emissão da borda úmida (ajuda a ler no escuro)
+var ver_tudo := false
 var _texturas := {}
-var _vivas: Array = []         # [{peg, decal}]
-var _fixas: Array[Node3D] = []
+var _vivas := {}               # id da pegada do MVP -> {peg, nos: Array[Node3D]}
 var _plano := RenderingServer.get_current_rendering_method() == "gl_compatibility"
 var _relogio := 0.0
 
 
 func _ready() -> void:
-	for calcado in ["bota", "botina", "descalco"]:
+	for calcado in COMPRIMENTO:
 		for lado in [0, 1]:
 			_texturas[calcado + str(lado)] = _gerar(calcado, lado)
 
 
-func ao_criar(peg: Dictionary) -> void:
-	var d := _decal(peg)
-	add_child(d)
-	_vivas.append({"peg": peg, "decal": d})
-
-
-## Pegadas antigas, que não somem (ex.: as do dono da casa, levando à porta).
-func fixar(pos: Vector2, angulo: float, calcado: String, lado: int) -> void:
-	var d := _decal({"pos": pos, "angulo": angulo, "calcado": calcado, "lado": lado})
-	add_child(d)
-	_fixas.append(d)
-
-
-func _decal(peg: Dictionary) -> Node3D:
-	var calcado: String = peg["calcado"]
-	var t: Array = _texturas[calcado + str(peg["lado"])]
-	var p: Vector2 = peg["pos"]
+func _decal(pos: Vector2, angulo: float, calcado: String, lado: int) -> Node3D:
+	var t: Array = _texturas[calcado + str(lado)]
 	if _plano:
 		var mi := MeshInstance3D.new()
 		var pm := PlaneMesh.new()
@@ -52,8 +40,8 @@ func _decal(peg: Dictionary) -> Node3D:
 		m.roughness = 1.0
 		mi.material_override = m
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		mi.position = Vector3(p.x, 0.02, p.y)
-		mi.rotation.y = -float(peg["angulo"]) - PI / 2.0
+		mi.position = Vector3(pos.x, 0.02, pos.y)
+		mi.rotation.y = -angulo - PI / 2.0
 		mi.set_meta("calcado", calcado)
 		_tamanho(mi, calcado)
 		return mi
@@ -66,45 +54,66 @@ func _decal(peg: Dictionary) -> Node3D:
 	d.albedo_mix = 1.0
 	d.upper_fade = 0.2
 	d.lower_fade = 0.2
-	d.position = Vector3(p.x, 0.0, p.y)
-	d.rotation.y = -float(peg["angulo"]) - PI / 2.0
+	d.position = Vector3(pos.x, 0.0, pos.y)
+	d.rotation.y = -angulo - PI / 2.0
 	d.cull_mask = 1   # só o chão (camada 1); mata e personagens ficam na camada 2
 	return d
 
 
-func atualizar(dt: float, olho: Vector2, ver_tudo: bool) -> int:
+## Sincroniza com mundo.pegadas: cria as novas, apaga as que o MVP já esqueceu, mostra só as que o jogador vê.
+func atualizar(dt: float) -> int:
 	_relogio += dt
 	var checar := _relogio > 0.2
 	if checar:
 		_relogio = 0.0
+	var j = mundo.jogador()
+	var existentes := {}
+	for g in mundo.pegadas:
+		existentes[g["id"]] = true
+		if not _vivas.has(g["id"]):
+			_criar(g)
 	var visiveis := 0
-	var restantes: Array = []
-	for item in _vivas:
-		var peg: Dictionary = item["peg"]
-		var d: Node3D = item["decal"]
-		var idade: float = mundo.idade(peg)
-		if idade > mundo.VIDA_PEGADA:
-			d.queue_free()
+	for id in _vivas.keys():
+		var item: Dictionary = _vivas[id]
+		if not existentes.has(id):
+			for nd in item["nos"]:
+				nd.queue_free()
+			_vivas.erase(id)
 			continue
-		restantes.append(item)
-		if checar:
-			d.visible = ver_tudo or mundo.ve(olho, peg["pos"])
-		var vida := 1.0 - smoothstep(mundo.VIDA_PEGADA * 0.5, mundo.VIDA_PEGADA, idade)
-		_vida(d, vida)
-		if d.visible:
+		var g: Dictionary = item["peg"]
+		var vis: bool = ver_tudo or mundo.pegada_visivel_para(j, g)
+		var idade: float = mundo.tempo - float(g["t"])
+		var vida := 1.0 - smoothstep(float(g["vida"]) * 0.5, float(g["vida"]), idade)
+		if g.get("fraca", false):
+			vida *= 0.45
+		for nd in item["nos"]:
+			nd.visible = vis
+			_vida(nd, vida)
+		if vis:
 			visiveis += 1
-	_vivas = restantes
-	if checar:
-		for d in _fixas:
-			d.visible = ver_tudo or mundo.ve(olho, Vector2(d.position.x, d.position.z))
 	return visiveis
 
 
+func _criar(g: Dictionary) -> void:
+	var dir: Vector2 = g["dir"]
+	if dir.length() < 0.001:
+		dir = Vector2(0, 1)
+	dir = dir.normalized()
+	var lat := dir.orthogonal()
+	var nos: Array = []
+	for k in PASSOS_POR_MARCA:
+		var lado := (int(g["id"]) * PASSOS_POR_MARCA + k) % 2
+		var p: Vector2 = g["pos"] + dir * (k - 1) * PASSO_M + lat * (0.13 if lado == 0 else -0.13)
+		var nd := _decal(p, dir.angle(), g["calcado"], lado)
+		add_child(nd)
+		nos.append(nd)
+	_vivas[g["id"]] = {"peg": g, "nos": nos}
+
+
 func reaplicar_escala() -> void:
-	for item in _vivas:
-		_tamanho(item["decal"], item["decal"].get_meta("calcado"))
-	for d in _fixas:
-		_tamanho(d, d.get_meta("calcado"))
+	for id in _vivas:
+		for nd in _vivas[id]["nos"]:
+			_tamanho(nd, nd.get_meta("calcado"))
 
 
 func _tamanho(n: Node3D, calcado: String) -> void:
@@ -132,6 +141,24 @@ func _vida(n: Node3D, vida: float) -> void:
 func _dentro(calcado: String, x: float, y: float) -> int:
 	# 0 = fora, 1 = sola, 2 = ranhura (só calçado)
 	match calcado:
+		"tamanco":
+			# tamanco: sola de madeira inteira, larga e de bico redondo, marca funda e uniforme
+			if y >= 8 and y <= 152:
+				var t := (y - 80.0) / 72.0
+				var meia := 24.0 * sqrt(max(0.0, 1.0 - pow(absf(t), 4.0)))
+				if abs(x - 32.0) <= meia:
+					return 1
+			return 0
+		"alpercata":
+			# alpercata: sola fina de couro no formato do pé, com as tiras marcando de leve
+			if y >= 6 and y <= 154:
+				var t := (y - 70.0) / 64.0 if y < 134 else 1.0
+				var meia := 22.0 * sqrt(max(0.0, 1.0 - t * t * 0.7))
+				if y > 120:
+					meia = 17.0 * sqrt(max(0.0, 1.0 - pow((y - 137.0) / 17.0, 2.0)))
+				if abs(x - (33.0 + 2.0 * t)) <= meia:
+					return 2 if (abs(y - 40.0) < 3.0 or abs(y - 110.0) < 3.0) else 1
+			return 0
 		"bota", "botina":
 			var salto_ini := 112.0 if calcado == "bota" else 118.0
 			if y >= 4 and y <= 104:

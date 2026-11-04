@@ -4,12 +4,12 @@ extends Node3D
 ## - um coro baixinho de fundo, de muitos grilos longe.
 
 const TAXA := 32000
-const QUANTOS := 18
+const QUANTOS := 48         # espalhados pelo mapa todo
 const CALA_A := 5.0        # m: perto assim, o grilo para de cantar
 const VOLTA_A := 9.0       # m: longe assim, ele volta
 
-var mundo
-var jogador
+var terreno                # Terreno 3D (mata e trilhas)
+var jogador                # qualquer objeto com .pos (Vector2)
 var _grilos: Array = []    # {player, volume, calado}
 var _rng := RandomNumberGenerator.new()
 
@@ -19,8 +19,8 @@ func montar() -> void:
 	var cantos := [_canto(4300.0, 3, 0.62), _canto(4800.0, 4, 0.74), _canto(5200.0, 3, 0.5)]
 	# lugares: plantas do sub-bosque perto das trilhas
 	var lugares: Array = []
-	for p in mundo.plantas:
-		if mundo.distancia_ao_aberto(p["pos"], 3.0) < 3.0:
+	for p in terreno.plantas:
+		if terreno.distancia_ao_aberto(p["pos"]) < 3.0:
 			lugares.append(p["pos"])
 	for k in QUANTOS:
 		if lugares.is_empty():

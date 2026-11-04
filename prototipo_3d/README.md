@@ -18,7 +18,8 @@ Para testar em computador sem Godot. Exporte com o preset **Web** (`export_prese
 
 | Tecla | O que faz |
 |---|---|
-| W A S D / setas | Andar (só pelas trilhas e clareiras; a mata é parede) |
+| W A S D / setas | Seguir a trilha (como no MVP, o personagem anda pelas trilhas do mapa) |
+| Espaço | Ficar parado (diante do lobo e da cobra, quem fica parado se sai melhor) |
 | Roda do mouse | Aproximar e afastar (nas duas câmeras) |
 | Q / E | Girar a câmera 90° (isométrica) |
 | C | Alterna entre a câmera isométrica e a **terceira pessoa** |
@@ -27,18 +28,22 @@ Para testar em computador sem Godot. Exporte com o preset **Web** (`export_prese
 | N | Liga e desliga a neblina rasteira |
 | L | Liga e desliga a luz de visão do jogador |
 | P | Tamanho das pegadas: 1x (real), 1,5x, 2x |
-| V | Ver tudo (ignora a linha de visada; para depurar) |
+| V | Ver tudo (mostra animais, pegadas, armadilhas e personagens fora do alcance; para depurar) |
 | H | Esconde os textos da tela |
 
 O canto superior esquerdo mostra FPS, chamadas de desenho e triângulos: **é o número que interessa medir no seu PC**.
 
 ## O que tem na cena
 
-- Trecho de 160 × 160 m de Mata Atlântica fechada: cerca de 4.100 árvores (jequitibá, embaúba, palmeira, bambu, árvores comuns) e 10.400 plantas de sub-bosque (samambaia, bromélia, moita).
-- Trilhas com bifurcação e beco, uma clareira vazia e a clareira da **Cabana do Bento**, montada pela Direção de Arte v1, seção 3.1.
-- Lua cheia vinda do canto superior esquerdo da tela, luz âmbar da janela e da porta, fumaça na chaminé, neblina rasteira.
-- Jogador de **bota de couro**; outro personagem **descalço** andando sozinho pela trilha do sudeste; pegadas de **botina** do dono da casa levando à porta.
-- Câmera isométrica **ortográfica**, como aprovado para a etapa intermediária, e câmera em **terceira pessoa** (tecla C) para sentir a etapa futura: atrás do ombro, à altura dos olhos, com neblina de distância.
+Desde 04/11/2026 o protótipo roda **a noite inteira do MVP**, com a lógica do jogo 2D (cópia em `scripts/mvp/`):
+
+- **Mapa sorteado de 450 × 450 m** (o mesmo gerador do MVP), com cerca de 34 mil árvores e 84 mil plantas de sub-bosque, para testar desempenho.
+- **As seis bases** montadas pela Direção de Arte v1: Cabana do Caçador (Bento), Casa da Curandeira (Iara), Capela dos Segredos (Anselmo), Torre do Vigia (Marta), Moinho Abandonado (Quincas) e a Tapera vazia. Cada uma com sua luz e seus pontos de interesse.
+- **Três personagens do computador** andando, visitando bases e deixando pegadas, com a mesma inteligência do MVP.
+- **Animais com as regras do MVP** (`docs/sistemas/animais_v1.md`): lobo que rosna, persegue quem corre e derruba; corujas que pousam em mourões, piam ou viram a cabeça para avisar; cão que guia ou late; cobras escondidas na trilha que chacoalham as folhas e picam quem continua andando.
+- **Armadilhas** escondidas na trilha (aparecem para quem nota, ou depois de disparadas), veneno, desmaio, chegada à saída e amanhecer.
+- **Ainda sem as conversas com os guardiões**: chegar a uma base não abre o diálogo.
+- Sons do MVP em 3D (uivo, rosnado, pio, latido, folhas, armadilha), grilos e vagalumes.
 
 Formas, cores e figuras são **provisórias** (primitivas do Godot). O protótipo testa técnica, não arte.
 
@@ -46,7 +51,8 @@ Formas, cores e figuras são **provisórias** (primitivas do Godot). O protótip
 
 | Pasta | Camada | O que tem |
 |---|---|---|
-| `scripts/logica/` | Mundo (sem desenho) | Terreno, trilhas, mata, personagens, pegadas e **visão por linha de visada** |
+| `scripts/mvp/` | Regras do jogo (sem desenho) | Cópia da lógica do MVP 2D: mapa, personagens, inteligência, animais, armadilhas, visitas |
+| `scripts/logica/` | Terreno (sem desenho) | Trilhas e clareiras abertas na mata a partir do mapa do MVP, a mata em volta e a **visão por linha de visada** |
 | `scripts/apresentacao/` | Apresentação | Mata (MultiMesh por quadra de 32 m), cabana, pegadas em decalque, personagens, câmera e luz |
 | `shaders/` | Apresentação | Mata (vento, tufos, transparência perto do jogador) e chão (barro e folhas) |
 | `testes/` | — | Teste da lógica sem tela |
@@ -55,7 +61,7 @@ Formas, cores e figuras são **provisórias** (primitivas do Godot). O protótip
 
 ```
 godot --headless --path prototipo_3d --import
-godot --headless --path prototipo_3d -s res://testes/teste_logica.gd
+godot --headless --path prototipo_3d -s res://testes/teste_mundo.gd
 ```
 
 Capturas automáticas (precisa de tela ou de um servidor X virtual):

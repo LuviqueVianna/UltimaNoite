@@ -5,6 +5,7 @@ extends Node3D
 
 var personagem
 var estilo := "jovem"            # "jovem" (boné, óculos, camiseta) ou "roceiro" (chapéu de palha, camisa)
+var cor_camisa := Color(0, 0, 0, 0)   # alfa > 0 troca a cor da camisa do estilo (para diferenciar os personagens)
 
 var _coxas: Array[Node3D] = []
 var _canelas: Array[Node3D] = []
@@ -46,7 +47,7 @@ const ESTILOS := {
 func _ready() -> void:
 	var e: Dictionary = ESTILOS[estilo]
 	var pele := _mat(e["pele"], 0.6)
-	var camisa := _mat(e["camisa"], 0.95)
+	var camisa := _mat(cor_camisa if cor_camisa.a > 0.0 else e["camisa"], 0.95)
 	var calca := _mat(e["calca"], 0.9)
 	var sapato := _mat(e["sapato"], 0.7)
 	var sola := _mat(e["sola"], 0.8)
@@ -158,6 +159,11 @@ func _process(dt: float) -> void:
 		_antebracos[k].rotation.x = -0.3 - maxf(0.0, balanco) * 0.35 * amp
 	_corpo.position.y = absf(cos(_fase)) * 0.035 * amp
 	_corpo.rotation.y = s * 0.06 * amp
+	# derrubado pelo lobo ou desmaiado: deitado no chão
+	var caido: bool = personagem.get("caido") == true
+	_corpo.rotation.x = lerp_angle(_corpo.rotation.x, -1.45 if caido else 0.0, minf(1.0, dt * 6.0))
+	if caido:
+		_corpo.position.y = 0.18
 
 
 func _mat(c: Color, aspereza: float) -> StandardMaterial3D:

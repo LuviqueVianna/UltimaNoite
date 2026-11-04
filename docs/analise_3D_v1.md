@@ -145,6 +145,14 @@ Pasta `prototipo_3d/` do repositório, projeto Godot **4.7.1** separado do MVP. 
 - Mata com mais vida (casca, musgo e líquen nos troncos, copas com variação de tom, folhas secas e musgo no chão, vagalumes), grilos com som posicional que se calam quando o jogador chega perto e personagem com traços humanos, a partir de uma foto de referência do usuário. As trilhas ficaram quase limpas para não atrapalhar a leitura das pegadas.
 - Ponto em aberto: o visual de referência (boné, camiseta estampada, tênis) é de hoje; o jogo se passa nos anos 1950.
 
+**Noite completa do MVP no protótipo (04/11/2026, pedido do usuário):**
+- O protótipo passou a rodar a lógica do MVP (cópia em `prototipo_3d/scripts/mvp/`): mapa sorteado de 450 × 450 m, seis bases, três personagens do computador, pegadas, lobo, corujas, cão, cobras, armadilhas, veneno, chegada e amanhecer. Ainda sem as conversas com os guardiões.
+- As cinco bases que faltavam foram montadas pela Direção de Arte v1, seção 3. Mata de ~34 mil árvores e ~84 mil plantas, para testar desempenho. Montagem da cena: cerca de 2 s.
+- O personagem passou a seguir as trilhas do grafo, como no MVP; na terceira pessoa, "para a frente" segue a trilha mais alinhada.
+- Velocidade do jogador: 4 m/s, a do protótipo de uma casa (pedido do usuário).
+- Achado: no MVP, `mundo/fauna.gd` lê `Dialogo.NOMES_ATRIBUTO` da tela de diálogo (lógica dependendo da interface). Corrigido na cópia; falta corrigir no MVP.
+- FPS no PC do usuário com o mapa grande: ainda não medido.
+
 **Próximo passo sugerido:** decidir tamanho das pegadas, alcance da visão e luz sob a mata.
 
 ---
