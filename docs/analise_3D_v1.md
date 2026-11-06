@@ -153,7 +153,17 @@ Pasta `prototipo_3d/` do repositório, projeto Godot **4.7.1** separado do MVP. 
 - Achado: no MVP, `mundo/fauna.gd` lê `Dialogo.NOMES_ATRIBUTO` da tela de diálogo (lógica dependendo da interface). Corrigido na cópia; falta corrigir no MVP.
 - FPS no PC do usuário com o mapa grande: ainda não medido.
 
-**Próximo passo sugerido:** decidir tamanho das pegadas, alcance da visão e luz sob a mata.
+**Ajustes de 05–06/11/2026, depois do teste do usuário:**
+- Andar livre de volta: o jogador anda pela trilha e pela clareira em qualquer direção, sem ficar preso ao grafo; chegada a uma base por proximidade. O grafo continua valendo para os personagens do computador.
+- Barra de vida (regra nova, só no protótipo): armadilha −20, lobo −30, cobra −20; cada casa nova recupera 35. Vida zero desmaia. Lentidão, prisão, queda e desmaio continuam como no MVP.
+- Saída visível: porteira com lanternas e luz alta; o HUD mostra distância e rumo.
+- Mini bússola com N/L/S/O que gira com a câmera, e marca âmbar apontando a saída. Os avisos ("vem do norte") agora têm referência na tela.
+- Os três personagens do computador ficaram diferentes entre si (roupa, pele, altura, calçado, mulheres por nome) e mostram hesitação quando param.
+- Mata mais detalhada: folhas em cartões com recorte, galhos, cipós, epífitas, relevo na casca e no chão. Para ficar realista de fato, o próximo passo é usar texturas fotográficas CC0 do Poly Haven, que o usuário vai baixar.
+- Corrigido o erro ao chegar perto da cobra (atributos do jogador eram constantes).
+- O projeto exige Godot 4.4 ou mais novo (testado no 4.7); no 4.3 dá erro de script.
+
+**Próximo passo sugerido:** integrar as texturas do Poly Haven, medir o FPS no mapa grande e decidir tamanho das pegadas, alcance da visão e luz sob a mata.
 
 ---
 
