@@ -17,6 +17,7 @@ var de := -1
 var para := -1
 var progresso := 0.0
 var rota: Array = []
+var livre := false            # protótipo 3D: o jogador anda fora do grafo (mundo.mover_jogador_livre)
 var pausado := false          # parado no meio de uma trilha (jogador soltou a tecla)
 var espera := 0.0
 var desde_pegada := 0.0
@@ -53,6 +54,8 @@ var tentou_fundos := false          # computador: já tentou sair pelos fundos c
 var _andando_s := 0.0               # segundos seguidos andando (gasto crescente do "sumir")
 var _parado_s := 0.0
 var na_base := ""
+var vida := Regras.VIDA_MAX       # protótipo 3D
+var casas_achadas := {}           # bases que já devolveram vida (uma vez cada)
 var no_anterior := -1
 var hesitou_no := -1
 var vezes_aresta := {}
@@ -273,7 +276,8 @@ func passo(dt: float, mapa: Mapa) -> Array:
 	if lento_s > 0.0:
 		lento_s -= dt
 	if pausado and no_atual < 0:
-		_gastar_oculto(dt, false)
+		if not livre:   # andando livre, o gasto é feito em mundo.mover_jogador_livre
+			_gastar_oculto(dt, false)
 		return eventos
 	if no_atual >= 0:
 		if rota.is_empty():

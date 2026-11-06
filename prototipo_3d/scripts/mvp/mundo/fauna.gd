@@ -264,6 +264,7 @@ func _derrubar(a: Animal, p: Personagem) -> void:
 	p.fatos_noite["lobo_derrubou"] = true
 	mundo.som.emit("lobo_derrubou", p.pos)
 	_falar(p, "lobo_derruba")
+	mundo.ferir(p, Regras.DANO_LOBO)
 	if a.faro_de == p.id:
 		_esquecer(a, 60.0)
 		return
@@ -495,6 +496,7 @@ func _cobra(a: Animal, dt: float, andou: Dictionary) -> void:
 			a.ouviu[p.id] = 0.0
 			if d <= Regras.COBRA_PICA_M:
 				var r: String = mundo.envenenar(p)
+				mundo.ferir(p, Regras.DANO_COBRA)
 				p.fatos_noite["cobra_picou"] = true
 				p.fatos_noite["cobra_reacao"] = "passou"
 				_ouvir("cobra_picou", a.pos, p.id, Regras.OUVE_M)

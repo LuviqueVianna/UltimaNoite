@@ -11,6 +11,7 @@ const PegadasView := preload("res://scripts/apresentacao/pegadas_view.gd")
 const PersonagemView := preload("res://scripts/apresentacao/personagem_view.gd")
 const AnimaisView := preload("res://scripts/apresentacao/animais_view.gd")
 const Grilos := preload("res://scripts/apresentacao/grilos.gd")
+const Bussola := preload("res://scripts/apresentacao/bussola.gd")
 const CHAO_SHADER := preload("res://shaders/chao.gdshader")
 
 const SEMENTE := 7
@@ -24,7 +25,10 @@ const SEGUE := 3.0          # quão rápido a câmera volta para trás do person
 const PAUSA_MOUSE := 1.2    # segundos sem mexer o mouse antes de a câmera voltar a seguir
 const AVISO_S := 6.0
 const ATRIBUTOS_JOGADOR := {"forca": 2, "inteligencia": 3, "carisma": 2, "furtividade": 3, "resistencia": 2}
-const CAMISAS := [Color(0.42, 0.36, 0.27), Color(0.3, 0.36, 0.42), Color(0.45, 0.3, 0.26)]
+# Visuais dos personagens do computador: cada um diferente, para não confundir quem é quem.
+const VISUAIS_HOMEM := ["vaqueiro", "roceiro", "velho"]
+const VISUAIS_MULHER := ["lavadeira", "senhora"]
+const PELES := [Color(0.24, 0.15, 0.1), Color(0.42, 0.29, 0.2), Color(0.62, 0.47, 0.37), Color(0.34, 0.22, 0.15)]
 
 
 ## Corpo que a figura do personagem lê: posição, direção, se anda, se caiu.
@@ -79,6 +83,10 @@ var _ajuda: Label
 var _avisos_label: Label
 var _avisos: Array = []   # {texto, ate}
 var _fim: Label
+var _barra_vida: ProgressBar
+var _texto_vida: Label
+var _bussola: Control
+var _clarao: ColorRect       # vermelho na tela quando perde vida; verde quando recupera
 var _visiveis := 0
 var _escalas := [1.0, 1.5, 2.0]
 var _escala_i := 1
@@ -88,7 +96,8 @@ var _tempo_montagem := {}
 func _ready() -> void:
 	var t0 := Time.get_ticks_msec()
 	mundo = Mundo.new()
-	mundo.iniciar(SEMENTE, {"nome": "Você", "atributos": ATRIBUTOS_JOGADOR})
+	# cópia: o veneno tira pontos dos atributos, e uma constante não pode ser alterada
+	mundo.iniciar(SEMENTE, {"nome": "Você", "atributos": ATRIBUTOS_JOGADOR.duplicate()})
 	var t1 := Time.get_ticks_msec()
 	terreno = Terreno.new(mundo.mapa, SEMENTE)
 	var t2 := Time.get_ticks_msec()
@@ -113,6 +122,7 @@ func _ready() -> void:
 	add_child(_animais)
 	_animais.montar()
 	_montar_armadilhas()
+	_montar_saida()
 	_montar_camera()
 	_montar_vagalumes()
 	_grilos = Grilos.new()
@@ -126,6 +136,7 @@ func _ready() -> void:
 	mundo.som.connect(_tocar_som)
 	mundo.chegou_saida.connect(_ao_chegar_saida)
 	mundo.amanheceu.connect(_ao_amanhecer)
+	mundo.vida_mudou.connect(_ao_mudar_vida)
 	mundo.desmaiou.connect(func(p): if p.eh_jogador: _ao_aviso("O veneno venceu: você desmaia na trilha."))
 	_tempo_montagem = {"mundo": t1 - t0, "terreno": t2 - t1, "mata": t3 - t2, "total": Time.get_ticks_msec() - t0}
 	print("MONTAGEM ", _tempo_montagem, " | árvores ", terreno.arvores.size(), " plantas ", terreno.plantas.size())
@@ -298,11 +309,17 @@ func _montar_personagens() -> void:
 		_corpos.append(corpo)
 		var v := PersonagemView.new()
 		v.personagem = corpo
+		v.calcado = p.calcado
 		if p.eh_jogador:
 			v.estilo = "jovem"
 		else:
-			v.estilo = "roceiro"
-			v.cor_camisa = CAMISAS[(p.id - 1) % CAMISAS.size()]
+			var mulheres := _nomes_femininos()
+			var lista: Array = VISUAIS_MULHER if mulheres.has(p.nome) else VISUAIS_HOMEM
+			var livre: Array = lista.filter(func(x): return not _visuais_usados.has(x))
+			v.estilo = livre[0] if not livre.is_empty() else lista[p.id % lista.size()]
+			_visuais_usados.append(v.estilo)
+			v.pele = PELES[(p.id * 3 + 1) % PELES.size()]
+			v.altura = [0.95, 1.04, 0.92, 1.0][p.id % 4]
 		add_child(v)
 		_figuras.append(v)
 		if p.eh_jogador:
@@ -313,6 +330,20 @@ func _montar_personagens() -> void:
 			_luz_visao.omni_range = 10.0
 			_luz_visao.light_volumetric_fog_energy = 0.0
 			v.add_child(_luz_visao)
+
+
+var _visuais_usados: Array = []
+
+
+## Nomes femininos da lista de nomes (os de nome_13 em diante, como no conteúdo do MVP).
+func _nomes_femininos() -> Array:
+	var d = Dados.ler_json("nomes.json")
+	var r := []
+	if d is Dictionary:
+		for n in d.get("nomes", []):
+			if int(String(n["id"]).get_slice("_", 1)) >= 13:
+				r.append(n["nome"])
+	return r
 
 
 ## Armadilhas: mola de ferro escondida na trilha. Só aparece para quem a notou, ou depois de disparada.
@@ -361,6 +392,75 @@ func _montar_armadilhas() -> void:
 		add_child(no)
 		_camada_2(no)
 		_armadilhas[a.id] = no
+
+
+## A saída do jogador (o lado oposto do mapa): uma porteira de pau com dois lampiões acesos,
+## para ser vista de longe entre as árvores. Chegar nela registra a chegada.
+func _montar_saida() -> void:
+	var j = mundo.jogador()
+	var no: int = j.saida
+	var p: Vector2 = mundo.mapa.pos(no)
+	# a porteira fica atravessada na trilha que chega ao nó
+	var dir := Vector2(0, 1)
+	if not mundo.mapa.adj[no].is_empty():
+		dir = (p - mundo.mapa.pos(mundo.mapa.adj[no][0].x)).normalized()
+	var raiz := Node3D.new()
+	raiz.name = "Saida"
+	raiz.position = Vector3(p.x, 0, p.y)
+	raiz.rotation.y = atan2(dir.x, dir.y)
+	add_child(raiz)
+	var pau := StandardMaterial3D.new()
+	pau.albedo_color = Color(0.36, 0.3, 0.24)
+	pau.roughness = 0.95
+	var luz := StandardMaterial3D.new()
+	luz.albedo_color = Color("#F2C26B")
+	luz.emission_enabled = true
+	luz.emission = Color("#E89A3C")
+	luz.emission_energy_multiplier = 4.0
+	for lado in [-1, 1]:
+		var poste := MeshInstance3D.new()
+		var c := CylinderMesh.new()
+		c.top_radius = 0.12
+		c.bottom_radius = 0.14
+		c.height = 2.6
+		poste.mesh = c
+		poste.material_override = pau
+		poste.position = Vector3(lado * 1.9, 1.3, 0)
+		raiz.add_child(poste)
+		var lamp := MeshInstance3D.new()
+		var b := BoxMesh.new()
+		b.size = Vector3(0.22, 0.3, 0.22)
+		lamp.mesh = b
+		lamp.material_override = luz
+		lamp.position = Vector3(lado * 1.9, 2.75, 0)
+		raiz.add_child(lamp)
+		var omni := OmniLight3D.new()
+		omni.light_color = Color("#E89A3C")
+		omni.light_energy = 3.0
+		omni.omni_range = 12.0
+		omni.position = Vector3(lado * 1.9, 2.8, 0.4)
+		omni.light_volumetric_fog_energy = 3.0
+		raiz.add_child(omni)
+	for y in [0.7, 1.3, 1.9]:
+		for lado in [-1, 1]:
+			var tabua := MeshInstance3D.new()
+			var b := BoxMesh.new()
+			b.size = Vector3(1.7, 0.12, 0.08)
+			tabua.mesh = b
+			tabua.material_override = pau
+			# porteira aberta: as duas folhas giradas para fora
+			tabua.position = Vector3(lado * 1.9 - lado * 0.6, y, 0.6)
+			tabua.rotation.y = lado * 1.1
+			raiz.add_child(tabua)
+	# um farol alto e fraco, para dar rumo de longe (a luz atravessa a neblina por cima da mata)
+	var farol := OmniLight3D.new()
+	farol.light_color = Color("#E89A3C")
+	farol.light_energy = 1.5
+	farol.omni_range = 40.0
+	farol.position = Vector3(0, 14.0, 0)
+	farol.light_volumetric_fog_energy = 6.0
+	raiz.add_child(farol)
+	_camada_2(raiz)
 
 
 func _montar_camera() -> void:
@@ -451,6 +551,51 @@ func _montar_hud() -> void:
 	_estilo_texto(_ajuda, Color(0.7, 0.68, 0.62), 14)
 	_ajuda.text = _texto_ajuda()
 	cl.add_child(_ajuda)
+	var caixa := HBoxContainer.new()
+	caixa.anchor_top = 1.0
+	caixa.anchor_bottom = 1.0
+	caixa.position = Vector2(16, -78)
+	caixa.add_theme_constant_override("separation", 10)
+	cl.add_child(caixa)
+	var rot := Label.new()
+	rot.text = "Vida"
+	_estilo_texto(rot, Color(0.85, 0.82, 0.74), 15)
+	caixa.add_child(rot)
+	_barra_vida = ProgressBar.new()
+	_barra_vida.custom_minimum_size = Vector2(220, 16)
+	_barra_vida.max_value = Regras.VIDA_MAX
+	_barra_vida.value = Regras.VIDA_MAX
+	_barra_vida.show_percentage = false
+	_barra_vida.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var fundo := StyleBoxFlat.new()
+	fundo.bg_color = Color(0.05, 0.06, 0.07, 0.8)
+	fundo.border_color = Color(0.6, 0.55, 0.45, 0.6)
+	fundo.set_border_width_all(1)
+	fundo.set_corner_radius_all(3)
+	var cheio := StyleBoxFlat.new()
+	cheio.bg_color = Color(0.72, 0.2, 0.16)
+	cheio.set_corner_radius_all(3)
+	_barra_vida.add_theme_stylebox_override("background", fundo)
+	_barra_vida.add_theme_stylebox_override("fill", cheio)
+	caixa.add_child(_barra_vida)
+	_texto_vida = Label.new()
+	_estilo_texto(_texto_vida, Color(0.85, 0.82, 0.74), 15)
+	caixa.add_child(_texto_vida)
+	_bussola = Bussola.new()
+	_bussola.anchor_left = 1.0
+	_bussola.anchor_right = 1.0
+	_bussola.offset_left = -136
+	_bussola.offset_right = -20
+	_bussola.offset_top = 16
+	_bussola.offset_bottom = 132
+	_bussola.camera = _camera
+	cl.add_child(_bussola)
+	_clarao = ColorRect.new()
+	_clarao.anchor_right = 1.0
+	_clarao.anchor_bottom = 1.0
+	_clarao.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_clarao.color = Color(0.7, 0.05, 0.03, 0.0)
+	cl.add_child(_clarao)
 	_fim = Label.new()
 	_fim.anchor_right = 1.0
 	_fim.anchor_bottom = 1.0
@@ -471,8 +616,8 @@ func _estilo_texto(l: Label, cor: Color, tamanho: int) -> void:
 
 func _texto_ajuda() -> String:
 	if terceira:
-		return "WASD/setas: seguir a trilha · Espaço: ficar parado · mouse: olhar · roda: aproximar · C: câmera isométrica · Esc: soltar o mouse · N: névoa · L: luz de visão · P: pegadas · V: ver tudo · H: esconder textos"
-	return "WASD/setas: seguir a trilha · Espaço: ficar parado · roda: zoom · Q/E: girar câmera · C: terceira pessoa · F: mata transparente · N: névoa · L: luz de visão · P: pegadas · V: ver tudo · H: esconder textos"
+		return "WASD/setas: andar · mouse: olhar · roda: aproximar · C: câmera isométrica · Esc: soltar o mouse · N: névoa · L: luz de visão · P: pegadas · V: ver tudo · H: esconder textos"
+	return "WASD/setas: andar · roda: zoom · Q/E: girar câmera · C: terceira pessoa · F: mata transparente · N: névoa · L: luz de visão · P: pegadas · V: ver tudo · H: esconder textos"
 
 
 # ---------------- câmera ----------------
@@ -507,7 +652,16 @@ func _posicionar_terceira(t: float) -> void:
 	var atras := Vector3(sin(_azimute), 0, cos(_azimute))
 	var direita := Vector3(cos(_azimute), 0, -sin(_azimute))
 	var dir_olhar := (-atras * cos(_inclinacao) + Vector3.UP * sin(_inclinacao)).normalized()
-	var pos := cabeca + direita * OMBRO - dir_olhar * _distancia_3p
+	# a câmera não entra na mata: encurta a distância até o primeiro ponto fechado atrás do personagem
+	var dist := _distancia_3p
+	var k := 0.3
+	while k < _distancia_3p:
+		var q := cabeca + direita * OMBRO * (k / _distancia_3p) - dir_olhar * k
+		if terreno.distancia_ao_aberto(Vector2(q.x, q.z)) > 0.6:
+			dist = maxf(0.6, k - 0.3)
+			break
+		k += 0.25
+	var pos := cabeca + direita * OMBRO * (dist / _distancia_3p) - dir_olhar * dist
 	pos.y = maxf(pos.y, 0.4)
 	_foco = _foco.lerp(pos, t) if t < 1.0 else pos
 	_camera.look_at_from_position(_foco, _foco + dir_olhar, Vector3.UP)
@@ -576,7 +730,7 @@ func _definir_fade(ativo: bool) -> void:
 
 func _process(dt: float) -> void:
 	if not pausado:
-		_dirigir()
+		_dirigir(dt)
 		mundo.tick(dt)
 	for k in mundo.personagens.size():
 		_corpos[k].atualizar(mundo.personagens[k], dt)
@@ -587,7 +741,10 @@ func _process(dt: float) -> void:
 			for b in mundo.visitante:
 				if mundo.visitante[b]["id"] == p.id:
 					dentro = true
-			_figuras[k].visible = ver_tudo or (not dentro and not p.oculto() and mundo.jogador().pos.distance_to(p.pos) <= mundo.jogador().alcance())
+			# quem já registrou a chegada foi embora da mata
+			var foi_embora: bool = p.registrou()
+			_figuras[k].visible = ver_tudo or (not dentro and not foi_embora and not p.oculto() and mundo.jogador().pos.distance_to(p.pos) <= mundo.jogador().alcance())
+			_figuras[k].hesitando = p.espera > 0.0 and p.no_atual >= 0
 	if terceira:
 		_seguir_por_tras(dt)
 	var jp: Vector2 = mundo.jogador().pos
@@ -602,9 +759,9 @@ func _process(dt: float) -> void:
 	_atualizar_hud()
 
 
-## Teclado em direção da câmera. Na terceira pessoa, "para a frente" segue a trilha mais alinhada,
-## mesmo em curva fechada, para o personagem não parar a cada nó.
-func _dirigir() -> void:
+## Teclado em direção da câmera: o personagem anda livre pelas trilhas e clareiras, como no primeiro protótipo.
+## A mata e as casas são parede (desliza ao encostar). As regras (lentidão, derrubado, pegadas) ficam no MVP.
+func _dirigir(dt: float) -> void:
 	var v := Vector2.ZERO
 	if Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP):
 		v.y += 1
@@ -614,26 +771,12 @@ func _dirigir() -> void:
 		v.x += 1
 	if Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT):
 		v.x -= 1
-	if Input.is_physical_key_pressed(KEY_SPACE) or v == Vector2.ZERO:
-		mundo.dirigir_jogador(Vector2.ZERO)
-		return
-	var frente := -Vector2(sin(_azimute), cos(_azimute))
-	var direita := Vector2(cos(_azimute), -sin(_azimute))
-	var dir := (frente * v.y + direita * v.x).normalized()
-	var j = mundo.jogador()
-	if terceira and j.no_atual >= 0:
-		var melhor := Vector2.ZERO
-		var melhor_dot := -0.3
-		for viz in mundo.mapa.adj[j.no_atual]:
-			if viz.x == j.no_anterior and mundo.mapa.adj[j.no_atual].size() > 1 and v.y > 0:
-				continue   # seguindo em frente, não volta pelo mesmo caminho
-			var d: Vector2 = (mundo.mapa.pos(viz.x) - mundo.mapa.pos(j.no_atual)).normalized()
-			if d.dot(dir) > melhor_dot:
-				melhor_dot = d.dot(dir)
-				melhor = d
-		if melhor != Vector2.ZERO:
-			dir = melhor
-	mundo.dirigir_jogador(dir)
+	var dir := Vector2.ZERO
+	if v != Vector2.ZERO:
+		var frente := -Vector2(sin(_azimute), cos(_azimute))
+		var direita := Vector2(cos(_azimute), -sin(_azimute))
+		dir = (frente * v.y + direita * v.x).normalized()
+	mundo.mover_jogador_livre(dir, dt, terreno.andavel)
 
 
 func _unhandled_input(ev: InputEvent) -> void:
@@ -718,6 +861,12 @@ func _tocar_som(evento: String, origem: Vector2) -> void:
 	tocador.play()
 
 
+func _ao_mudar_vida(p, delta: float) -> void:
+	if not p.eh_jogador:
+		return
+	_clarao.color = Color(0.7, 0.05, 0.03, 0.35) if delta < 0.0 else Color(0.2, 0.6, 0.25, 0.18)
+
+
 func _ao_chegar_saida(p) -> void:
 	mundo.registrar_chegada(p)
 	_ao_aviso("Você chegou ao outro lado da mata. Chegada registrada com %d pontos." % p.pontos())
@@ -748,7 +897,13 @@ func _atualizar_hud() -> void:
 		estado.append("desmaiado")
 	if j.registrou():
 		estado.append("chegada registrada")
-	_hud.text = "A Última Noite — protótipo 3D · câmera %s · faltam %d:%02d para o amanhecer\n%d FPS · %d chamadas de desenho · %d mil triângulos · mapa %d × %d m\nMata: %d árvores e plantas · pegadas à vista: %d\nPerto: %s%s" % [
+	var saida: Vector2 = mundo.mapa.pos(j.saida)
+	var rumo := "Saída: chegada registrada" if j.registrou() else "Saída: %d m, %s" % [int(j.pos.distance_to(saida)), Textos.direcao(j.pos, saida)]
+	var outros := 0
+	for k in range(1, _figuras.size()):
+		if _figuras[k].visible:
+			outros += 1
+	_hud.text = "A Última Noite — protótipo 3D · câmera %s · faltam %d:%02d para o amanhecer\n%d FPS · %d chamadas de desenho · %d mil triângulos · mapa %d × %d m\nMata: %d árvores e plantas · pegadas à vista: %d · outros à vista: %d de %d\n%s · Perto: %s%s" % [
 		"em terceira pessoa" if terceira else "isométrica",
 		int(t) / 60, int(t) % 60,
 		Engine.get_frames_per_second(),
@@ -757,9 +912,17 @@ func _atualizar_hud() -> void:
 		int(terreno.tamanho), int(terreno.tamanho),
 		_veg.total_instancias,
 		_visiveis,
+		outros, _figuras.size() - 1,
+		rumo,
 		", ".join(perto) if not perto.is_empty() else "nenhum animal à vista",
 		("\nVocê: " + ", ".join(estado)) if not estado.is_empty() else "",
 	]
+	_bussola.de = j.pos
+	_bussola.saida = mundo.mapa.pos(j.saida)
+	_bussola.mostrar_saida = not j.registrou()
+	_barra_vida.value = lerp(_barra_vida.value, j.vida, 0.2)
+	_texto_vida.text = "%d" % int(round(j.vida))
+	_clarao.color.a = move_toward(_clarao.color.a, 0.0, get_process_delta_time() * 0.5)
 	var linhas := []
 	_avisos = _avisos.filter(func(a): return a["ate"] > mundo.tempo)
 	for a in _avisos:
@@ -801,7 +964,7 @@ func _captura(pasta: String) -> void:
 	_ajuda.visible = false
 	# a noite anda um minuto: os personagens do computador saem das partidas, os animais se mexem
 	for k in 600:
-		mundo.dirigir_jogador(Vector2(1, 0.2))
+		mundo.mover_jogador_livre(Vector2(1, 0.2), 0.1, terreno.andavel)
 		mundo.tick(0.1)
 	for k in mundo.personagens.size():
 		_corpos[k].atualizar(mundo.personagens[k], 0.1)
@@ -809,6 +972,7 @@ func _captura(pasta: String) -> void:
 	_pegadas.ver_tudo = true
 	_animais.ver_tudo = true
 	var t: float = terreno.tamanho
+	var rapida := OS.get_cmdline_user_args().has("--rapida")   # só algumas fotos, para conferir o visual
 	# 1) mapa inteiro, de cima
 	_definir_fade(false)
 	_zoom = t * 1.05
@@ -818,9 +982,10 @@ func _captura(pasta: String) -> void:
 	var off := Vector3(sin(_azimute), 0, cos(_azimute)) * cos(ELEVACAO) + Vector3.UP * sin(ELEVACAO)
 	_cam_fixa = {"pos": centro + off * 400.0, "alvo": centro}
 	_posicionar_camera(1.0)
-	await _foto(pasta, "01_mapa_inteiro", 10)
+	if not rapida:
+		await _foto(pasta, "01_mapa_inteiro", 10)
 	# 2) cada base, vista de quem chega pela trilha
-	var ordem := ["bento", "iara", "anselmo", "marta", "quincas", "vazia"]
+	var ordem := ["iara", "marta"] if rapida else ["bento", "iara", "anselmo", "marta", "quincas", "vazia"]
 	var n := 2
 	for b in ordem:
 		if not terreno.casas.has(b):
@@ -837,6 +1002,8 @@ func _captura(pasta: String) -> void:
 	# 3) os animais de perto
 	var vistos := {}
 	for a in mundo.fauna.animais:
+		if rapida:
+			break
 		if vistos.has(a.tipo):
 			continue
 		vistos[a.tipo] = true
@@ -844,6 +1011,16 @@ func _captura(pasta: String) -> void:
 		var de := alvo + Vector3(2.6, 1.2 if a.tipo != "coruja" else 0.3, 2.6) * (0.7 if a.tipo == "cobra" else 1.0)
 		_olhar(de, alvo)
 		await _foto(pasta, "%02d_animal_%s" % [n, a.tipo])
+		n += 1
+	# 3b) os personagens do computador, de frente
+	for k in range(1, mundo.personagens.size()):
+		var p = mundo.personagens[k]
+		var c: Corpo = _corpos[k]
+		var frente: Vector2 = c.direcao
+		var olho: Vector2 = p.pos + frente * 3.2 + frente.orthogonal() * 0.8
+		_figuras[k].visible = true
+		_olhar(Vector3(olho.x, 1.5, olho.y), Vector3(p.pos.x, 1.0, p.pos.y))
+		await _foto(pasta, "%02d_personagem_%s" % [n, _figuras[k].estilo])
 		n += 1
 	# 4) o jogador na trilha, em terceira pessoa
 	_cam_fixa = {}
@@ -857,5 +1034,12 @@ func _captura(pasta: String) -> void:
 	_inclinacao = deg_to_rad(-8.0)
 	_posicionar_camera(1.0)
 	await _foto(pasta, "%02d_terceira_pessoa" % n)
+	# 5) isométrica perto do jogador
+	_trocar_camera()
+	_zoom = 30.0
+	_camera.size = _zoom
+	_definir_fade(true)
+	_posicionar_camera(1.0)
+	await _foto(pasta, "%02d_isometrica" % (n + 1))
 	print("FIM")
 	get_tree().quit()

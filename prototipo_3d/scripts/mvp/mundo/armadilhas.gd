@@ -89,6 +89,7 @@ func _disparar(a: Armadilha, p: Personagem) -> void:
 	p.lento_s = maxf(p.lento_s, Regras.LENTO_S * (1.0 - Regras.nivel(Regras.REDUZ_LENTIDAO, p.nivel("resistencia"))))
 	mundo.som.emit("armadilha", a.pos)
 	_falar(p, a, "armadilha_acionada", "")
+	mundo.ferir(p, Regras.DANO_ARMADILHA)
 	if p.eh_jogador:
 		mundo.aviso.emit("Você fica preso por %.0f s e depois anda devagar." % Regras.nivel(Regras.PRESO_S, p.nivel("forca")))
 	# Os outros ouvem de longe

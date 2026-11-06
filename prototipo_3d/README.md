@@ -18,8 +18,7 @@ Para testar em computador sem Godot. Exporte com o preset **Web** (`export_prese
 
 | Tecla | O que faz |
 |---|---|
-| W A S D / setas | Seguir a trilha (como no MVP, o personagem anda pelas trilhas do mapa) |
-| Espaço | Ficar parado (diante do lobo e da cobra, quem fica parado se sai melhor) |
+| W A S D / setas | Andar livre pelas trilhas e clareiras (a mata e as casas são parede). Diante do lobo e da cobra, quem fica parado se sai melhor |
 | Roda do mouse | Aproximar e afastar (nas duas câmeras) |
 | Q / E | Girar a câmera 90° (isométrica) |
 | C | Alterna entre a câmera isométrica e a **terceira pessoa** |
@@ -42,6 +41,9 @@ Desde 04/11/2026 o protótipo roda **a noite inteira do MVP**, com a lógica do 
 - **Três personagens do computador** andando, visitando bases e deixando pegadas, com a mesma inteligência do MVP.
 - **Animais com as regras do MVP** (`docs/sistemas/animais_v1.md`): lobo que rosna, persegue quem corre e derruba; corujas que pousam em mourões, piam ou viram a cabeça para avisar; cão que guia ou late; cobras escondidas na trilha que chacoalham as folhas e picam quem continua andando.
 - **Armadilhas** escondidas na trilha (aparecem para quem nota, ou depois de disparadas), veneno, desmaio, chegada à saída e amanhecer.
+- **Vida** (barra no canto inferior esquerdo, regra nova pedida em 06/11/2026): armadilha tira 20, lobo derrubando tira 30, picada de cobra tira 20; a primeira chegada a cada casa devolve 35; vida zero desmaia. Preso, lento, derrubado, veneno e desmaio continuam como no MVP.
+- **Saída**: porteira aberta com dois lampiões no lado oposto do mapa (com uma luz alta para dar rumo de longe). O canto da tela mostra a distância e a direção; chegar nela registra a chegada.
+- **Folhagem**: copas, samambaias, palmeiras e embaúbas feitas de cartões com folhas recortadas (texturas desenhadas na montagem, sem arquivo de imagem); relevo na casca e no chão.
 - **Ainda sem as conversas com os guardiões**: chegar a uma base não abre o diálogo.
 - Sons do MVP em 3D (uivo, rosnado, pio, latido, folhas, armadilha), grilos e vagalumes.
 

@@ -41,7 +41,37 @@ func _init(m, semente: int) -> void:
 	_gerar_vegetacao()
 
 
+## Onde as construções ocupam o chão, por base: [centro local (x, z), meia largura (x, z)].
+## Local: +z é a frente da casa (para o nó do mapa), +x o lado direito de quem olha a fachada... de dentro.
+const OCUPA := {
+	"bento": [[Vector2(-0.3, 0), Vector2(3.5, 2.6)]],
+	"iara": [[Vector2(0, 0), Vector2(3.6, 2.6)], [Vector2(6.1, 0), Vector2(1.8, 2.6)], [Vector2(-6.5, -1.5), Vector2(1.2, 0.7)]],
+	"anselmo": [[Vector2(0, 0), Vector2(2.6, 4.1)], [Vector2(-4.1, 3.4), Vector2(0.8, 0.3)]],
+	"marta": [[Vector2(0, 0), Vector2(1.8, 1.8)]],
+	"quincas": [[Vector2(0, 0), Vector2(3.1, 2.6)], [Vector2(4.2, 0.4), Vector2(0.4, 2.3)], [Vector2(-5.0, -2.5), Vector2(1.2, 1.6)]],
+	"vazia": [[Vector2(0, 0), Vector2(2.9, 2.4)]],
+}
+
+
 # ---------------- consulta ----------------
+
+## Dá para pisar aqui? Trilha ou clareira, fora das construções e dentro do mapa.
+func andavel(p: Vector2) -> bool:
+	if tipo_em(p) == MATA:
+		return false
+	for b in casas:
+		var c: Dictionary = casas[b]
+		var d: Vector2 = p - c["centro"]
+		if d.length() > 12.0:
+			continue
+		var f: Vector2 = c["frente"]
+		var local := Vector2(d.dot(Vector2(f.y, -f.x)), d.dot(f))
+		for caixa in OCUPA.get(b, []):
+			var q: Vector2 = local - caixa[0]
+			if absf(q.x) <= caixa[1].x and absf(q.y) <= caixa[1].y:
+				return false
+	return true
+
 
 func indice(p: Vector2) -> int:
 	var i := int(floor(p.x))
@@ -208,8 +238,8 @@ func _gerar_vegetacao() -> void:
 			elif r < 0.36 or (aberto < 3.0 and r < 0.6):
 				tipo = "embauba"
 			elif r < 0.46 or aberto < 3.0:
-				tipo = "palmeira" if _rng.randf() < 0.7 else "bambu"
-			elif r < 0.51:
+				tipo = "palmeira" if _rng.randf() < 0.8 else "bambu"
+			elif r < 0.48:
 				tipo = "bambu"
 			arvores.append({"pos": p, "tipo": tipo, "escala": _rng.randf_range(0.8, 1.25), "giro": _rng.randf() * TAU})
 		y += esp

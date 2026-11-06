@@ -124,6 +124,7 @@ func _chegou(p: Personagem, no: int) -> void:
 	p.na_base = base
 	if base == "":
 		return
+	_curar_na_casa(p, base)
 	if p.eh_jogador:
 		if not p.bases_visitadas.has(base):
 			chegou_base.emit(p, base)
@@ -155,6 +156,36 @@ func registrar_chegada(p: Personagem) -> void:
 
 
 ## Veneno da panela ruim ou da cobra, com os avisos ao jogador. Devolve o mesmo que Personagem.envenenar.
+## Protótipo 3D: perde vida. Chegando a zero, desmaia (o mesmo desmaio do veneno).
+signal vida_mudou(p: Personagem, delta: float)
+
+func ferir(p: Personagem, dano: float) -> void:
+	if p.desmaiado or p.registrou():
+		return
+	p.vida = maxf(0.0, p.vida - dano)
+	vida_mudou.emit(p, -dano)
+	if p.vida <= 0.0:
+		p.desmaiado = true
+		p.rota = []
+		p.oculto_s = 0.0
+		p.escondido = ""
+		if p.eh_jogador:
+			aviso.emit("As forças acabam. Você cai na trilha e a noite se apaga.")
+		desmaiou.emit(p)
+
+
+func _curar_na_casa(p: Personagem, base: String) -> void:
+	if p.casas_achadas.has(base) or p.desmaiado:
+		return
+	p.casas_achadas[base] = tempo
+	var antes := p.vida
+	p.vida = minf(Regras.VIDA_MAX, p.vida + Regras.CURA_CASA)
+	if p.vida > antes:
+		vida_mudou.emit(p, p.vida - antes)
+		if p.eh_jogador:
+			aviso.emit("O abrigo da casa devolve parte das forças.")
+
+
 func envenenar(p: Personagem) -> String:
 	var r := p.envenenar(rng)
 	if r == "resistiu":
@@ -320,6 +351,68 @@ func mover_jogador_para(ponto: Vector2) -> bool:
 	if j.no_atual == a or j.no_atual == b:
 		destino = b if j.no_atual == a else a
 	return j.ir_para(mapa, destino, not aberto)
+
+
+## ---- Protótipo 3D: o jogador anda livre pelas trilhas e clareiras (não preso ao grafo) ----
+## A apresentação diz para onde ele quer ir e se o lugar é andável; aqui ficam as regras:
+## velocidade (lentidão), parado enquanto derrubado ou desmaiado, pegadas, gasto do "sumir"
+## e chegada aos nós (bases, saída) por proximidade. Fauna e armadilhas só olham a posição.
+const RAIO_CHEGADA := 3.0
+var _no_livre := -1
+
+func mover_jogador_livre(desejado: Vector2, dt: float, andavel: Callable) -> void:
+	var p := jogador()
+	p.livre = true
+	p.pausado = true
+	p.rota = []
+	if p.no_atual >= 0:
+		p.no_anterior = p.no_atual
+	p.no_atual = -1
+	p.de = -1
+	p.para = -1
+	if p.desmaiado or p.espera > 0.0 or terminou:
+		return
+	var antes := p.pos
+	if desejado.length() > 0.01:
+		var passo := desejado.normalized() * p.velocidade() * dt
+		var novo := p.pos + passo
+		if not andavel.call(novo):
+			# desliza pela parede de mata
+			if andavel.call(p.pos + Vector2(passo.x, 0)):
+				novo = p.pos + Vector2(passo.x, 0)
+			elif andavel.call(p.pos + Vector2(0, passo.y)):
+				novo = p.pos + Vector2(0, passo.y)
+			else:
+				novo = p.pos
+		p.pos = novo
+	var andou := p.pos.distance_to(antes)
+	p._gastar_oculto(dt, andou > 0.001)
+	if andou > 0.001:
+		p.desde_pegada += andou
+		if p.desde_pegada >= Regras.ESPACO_PEGADA:
+			p.desde_pegada = 0.0
+			p.passo_esquerdo = not p.passo_esquerdo
+			var dir := (p.pos - antes).normalized()
+			var lado := -1.0 if p.passo_esquerdo else 1.0
+			pegadas.append({
+				"id": _proxima_pegada, "pos": p.pos + dir.orthogonal() * 0.15 * lado, "dir": dir, "dono": p.id,
+				"calcado": p.calcado, "t": tempo, "vida": p.vida_pegada(), "fraca": p.oculto_s > 0.0,
+			})
+			_proxima_pegada += 1
+	# chegada por proximidade: entrar no raio de um nó conta como chegar nele
+	var perto := -1
+	var melhor := RAIO_CHEGADA
+	for i in mapa.nos.size():
+		var d := p.pos.distance_to(mapa.pos(i))
+		if d < melhor:
+			melhor = d
+			perto = i
+	if perto != _no_livre:
+		_no_livre = perto
+		if perto >= 0:
+			_chegou(p, perto)
+		else:
+			p.na_base = ""
 
 
 ## Teclado: segue a trilha que mais aponta para a direção pedida. Direção zero = para onde está.

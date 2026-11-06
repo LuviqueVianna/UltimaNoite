@@ -8,7 +8,20 @@ uniform vec3 folhas : source_color = vec3(0.14, 0.13, 0.08);
 uniform vec3 musgo : source_color = vec3(0.12, 0.2, 0.157);    // #1F3328
 uniform float tamanho = 160.0;
 
-varying highp vec2 wxz;   // highp: no navegador a precisão média fazia listras longe do centro
+varying highp vec2 wxz;
+
+// Relevo sem mapa de normais (Mikkelsen): folhas, torrões e sulcos ganham volume com a luz da lua.
+vec3 perturbar(vec3 n, vec3 pos, float h, float forca) {
+	vec3 dpdx = dFdx(pos);
+	vec3 dpdy = dFdy(pos);
+	float dhx = dFdx(h);
+	float dhy = dFdy(h);
+	vec3 r1 = cross(dpdy, n);
+	vec3 r2 = cross(n, dpdx);
+	float det = dot(dpdx, r1);
+	vec3 grad = sign(det) * (dhx * r1 + dhy * r2);
+	return normalize(abs(det) * n - forca * grad);
+}   // highp: no navegador a precisão média fazia listras longe do centro
 
 void vertex() {
 	wxz = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xz;
@@ -31,8 +44,8 @@ void fragment() {
 	float tom = texture(ruido, fract(wxz * 0.7 + 0.13)).r;
 	vec3 folha_seca = mix(vec3(0.3, 0.16, 0.08), vec3(0.32, 0.25, 0.11), tom);   // ferrugem a ocre
 	folha_seca = mix(folha_seca, vec3(0.3, 0.27, 0.2), smoothstep(0.6, 0.8, f2) * 0.6);   // folhas acinzentadas, velhas
-	float tem_folha = smoothstep(0.35, 0.8, f1) * (1.0 - aberto);
-	c_mata = mix(c_mata, folha_seca * (0.75 + 0.3 * n3), tem_folha * 0.6);
+	float tem_folha = smoothstep(0.3, 0.9, f1) * (1.0 - aberto);
+	c_mata = mix(c_mata, folha_seca * (0.7 + 0.2 * n3), tem_folha * 0.35);
 	// manchas de musgo vivo na mata, longe da trilha
 	float mancha = smoothstep(0.58, 0.7, n1 + (n2 - 0.5) * 0.3) * (1.0 - aberto);
 	c_mata = mix(c_mata, vec3(0.16, 0.28, 0.11) * (0.8 + 0.4 * n3), mancha * 0.75);
@@ -41,6 +54,8 @@ void fragment() {
 	vec3 trilha = mix(c_barro, folha_seca, smoothstep(0.55, 0.85, f1) * 0.18);
 	trilha *= 1.0 - smoothstep(0.6, 0.9, f2) * 0.1;
 	ALBEDO = mix(c_mata, trilha, aberto);
+	float relevo = n3 * 0.012 + n2 * 0.03 + tem_folha * 0.006 * f2;
+	NORMAL = perturbar(NORMAL, VERTEX, relevo, 1.0);
 	// barro úmido brilha um pouco com a lua
 	ROUGHNESS = mix(0.95, 0.55 + 0.3 * n3, aberto);
 	SPECULAR = mix(0.2, 0.45, aberto);

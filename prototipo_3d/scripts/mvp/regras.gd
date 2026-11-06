@@ -3,6 +3,14 @@ extends RefCounted
 ## Números do MVP v0.4 (docs/MVP_v0.4.md). Unidade de distância: metros.
 
 const NOITE_S := 720.0               # duração da noite no MVP (provisório)
+# Vida (protótipo 3D, pedido do usuário em 06/11/2026): perigos tiram, cada casa nova devolve uma parte.
+# As outras consequências (preso, lento, derrubado, veneno, desmaio) continuam como no MVP.
+const VIDA_MAX := 100.0
+const DANO_ARMADILHA := 20.0
+const DANO_LOBO := 30.0
+const DANO_COBRA := 20.0
+const CURA_CASA := 35.0
+
 const VEL_TRILHA := 4.0              # protótipo 3D: a velocidade que o usuário aprovou no primeiro protótipo (o MVP 2D está em 10 m/s para testes)
 const VEL_COMPUTADOR := 1.5          # m/s dos personagens do computador (mais lentos, a pedido do usuário)
 const ACELERA_COMPUTADOR := 3.0      # depois que o jogador registra a chegada, o computador anda 3x mais rápido

@@ -13,7 +13,10 @@ uniform float translucidez = 0.25;   // folhas deixam passar um pouco da lua
 uniform float altura_copa = 10.0;   // altura típica da espécie, para saber se a copa tapa o jogador
 uniform float raio_copa = 2.5;     // quanto a copa se abre para os lados (m)
 uniform float corta = 1.0;
-uniform float casca = 0.0;          // 0 = folhagem; 1 = casca com sulcos; 2 = anéis (embaúba, palmeira, bambu)          // 0 = nunca some (sub-bosque baixo)
+uniform float casca = 0.0;
+uniform sampler2D textura : source_color, filter_linear_mipmap, repeat_disable;
+uniform float usa_textura = 0.0;   // 1 = cartão de folhas recortado pela textura (copa, samambaia, palmeira)
+uniform float centro_copa = 9.0;   // altura do centro da copa: os cartões usam a normal da copa inteira          // 0 = folhagem; 1 = casca com sulcos; 2 = anéis (embaúba, palmeira, bambu)          // 0 = nunca some (sub-bosque baixo)
 uniform float rugosidade = 0.0;     // deforma a copa em tufos irregulares (0 nos troncos)
 
 global uniform vec3 jogador_pos;
@@ -49,6 +52,19 @@ float ruido3(vec3 x) {
 varying float tufo;
 varying float some;
 
+// Relevo sem mapa de normais: inclina a normal pela variação da altura h na tela (Mikkelsen).
+vec3 perturbar(vec3 n, vec3 pos, float h, float forca) {
+	vec3 dpdx = dFdx(pos);
+	vec3 dpdy = dFdy(pos);
+	float dhx = dFdx(h);
+	float dhy = dFdy(h);
+	vec3 r1 = cross(dpdy, n);
+	vec3 r2 = cross(n, dpdx);
+	float det = dot(dpdx, r1);
+	vec3 grad = sign(det) * (dhx * r1 + dhy * r2);
+	return normalize(abs(det) * n - forca * grad);
+}
+
 // Distância lateral (perpendicular à visão) entre um ponto e a linha câmera → jogador.
 // Negativa quando o ponto está atrás do jogador (não tapa).
 float lateral(vec3 p) {
@@ -62,6 +78,10 @@ float lateral(vec3 p) {
 
 void vertex() {
 	vcor = COLOR.rgb;
+	if (usa_textura > 0.5) {
+		// os cartões de folha recebem a normal de uma copa redonda: a copa toda se ilumina como um volume
+		NORMAL = normalize(mix(NORMAL, normalize(VERTEX - vec3(0.0, centro_copa, 0.0)), 0.75));
+	}
 	vec3 w = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	float h = max(VERTEX.y, 0.0);
 	tufo = ruido3(w * 0.9) * 0.65 + ruido3(w * 2.3) * 0.35;
@@ -88,6 +108,15 @@ void vertex() {
 
 void fragment() {
 	vec3 base = cor.rgb * vcor;
+	if (usa_textura > 0.5) {
+		vec4 t = texture(textura, UV);
+		// recorte com borda nítida mesmo de longe (o alfa médio dos mipmaps não apaga a folhagem)
+		float a = (t.a - 0.4) / max(fwidth(t.a), 0.0001) + 0.5;
+		if (a < 0.5) {
+			discard;
+		}
+		base *= t.rgb * 1.5;
+	}
 	vec3 n_mundo = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 	if (casca > 0.5) {
 		// sulcos verticais (ou anéis), musgo na base e no lado sombreado, manchas de líquen
@@ -95,9 +124,11 @@ void fragment() {
 		if (casca < 1.5) {
 			sulco = ruido3(vec3(wpos.x * 7.0, wpos.y * 0.8, wpos.z * 7.0)) * 0.7 + ruido3(wpos * 3.0) * 0.3;
 			base *= 0.6 + 0.65 * sulco;
+			NORMAL = perturbar(NORMAL, VERTEX, sulco * 0.05, 1.0);
 		} else {
 			float anel = fract(wpos.y * 1.4 + ruido3(wpos * 1.5) * 0.35);
 			base *= 1.0 - 0.45 * smoothstep(0.82, 0.95, anel);
+			NORMAL = perturbar(NORMAL, VERTEX, -smoothstep(0.82, 0.95, anel) * 0.02, 1.0);
 			base *= 0.85 + 0.3 * ruido3(wpos * 4.0);
 		}
 		float lado_umido = smoothstep(-0.2, 0.9, dot(n_mundo, normalize(vec3(-0.4, 0.0, -1.0))));
