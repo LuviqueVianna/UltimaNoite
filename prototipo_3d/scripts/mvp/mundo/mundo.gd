@@ -372,6 +372,12 @@ func mover_jogador_livre(desejado: Vector2, dt: float, andavel: Callable) -> voi
 	p.para = -1
 	if p.desmaiado or p.espera > 0.0 or terminou:
 		return
+	if p.pegando_s > 0.0:
+		p.pegando_s = maxf(0.0, p.pegando_s - dt)
+		p._gastar_oculto(dt, false)
+		p.atualizar_folego(dt, false)
+		return
+	var correu := p.correndo_de_fato() and desejado.length() > 0.01
 	var antes := p.pos
 	if desejado.length() > 0.01:
 		var passo := desejado.normalized() * p.velocidade() * dt
@@ -387,6 +393,7 @@ func mover_jogador_livre(desejado: Vector2, dt: float, andavel: Callable) -> voi
 		p.pos = novo
 	var andou := p.pos.distance_to(antes)
 	p._gastar_oculto(dt, andou > 0.001)
+	p.atualizar_folego(dt, correu and andou > 0.001)
 	if andou > 0.001:
 		p.desde_pegada += andou
 		if p.desde_pegada >= Regras.ESPACO_PEGADA:

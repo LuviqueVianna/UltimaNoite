@@ -19,6 +19,9 @@ Para testar em computador sem Godot. Exporte com o preset **Web** (`export_prese
 | Tecla | O que faz |
 |---|---|
 | W A S D / setas | Andar livre pelas trilhas e clareiras (a mata e as casas são parede). Diante do lobo e da cobra, quem fica parado se sai melhor |
+| Shift (segurar) | Mini corrida (1,5x). Gasta a barra de fôlego (6 s cheia; recupera em 8 s depois de 1,5 s sem correr; esgotada, só volta a correr com 30%). Só funciona sem lentidão (lobo, armadilha) e em pé. O barulho atrai o lobo que ronda a até 35 m |
+| Ctrl | Agachar / levantar. Agachar é o "sumir na mata": gasta um uso, se houver, e anda na metade da velocidade; levantar encerra o tempo oculto |
+| G | Esticar o braço à frente, como quem tenta pegar algo (ainda não há itens sinalizados). Fica parado 0,9 s |
 | Roda do mouse | Aproximar e afastar (nas duas câmeras) |
 | Q / E | Girar a câmera 90° (isométrica) |
 | C | Alterna entre a câmera isométrica e a **terceira pessoa** |
@@ -26,7 +29,7 @@ Para testar em computador sem Godot. Exporte com o preset **Web** (`export_prese
 | F | Liga e desliga a mata transparente perto do jogador |
 | N | Liga e desliga a neblina rasteira |
 | L | Liga e desliga a luz de visão do jogador |
-| P | Tamanho das pegadas: 1x (real), 1,5x, 2x |
+| P | Tamanho das pegadas: 0,8x · 1x (real, padrão) · 1,25x · 1,5x |
 | V | Ver tudo (mostra animais, pegadas, armadilhas e personagens fora do alcance; para depurar) |
 | H | Esconde os textos da tela |
 

@@ -12,6 +12,17 @@ const DANO_COBRA := 20.0
 const CURA_CASA := 35.0
 
 const VEL_TRILHA := 4.0              # protótipo 3D: a velocidade que o usuário aprovou no primeiro protótipo (o MVP 2D está em 10 m/s para testes)
+const AGACHADO_FATOR := 0.5         # protótipo 3D: agachado (escondido na mata) anda na metade da velocidade
+const CORRIDA_FATOR := 1.5           # protótipo 3D: mini corrida (Shift), só sem lentidão
+const PEGAR_S := 1.4                 # protótipo 3D: tempo parado para abaixar e pegar algo do chão
+const ALCANCAR_S := 0.9              # protótipo 3D: gesto de esticar o braço à frente (G sem item por perto)
+const FOLEGO_GASTO_S := 6.0          # protótipo 3D: segundos de corrida com o fôlego cheio
+const FOLEGO_ESPERA_S := 1.5         # depois de parar de correr, espera isto para começar a recuperar
+const FOLEGO_RECARGA_S := 8.0        # tempo para recuperar do zero ao cheio
+const FOLEGO_VOLTA := 0.3            # sem fôlego, só volta a correr depois de recuperar esta fração
+const LOBO_OUVE_CORRIDA_M := 35.0    # protótipo 3D: o lobo que ronda ouve quem corre até esta distância
+const LOBO_ATRAIDO_S := 20.0         # quanto tempo ele procura o barulho
+const LOBO_VEL_ATRAIDO := 3.0        # e a que velocidade vai até lá
 const VEL_COMPUTADOR := 1.5          # m/s dos personagens do computador (mais lentos, a pedido do usuário)
 const ACELERA_COMPUTADOR := 3.0      # depois que o jogador registra a chegada, o computador anda 3x mais rápido
 const ESPACO_PEGADA := 2.6           # m entre pegadas desenhadas (o desenho é maior que o real)

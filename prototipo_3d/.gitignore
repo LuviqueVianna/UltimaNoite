@@ -1,3 +1,5 @@
 .godot/
 *.import
 capturas/
+# texturas extraídas do .glb pelo Godot na importação (geradas de novo em cada máquina)
+assets/personagens/*.png

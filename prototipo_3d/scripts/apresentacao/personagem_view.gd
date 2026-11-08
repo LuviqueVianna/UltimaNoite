@@ -1,11 +1,12 @@
 extends Node3D
-## Figura provisória de um personagem, montada com primitivas, com juntas de joelho e cotovelo.
+## Figura de um personagem. Estilo "real": modelo 3D do jogador (MPFB, assets/personagens/jogador.glb),
+## animado por código nos ossos. Demais estilos: figura provisória montada com primitivas.
 ## Só lê o estado do personagem da lógica. O visual vem de um "estilo" (roupa, cabeça, acessórios),
 ## e o pé mostra o calçado do MVP — o mesmo que marca as pegadas no barro.
 ## Frente do modelo = +Z local.
 
 var personagem
-var estilo := "jovem"
+var estilo := "jovem"          # "real" = modelo 3D do jogador; os demais são figuras provisórias
 var calcado := "bota"         # bota, botina, alpercata, tamanco, descalco
 var altura := 1.0             # escala do corpo
 var pele := Color(0, 0, 0, 0) # alfa > 0 troca a cor da pele do estilo
@@ -19,6 +20,17 @@ var _corpo: Node3D
 var _cabeca: Node3D
 var _fase := 0.0
 var _t := 0.0
+
+const MODELO_REAL := "res://assets/personagens/jogador.glb"
+var _skel: Skeleton3D
+var _osso := {}              # nome do osso -> índice
+var _rest_g := {}            # índice -> Basis global de repouso (espaço do esqueleto)
+var _ordem: Array[int] = []  # ossos com o pai sempre antes do filho
+var _vel := 0.0              # velocidade suavizada (m/s)
+var _amp := 0.0              # 0 parado, 1 andando (transição suave)
+var _agacha := 0.0           # 0 em pé, 1 agachado (transição suave)
+var _chao_repouso := 0.0     # altura dos pés na pose de repouso (para assentá-los no chão)
+var _desce := {}             # nome do osso do braço -> Basis que leva o osso da pose em A para junto do corpo
 
 ## Estilos. Chaves que faltam valem o padrão de _padrao().
 const ESTILOS := {
@@ -61,6 +73,11 @@ func _padrao() -> Dictionary:
 
 
 func _ready() -> void:
+	if estilo == "real":
+		if _montar_real():
+			return
+		push_warning("Modelo do jogador não encontrado em %s; usando a figura provisória." % MODELO_REAL)
+		estilo = "jovem"
 	var e: Dictionary = _padrao()
 	e.merge(ESTILOS[estilo], true)
 	var cor_pele: Color = pele if pele.a > 0.0 else e["pele"]
@@ -241,6 +258,9 @@ func _process(dt: float) -> void:
 	if personagem == null:
 		return
 	_t += dt
+	if _skel != null:
+		_animar_real(dt)
+		return
 	position = Vector3(personagem.pos.x, 0, personagem.pos.y)
 	var alvo: float = -personagem.direcao.angle() + PI / 2.0
 	rotation.y = lerp_angle(rotation.y, alvo, min(1.0, dt * 10.0))
@@ -271,6 +291,236 @@ func _process(dt: float) -> void:
 	_corpo.rotation.x = lerp_angle(_corpo.rotation.x, -1.45 if caido else curva, minf(1.0, dt * 6.0))
 	if caido:
 		_corpo.position.y = 0.18
+
+
+# ---------------------------------------------------------------- modelo real
+
+func _montar_real() -> bool:
+	if not ResourceLoader.exists(MODELO_REAL):
+		return false
+	var cena := load(MODELO_REAL) as PackedScene
+	if cena == null:
+		return false
+	_corpo = Node3D.new()
+	_corpo.scale = Vector3.ONE * altura
+	add_child(_corpo)
+	var modelo := cena.instantiate() as Node3D
+	_corpo.add_child(modelo)
+	var achados := modelo.find_children("*", "Skeleton3D", true, false)
+	if achados.is_empty():
+		_corpo.queue_free()
+		return false
+	_skel = achados[0]
+	for mi in modelo.find_children("*", "MeshInstance3D", true, false):
+		mi.layers = 2
+		_ajustar_materiais(mi)
+	var n := _skel.get_bone_count()
+	for i in n:
+		_osso[_skel.get_bone_name(i)] = i
+		_rest_g[i] = _skel.get_bone_global_rest(i).basis.orthonormalized()
+	# ordem pai -> filho
+	var visto := {}
+	while _ordem.size() < n:
+		for i in n:
+			var p := _skel.get_bone_parent(i)
+			if not visto.has(i) and (p < 0 or visto.has(p)):
+				visto[i] = true
+				_ordem.append(i)
+	# o MPFB exporta em pose de A (braços e pernas abertos): cada osso dos membros é
+	# levado para baixo, os braços um pouco abertos e as pernas retas sob o quadril
+	for lado in ["l", "r"]:
+		for par in [["upperarm_", "lowerarm_", 0.12], ["lowerarm_", "hand_", 0.06],
+				["thigh_", "calf_", 0.0], ["calf_", "foot_", 0.0]]:
+			var b := _osso.get(par[0] + lado, -1) as int
+			var c := _osso.get(par[1] + lado, -1) as int
+			if b < 0 or c < 0:
+				continue
+			var d := (_skel.get_bone_global_rest(c).origin - _skel.get_bone_global_rest(b).origin).normalized()
+			var alvo := Vector3(signf(d.x) * par[2], -1.0, 0.0).normalized()
+			_desce[par[0] + lado] = Basis(Quaternion(d, alvo))
+	# altura dos pés com as pernas retas: referência para assentar no chão
+	var menor := INF
+	for nome_pe in ["foot_l", "foot_r", "ball_l", "ball_r"]:
+		var ip: int = _osso.get(nome_pe, -1)
+		if ip >= 0:
+			menor = minf(menor, _skel.get_bone_global_rest(ip).origin.y)
+	_chao_repouso = 0.0 if menor == INF else menor
+	return true
+
+
+## Pele, olhos, roupa: opacos (o MPFB exporta a pele com transparência, o que estraga sombra e ordem de desenho).
+## Sobrancelhas e cílios: recorte por alfa, dos dois lados.
+func _ajustar_materiais(mi: MeshInstance3D) -> void:
+	if mi.mesh == null:
+		return
+	for s in mi.mesh.get_surface_count():
+		var m := mi.mesh.surface_get_material(s) as BaseMaterial3D
+		if m == null:
+			continue
+		m = m.duplicate()
+		var pelos := mi.name.contains("eyebrow") or mi.name.contains("eyelash") \
+			or m.resource_name.contains("eyebrow") or m.resource_name.contains("eyelash")
+		if pelos:
+			m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+			m.alpha_scissor_threshold = 0.35
+			m.cull_mode = BaseMaterial3D.CULL_DISABLED
+		else:
+			m.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+		mi.set_surface_override_material(s, m)
+
+
+## Ciclo de passada a partir das curvas de marcha humana (quadril, joelho e tornozelo),
+## misturando andar e correr pela velocidade, com balanço do quadril, tronco contrário,
+## cabeça estável e respiração parado. Por cima: agachar (esconder na mata) e abaixar para
+## pegar algo do chão. Os pés são assentados no chão depois da pose.
+## Ângulos em graus nas curvas, radianos na aplicação.
+func _animar_real(dt: float) -> void:
+	position = Vector3(personagem.pos.x, 0, personagem.pos.y)
+	var alvo: float = -personagem.direcao.angle() + PI / 2.0
+	rotation.y = lerp_angle(rotation.y, alvo, min(1.0, dt * 8.0))
+	var andando: bool = personagem.andando
+	var v: float = clampf(personagem.velocidade, 0.0, 8.0) if andando else 0.0
+	_vel = lerpf(_vel, v, minf(1.0, dt * 6.0))
+	_amp = move_toward(_amp, 1.0 if andando else 0.0, dt * 3.5)
+	_agacha = move_toward(_agacha, 1.0 if personagem.get("agachado") == true else 0.0, dt * 4.0)
+	var pg = personagem.get("pegar")
+	var pegar: float = pg if pg != null else -1.0
+	var tipo = personagem.get("pegar_tipo")
+	# e: abaixar até o chão (desce até 40% do tempo, segura, sobe a partir de 65%)
+	# ea: esticar o braço à frente (vai até 35%, segura, volta a partir de 60%)
+	var e := 0.0
+	var ea := 0.0
+	if pegar >= 0.0:
+		if tipo == "chao":
+			e = smoothstep(0.0, 0.4, pegar) * (1.0 - smoothstep(0.65, 1.0, pegar))
+		else:
+			ea = smoothstep(0.0, 0.35, pegar) * (1.0 - smoothstep(0.6, 1.0, pegar))
+	var ag := _agacha
+	# 0 = andar, 1 = correr (agachado nunca corre)
+	var c := clampf((_vel - 1.8) / 3.0, 0.0, 1.0) * (1.0 - ag)
+	var passada := lerpf(1.4, 3.0, c) * (1.0 - 0.45 * ag)   # metros por ciclo (dois passos)
+	var freq := clampf(_vel / passada, 0.75, 2.0) if _vel > 0.05 else 0.75
+	_fase = fposmod(_fase + dt * freq * (1.0 if _amp > 0.0 else 0.0), 1.0)
+	var a := _amp * (1.0 - 0.55 * ag)
+	var X := Vector3.RIGHT
+	var giro := {}
+	var quadril_l := 0.0
+	var quadril_r := 0.0
+	for k in 2:
+		var lado := "l" if k == 0 else "r"
+		var p := fposmod(_fase + (0.0 if k == 0 else 0.5), 1.0)   # 0 = calcanhar toca o chão
+		# quadril (flexão +: perna para a frente)
+		var q := lerpf(7.0 + 18.0 * cos(TAU * p), 10.0 + 32.0 * cos(TAU * (p - 0.03)), c)
+		# joelho: dobra ao receber o peso e, mais, no balanço
+		var j := lerpf(15.0 * _sino(p, 0.12, 0.06) + 60.0 * _sino(p, 0.72, 0.11) + 3.0,
+			38.0 * _sino(p, 0.15, 0.08) + 90.0 * _sino(p, 0.7, 0.12) + 8.0, c)
+		# tornozelo (dorsiflexão +)
+		var t := lerpf(8.0 * _sino(p, 0.42, 0.1) - 16.0 * _sino(p, 0.62, 0.05),
+			12.0 * _sino(p, 0.28, 0.08) - 22.0 * _sino(p, 0.5, 0.06), c)
+		q *= a
+		j = j * a + 2.0 * (1.0 - a)
+		t *= a
+		if k == 0:
+			quadril_l = q
+		else:
+			quadril_r = q
+		# agachado: cócoras baixas; pegar: agacha com a perna direita um pouco à frente
+		var frente_pegar := 12.0 if k == 1 else -4.0
+		# esticar o braço: a perna direita adianta um pouco, como quem se inclina para alcançar
+		q += ea * (10.0 if k == 1 else -3.0)
+		j += ea * (8.0 if k == 1 else 2.0)
+		q += ag * 72.0 + e * (92.0 + frente_pegar - ag * 72.0)
+		j += ag * 112.0 + e * (128.0 - frente_pegar - ag * 112.0)
+		t += ag * 34.0 + e * (38.0 - ag * 34.0)
+		var d_coxa: Basis = _desce.get("thigh_" + lado, Basis.IDENTITY)
+		var d_perna: Basis = _desce.get("calf_" + lado, Basis.IDENTITY)
+		_girar(giro, "thigh_" + lado, Basis(X, deg_to_rad(-q)) * d_coxa)
+		_girar(giro, "calf_" + lado, Basis(X, deg_to_rad(-q + j)) * d_perna)
+		_girar(giro, "foot_" + lado, Basis(X, deg_to_rad(-q + j - t)) * d_perna)
+	# braços: contrários à perna do mesmo lado; cotovelo mais dobrado correndo
+	for k in 2:
+		var lado := "l" if k == 0 else "r"
+		var q_oposta := quadril_r if k == 0 else quadril_l
+		var ombro := (q_oposta - 7.0 * a) * lerpf(0.75, 0.9, c)
+		var cotovelo := lerpf(12.0, 75.0, c * _amp) + maxf(0.0, ombro) * 0.5
+		# agachado: braços à frente, sobre os joelhos
+		ombro += ag * 30.0
+		cotovelo += ag * 45.0
+		# pegar: o braço direito desce estendido até o chão; o esquerdo apoia no joelho
+		if lado == "r":
+			ombro = lerpf(ombro, 38.0, e)
+			cotovelo = lerpf(cotovelo, 5.0, e)
+			# esticar: braço direito à frente, na altura do peito, quase reto
+			ombro = lerpf(ombro, 82.0 + ag * 10.0, ea)
+			cotovelo = lerpf(cotovelo, 8.0, ea)
+		else:
+			ombro = lerpf(ombro, 40.0, e)
+			cotovelo = lerpf(cotovelo, 60.0, e)
+			ombro = lerpf(ombro, -8.0 + ag * 30.0, ea)
+			cotovelo = lerpf(cotovelo, 20.0 + ag * 45.0, ea)
+		var d_braco: Basis = _desce.get("upperarm_" + lado, Basis.IDENTITY)
+		var d_ante: Basis = _desce.get("lowerarm_" + lado, Basis.IDENTITY)
+		_girar(giro, "upperarm_" + lado, Basis(X, deg_to_rad(-ombro)) * d_braco)
+		_girar(giro, "lowerarm_" + lado, Basis(X, deg_to_rad(-ombro - cotovelo)) * d_ante)
+		_girar(giro, "hand_" + lado, Basis(X, deg_to_rad(-ombro - cotovelo * 0.9)) * d_ante)
+	# quadril gira e inclina com a passada; tronco gira ao contrário; corrida e agachado inclinam para a frente
+	var s := sin(TAU * _fase)
+	var giro_quadril := deg_to_rad(lerpf(5.0, 7.0, c)) * s * a
+	var queda := deg_to_rad(lerpf(4.0, 3.0, c)) * sin(TAU * _fase * 2.0 + PI / 2.0) * a
+	var respira := deg_to_rad(1.2) * sin(_t * 1.5) * (1.0 - _amp)
+	_girar(giro, "pelvis", Basis(Vector3.UP, giro_quadril) * Basis(Vector3.BACK, queda * signf(s)))
+	var inclina := deg_to_rad(lerpf(3.0, 10.0, c)) * _amp + respira + deg_to_rad(24.0) * ag + deg_to_rad(68.0 - 24.0 * ag) * e + deg_to_rad(12.0) * ea
+	_girar(giro, "spine_01", Basis(X, inclina * 0.4) * Basis(Vector3.UP, -giro_quadril * 0.6))
+	_girar(giro, "spine_02", Basis(X, inclina * 0.7) * Basis(Vector3.UP, -giro_quadril * 1.4))
+	# esticar: o ombro direito vai à frente (tronco gira um pouco)
+	var gira_alcance := deg_to_rad(14.0) * ea
+	_girar(giro, "spine_03", Basis(X, inclina) * Basis(Vector3.UP, -giro_quadril * 1.8 + gira_alcance))
+	var olhar := sin(_t * 1.6) * 0.7 if (hesitando and not andando) else 0.0
+	_girar(giro, "neck_01", Basis(X, inclina * 0.5) * Basis(Vector3.UP, olhar * 0.4))
+	# cabeça nivelada; ao pegar, olha para o chão
+	_girar(giro, "head", Basis(Vector3.UP, olhar) * Basis(X, deg_to_rad(30.0) * e + deg_to_rad(8.0) * ea))
+	# aplica: pose local = repouso do pai⁻¹ · giro do pai⁻¹ · giro · repouso do osso
+	var absoluto := {}
+	for i in _ordem:
+		var pai := _skel.get_bone_parent(i)
+		var gp: Basis = absoluto[pai] if pai >= 0 else Basis.IDENTITY
+		var g: Basis = giro.get(i, gp)
+		absoluto[i] = g
+		var local: Basis = g * _rest_g[i]
+		if pai >= 0:
+			local = (gp * _rest_g[pai]).inverse() * local
+		_skel.set_bone_pose_rotation(i, local.get_rotation_quaternion())
+	var caido: bool = personagem.get("caido") == true
+	_corpo.rotation.x = lerp_angle(_corpo.rotation.x, -1.45 if caido else 0.0, minf(1.0, dt * 6.0))
+	if caido:
+		_corpo.position = Vector3(0, 0.15, 0)
+		return
+	# assenta o pé mais baixo no chão (dá o sobe e desce da passada e a altura do agachado);
+	# o peso vai para o lado da perna de apoio
+	var y := _chao_repouso - _pe_mais_baixo()
+	_corpo.position = Vector3(0.025 * s * a * (1.0 - c * 0.5), y, 0.0)
+
+
+## Altura (no espaço do esqueleto) do ponto mais baixo dos pés na pose atual.
+func _pe_mais_baixo() -> float:
+	var menor := INF
+	for n in ["foot_l", "foot_r", "ball_l", "ball_r"]:
+		var i: int = _osso.get(n, -1)
+		if i >= 0:
+			menor = minf(menor, _skel.get_bone_global_pose(i).origin.y)
+	return 0.0 if menor == INF else menor
+
+
+## Curva em sino periódica (0..1) centrada em c, com largura w.
+func _sino(p: float, centro: float, w: float) -> float:
+	var d := fposmod(p - centro + 0.5, 1.0) - 0.5
+	return exp(-(d * d) / (2.0 * w * w))
+
+
+func _girar(giro: Dictionary, osso: String, b: Basis) -> void:
+	var i: int = _osso.get(osso, -1)
+	if i >= 0:
+		giro[i] = b
 
 
 func _mat(c: Color, aspereza: float) -> StandardMaterial3D:

@@ -10,7 +10,7 @@ const PASSOS_POR_MARCA := 3
 const PASSO_M := 0.87
 
 var mundo                      # Mundo do MVP
-var escala := 1.5              # 1 = tamanho real; o jogo pode exagerar para ler melhor
+var escala := 1.0              # 1 = tamanho real (P troca: 0,8 · 1 · 1,25 · 1,5)
 var brilho_borda := 0.35       # emissão da borda úmida (ajuda a ler no escuro)
 var ver_tudo := false
 var _texturas := {}

@@ -143,6 +143,17 @@ func _lobo(a: Animal, dt: float, andou: Dictionary) -> void:
 			if a.caminho.is_empty():
 				a.caminho = _caminho_ate(a.pos, _no_perto_de(a.casa, Regras.LOBO_RONDA_M))
 			_andar(a, dt, vel)
+			# Protótipo 3D: correr faz barulho; o lobo que ronda ouve e vai até onde ouviu.
+			if not a.ferido:
+				var barulho := _quem_corre_perto(a)
+				if barulho != null:
+					a.estado = "atraido"
+					a.relogio = Regras.LOBO_ATRAIDO_S
+					_ir_ao_barulho(a, barulho.pos)
+					_sinal(a, "ouviu", 3.0)
+					if barulho.eh_jogador:
+						mundo.aviso.emit("Galhos estalam na mata. Algo vem na direção do barulho.")   # provisório
+					return
 			# Quem está oculto (sumiu na mata ou na moita) passa despercebido pelo lobo que ronda.
 			var p := _quem_esta_perto(a, Regras.LOBO_VE_M, true)
 			if p == null:
@@ -171,6 +182,19 @@ func _lobo(a: Animal, dt: float, andou: Dictionary) -> void:
 					p.espera = maxf(p.espera, Regras.LOBO_ROSNA_S + 0.4)
 				elif p.perfil != "ousado":
 					p.sumir()
+		"atraido":
+			# Vai até onde ouviu a corrida. Se continuar ouvindo, corrige o rumo.
+			a.relogio -= dt
+			var barulho := _quem_corre_perto(a)
+			if barulho != null and barulho.pos.distance_to(a.ref) > 6.0:
+				_ir_ao_barulho(a, barulho.pos)
+				a.relogio = maxf(a.relogio, Regras.LOBO_ATRAIDO_S * 0.5)
+			var chegou := _andar(a, dt, Regras.LOBO_VEL_ATRAIDO)
+			var visto := _quem_esta_perto(a, Regras.LOBO_VE_M, true)
+			if (visto != null and not _protegido(visto)) or chegou or a.relogio <= 0.0:
+				# volta à ronda: se há alguém à vista, o encontro normal acontece no próximo passo
+				a.estado = "ronda"
+				a.caminho = []
 		"rosnando":
 			var p: Personagem = mundo.personagens[a.alvo]
 			a.mexeu += andou.get(p.id, 0.0)
@@ -246,6 +270,28 @@ func _lobo(a: Animal, dt: float, andou: Dictionary) -> void:
 				var c := mundo.mapa.pos(a.porta)
 				a.caminho = [c + Vector2.from_angle(mundo.rng.randf() * TAU) * Regras.LOBO_ESPERA_DIST_M]
 			_andar(a, dt, Regras.LOBO_VEL * 0.6)
+
+
+## Protótipo 3D: quem está correndo ao alcance do ouvido do lobo (o mais perto).
+func _quem_corre_perto(a: Animal) -> Personagem:
+	var melhor: Personagem = null
+	var melhor_d := Regras.LOBO_OUVE_CORRIDA_M
+	for p in mundo.personagens:
+		if not p.correndo_de_fato() or _fora_da_noite(p) or p.escondido != "":
+			continue
+		if mundo.tempo < a.ignora.get(p.id, -1.0):
+			continue
+		var d: float = p.pos.distance_to(a.pos)
+		if d <= melhor_d:
+			melhor_d = d
+			melhor = p
+	return melhor
+
+
+func _ir_ao_barulho(a: Animal, ponto: Vector2) -> void:
+	a.ref = ponto
+	a.caminho = _caminho_ate(a.pos, _no_mais_perto(ponto))
+	a.caminho.append(ponto)
 
 
 func _perseguir(a: Animal, p: Personagem) -> void:

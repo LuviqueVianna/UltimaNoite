@@ -50,6 +50,13 @@ var ferido_s := 0.0                 # derrubado pelo lobo há pouco (os guardiõ
 var oculto_s := 0.0                 # o que resta do "sumir na mata" em uso
 var sumir_usados := 0
 var escondido := ""                 # base em cuja moita está escondido
+var agachado := false               # protótipo 3D: agachado = "sumir na mata" (Ctrl)
+var correndo := false               # protótipo 3D: mini corrida pedida (Shift); só vale sem lentidão
+var pegando_s := 0.0                # protótipo 3D: pegando algo ou esticando o braço (parado)
+var pegar_tipo := ""                # "chao" (abaixa até o chão) ou "alcancar" (estica o braço à frente)
+var folego := 1.0                   # protótipo 3D: 0..1, gasto na corrida
+var sem_folego := false             # esgotou: só corre de novo depois de recuperar Regras.FOLEGO_VOLTA
+var _descanso_s := 0.0
 var tentou_fundos := false          # computador: já tentou sair pelos fundos com o lobo à porta
 var _andando_s := 0.0               # segundos seguidos andando (gasto crescente do "sumir")
 var _parado_s := 0.0
@@ -100,6 +107,57 @@ func sumir() -> bool:
 	return true
 
 
+## Protótipo 3D: agachar é o "sumir na mata". Abaixar gasta um uso, se houver (sem usos, só abaixa);
+## levantar encerra o que restava do tempo oculto.
+func agachar(sim: bool) -> void:
+	if sim == agachado:
+		return
+	if sim:
+		if desmaiado or pegando_s > 0.0 or registrou():
+			return
+		agachado = true
+		correndo = false
+		sumir()
+	else:
+		agachado = false
+		oculto_s = 0.0
+
+
+## Protótipo 3D: "chao" abaixa para pegar um item caído (quando houver itens sinalizados);
+## "alcancar" só estica o braço à frente. Fica parado enquanto isso.
+func pegar(tipo := "alcancar") -> bool:
+	if desmaiado or pegando_s > 0.0 or espera > 0.0:
+		return false
+	pegar_tipo = tipo
+	pegando_s = Regras.PEGAR_S if tipo == "chao" else Regras.ALCANCAR_S
+	correndo = false
+	return true
+
+
+func duracao_pegar() -> float:
+	return Regras.PEGAR_S if pegar_tipo == "chao" else Regras.ALCANCAR_S
+
+
+## Mini corrida só sem lentidão, em pé e com fôlego.
+func correndo_de_fato() -> bool:
+	return correndo and lento_s <= 0.0 and not agachado and pegando_s <= 0.0 and not sem_folego and folego > 0.0
+
+
+## Fôlego: a corrida gasta; parado ou andando, recupera depois de uma pausa.
+func atualizar_folego(dt: float, correu: bool) -> void:
+	if correu:
+		folego = maxf(0.0, folego - dt / Regras.FOLEGO_GASTO_S)
+		_descanso_s = 0.0
+		if folego <= 0.0:
+			sem_folego = true
+	else:
+		_descanso_s += dt
+		if _descanso_s >= Regras.FOLEGO_ESPERA_S:
+			folego = minf(1.0, folego + dt / Regras.FOLEGO_RECARGA_S)
+		if sem_folego and folego >= Regras.FOLEGO_VOLTA:
+			sem_folego = false
+
+
 func envenenado() -> bool:
 	return turvo_s > 0.0
 
@@ -126,7 +184,12 @@ func leitura_pegadas() -> int:
 
 
 func velocidade() -> float:
-	return velocidade_normal() * (0.5 if lento_s > 0.0 else 1.0)
+	var v := velocidade_normal() * (0.5 if lento_s > 0.0 else 1.0)
+	if agachado:
+		v *= Regras.AGACHADO_FATOR
+	elif correndo_de_fato():
+		v *= Regras.CORRIDA_FATOR
+	return v
 
 
 func tem_marca(marca: String) -> bool:

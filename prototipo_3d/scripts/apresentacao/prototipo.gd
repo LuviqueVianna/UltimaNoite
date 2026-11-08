@@ -38,6 +38,9 @@ class Corpo extends RefCounted:
 	var andando := false
 	var velocidade := 0.0
 	var caido := false
+	var agachado := false
+	var pegar := -1.0         # progresso do gesto de pegar (0..1); -1 = não está pegando
+	var pegar_tipo := ""      # "chao" ou "alcancar"
 
 	func atualizar(p, dt: float) -> void:
 		var d: Vector2 = p.pos - pos
@@ -47,6 +50,9 @@ class Corpo extends RefCounted:
 		velocidade = d.length() / maxf(dt, 0.0001)
 		pos = p.pos
 		caido = p.desmaiado or (p.ferido_s > 0.0 and p.espera > 0.0)
+		agachado = p.agachado
+		pegar = 1.0 - p.pegando_s / p.duracao_pegar() if p.pegando_s > 0.0 else -1.0
+		pegar_tipo = p.pegar_tipo
 
 
 var mundo                 # Mundo do MVP
@@ -84,11 +90,12 @@ var _avisos_label: Label
 var _avisos: Array = []   # {texto, ate}
 var _fim: Label
 var _barra_vida: ProgressBar
+var _barra_folego: ProgressBar
 var _texto_vida: Label
 var _bussola: Control
 var _clarao: ColorRect       # vermelho na tela quando perde vida; verde quando recupera
 var _visiveis := 0
-var _escalas := [1.0, 1.5, 2.0]
+var _escalas := [0.8, 1.0, 1.25, 1.5]   # pedido do usuário (08/11): pegadas menores; padrão 1,0 = tamanho real
 var _escala_i := 1
 var _tempo_montagem := {}
 
@@ -311,7 +318,7 @@ func _montar_personagens() -> void:
 		v.personagem = corpo
 		v.calcado = p.calcado
 		if p.eh_jogador:
-			v.estilo = "jovem"
+			v.estilo = "real"
 		else:
 			var mulheres := _nomes_femininos()
 			var lista: Array = VISUAIS_MULHER if mulheres.has(p.nome) else VISUAIS_HOMEM
@@ -581,6 +588,22 @@ func _montar_hud() -> void:
 	_texto_vida = Label.new()
 	_estilo_texto(_texto_vida, Color(0.85, 0.82, 0.74), 15)
 	caixa.add_child(_texto_vida)
+	var rot_f := Label.new()
+	rot_f.text = "   Fôlego"
+	_estilo_texto(rot_f, Color(0.85, 0.82, 0.74), 15)
+	caixa.add_child(rot_f)
+	_barra_folego = ProgressBar.new()
+	_barra_folego.custom_minimum_size = Vector2(140, 10)
+	_barra_folego.max_value = 100.0
+	_barra_folego.value = 100.0
+	_barra_folego.show_percentage = false
+	_barra_folego.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var cheio_f := StyleBoxFlat.new()
+	cheio_f.bg_color = Color(0.78, 0.72, 0.45)
+	cheio_f.set_corner_radius_all(3)
+	_barra_folego.add_theme_stylebox_override("background", fundo)
+	_barra_folego.add_theme_stylebox_override("fill", cheio_f)
+	caixa.add_child(_barra_folego)
 	_bussola = Bussola.new()
 	_bussola.anchor_left = 1.0
 	_bussola.anchor_right = 1.0
@@ -616,8 +639,8 @@ func _estilo_texto(l: Label, cor: Color, tamanho: int) -> void:
 
 func _texto_ajuda() -> String:
 	if terceira:
-		return "WASD/setas: andar · mouse: olhar · roda: aproximar · C: câmera isométrica · Esc: soltar o mouse · N: névoa · L: luz de visão · P: pegadas · V: ver tudo · H: esconder textos"
-	return "WASD/setas: andar · roda: zoom · Q/E: girar câmera · C: terceira pessoa · F: mata transparente · N: névoa · L: luz de visão · P: pegadas · V: ver tudo · H: esconder textos"
+		return "WASD/setas: andar · Shift: correr · Ctrl: agachar/esconder · G: pegar do chão · mouse: olhar · roda: aproximar · C: câmera isométrica · Esc: soltar o mouse · N: névoa · L: luz de visão · P: pegadas · V: ver tudo · H: esconder textos"
+	return "WASD/setas: andar · Shift: correr · Ctrl: agachar/esconder · G: pegar do chão · roda: zoom · Q/E: girar câmera · C: terceira pessoa · F: mata transparente · N: névoa · L: luz de visão · P: pegadas · V: ver tudo · H: esconder textos"
 
 
 # ---------------- câmera ----------------
@@ -776,6 +799,8 @@ func _dirigir(dt: float) -> void:
 		var frente := -Vector2(sin(_azimute), cos(_azimute))
 		var direita := Vector2(cos(_azimute), -sin(_azimute))
 		dir = (frente * v.y + direita * v.x).normalized()
+	# Shift: mini corrida (as regras só deixam correr sem lentidão e em pé)
+	mundo.jogador().correndo = dir != Vector2.ZERO and Input.is_physical_key_pressed(KEY_SHIFT)
 	mundo.mover_jogador_livre(dir, dt, terreno.andavel)
 
 
@@ -801,6 +826,14 @@ func _unhandled_input(ev: InputEvent) -> void:
 		match ev.physical_keycode:
 			KEY_C:
 				_trocar_camera()
+			KEY_CTRL:
+				# agachar / levantar: agachado é o "sumir na mata"
+				var j = mundo.jogador()
+				j.agachar(not j.agachado)
+			KEY_G:
+				# ainda não há itens sinalizados: estica o braço à frente, como quem tenta pegar algo.
+				# Com itens, G perto de um item caído vai usar pegar("chao").
+				mundo.jogador().pegar("alcancar")
 			KEY_ESCAPE:
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			KEY_Q:
@@ -891,6 +924,14 @@ func _atualizar_hud() -> void:
 	var estado := []
 	if j.lento_s > 0.0:
 		estado.append("lento")
+	if j.agachado:
+		estado.append("agachado, oculto %.0f s" % j.oculto_s if j.oculto_s > 0.0 else "agachado (visível; usos de esconder: %d)" % j.usos_sumir())
+	elif j.correndo_de_fato():
+		estado.append("correndo")
+	elif j.correndo and j.lento_s > 0.0:
+		estado.append("lento demais para correr")
+	elif j.correndo and j.sem_folego:
+		estado.append("sem fôlego")
 	if j.doses_veneno > 0:
 		estado.append("envenenado (%d)" % j.doses_veneno)
 	if j.desmaiado:
@@ -922,6 +963,8 @@ func _atualizar_hud() -> void:
 	_bussola.mostrar_saida = not j.registrou()
 	_barra_vida.value = lerp(_barra_vida.value, j.vida, 0.2)
 	_texto_vida.text = "%d" % int(round(j.vida))
+	_barra_folego.value = lerp(_barra_folego.value, j.folego * 100.0, 0.3)
+	_barra_folego.modulate = Color(1, 0.55, 0.45) if j.sem_folego else Color.WHITE
 	_clarao.color.a = move_toward(_clarao.color.a, 0.0, get_process_delta_time() * 0.5)
 	var linhas := []
 	_avisos = _avisos.filter(func(a): return a["ate"] > mundo.tempo)
